@@ -1,0 +1,18 @@
+# file managed by puppet
+
+ScriptAlias /cgi-bin/nagios3     <%= nagios_cgi_dir %>
+ScriptAlias /nagios3/cgi-bin     <%= nagios_cgi_dir %>
+Alias       /nagios3/stylesheets <%= nagios_stylesheets_dir %>
+Alias       /nagios3             <%= nagios_physical_html_path %>
+
+<DirectoryMatch (<%= nagios_physical_html_path %>|<%= nagios_cgi_dir %>)>
+	Options FollowSymLinks
+	AllowOverride AuthConfig
+	Order Allow,Deny
+	Allow From All
+
+	AuthName "Nagios Access"
+	AuthType Basic
+	AuthUserFile /var/www/<%= fqdn %>/private/nagios-htpasswd
+	require valid-user
+</DirectoryMatch>

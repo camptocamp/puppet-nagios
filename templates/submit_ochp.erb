@@ -1,0 +1,13 @@
+#!/bin/bash
+# Script submit_ochp
+
+# Arguments:
+#  $1 = host_name (Short name of host that the service is
+#       associated with)
+#  $2 = A string indicating the current state of the host ("UP", "DOWN", or "UNREACHABLE").
+#  $3 = The first line of text output from the last host check (i.e. "Ping OK").
+
+/usr/bin/printf "%b" "$1\t$2\t$3\n" | <%= nagios_nsca_bin %> -H <%= nagios_nsca_server %> -c <%= nagios_send_nsca_cfg %>
+
+# ** DEBUG **
+# /usr/bin/printf "%b" "[$(date)] " "$1\t$2\t$3\n" >> /tmp/nagios-debug.log

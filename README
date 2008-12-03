@@ -1,0 +1,66 @@
+Introduction/Notes
+==================
+
+The goal of this module is to provide a simple way to use 
+distributed monitoring as described on this page :
+http://nagios.sourceforge.net/docs/3_0/distributed.html
+
+This module is under development and still requires many 
+improvements to suit maximum of use-case and to be 
+cross-distribution. Please don't treat it as stable !
+
+
+Usage
+=================
+
+node 'distributed_monitoring_server' {
+  import "nagios"
+
+  # It is possible to override all standard main configuration 
+  # file options defined in template nagios.cfg.erb with prefix "nagios_"
+  # 
+  # $nagios_debug_level="-1"
+  # $nagios_debug_verbosity="3"
+  
+  $nagiosadmin_password = "XXXX"
+  $nagios_nsca_server="central_monitoring_server"
+
+  ...
+
+  include apache::base
+
+  include nagios::base
+  include nagios::nsca::client
+  include nagios::webinterface
+
+  # active check on distributed monitoring server 
+  # and passive check on central server
+  nagios::service::distributed {"check_local_du":}
+  nagios::service::distributed {"check_http":}
+
+  # active check only on central server
+  nagios::service::remote {"check_url!distributed_monitoring_server!/test/page.php":
+    description => "check my super test page",
+  }
+
+  # active check only on distributed monitoring server
+  nagios::service::local {"check_url!reductivelabs.com!/trac/puppet":
+    description => "check puppet website",
+  }
+
+}
+
+node 'central_monitoring_server' {
+  import "nagios"
+
+  $nagiosadmin_password = "XXXX"
+
+  ...
+
+  include apache::base
+
+  include nagios::base
+  include nagios::nsca::daemon
+  include nagios::webinterface
+} 
+

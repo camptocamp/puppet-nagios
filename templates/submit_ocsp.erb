@@ -1,0 +1,16 @@
+#!/bin/bash
+# Script submit_ocsp
+
+# Arguments:
+#  $1 = host_name (Short name of host that the service is
+#       associated with)
+#  $2 = svc_description (Description of the service)
+#  $3 = return_code (An integer that determines the state
+#       of the service check, 0=OK, 1=WARNING, 2=CRITICAL, 3=UNKNOWN).
+#  $4 = plugin_output (A text string that should be used
+#       as the plugin output for the service check)s
+
+/usr/bin/printf "%b" "$1\t$2\t$3\t$4\n" | <%= nagios_nsca_bin %> -H <%= nagios_nsca_server %> -c <%= nagios_send_nsca_cfg %>
+
+# ** DEBUG **
+# /usr/bin/printf "%b" "[$(date)] " "$1\t$2\t$3\t$4\n" >> /tmp/nagios-debug.log
