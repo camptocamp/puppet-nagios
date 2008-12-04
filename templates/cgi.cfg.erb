@@ -11,19 +11,21 @@
 # This tells the CGIs where to find your main configuration file.
 # The CGIs will read the main and host config files for any other
 # data they might need.
-
+<% if has_variable?("nagios_main_config_file") %>
 main_config_file=<%= nagios_main_config_file %>
-
-
+<% else %>
+main_config_file=/etc/nagios3/nagios.cfg
+<% end %>
 
 # PHYSICAL HTML PATH
 # This is the path where the HTML files for Nagios reside.  This
 # value is used to locate the logo images needed by the statusmap
 # and statuswrl CGIs.
-
+<% if has_variable?("nagios_physical_html_path") %>
 physical_html_path=<%= nagios_physical_html_path %>
-
-
+<% else %>
+physical_html_path=/usr/share/nagios3/htdocs
+<% end %>
 
 # URL HTML PATH
 # This is the path portion of the URL that corresponds to the
@@ -32,30 +34,39 @@ physical_html_path=<%= nagios_physical_html_path %>
 # and graphics.  If you access the Nagios pages with an URL like
 # http://www.myhost.com/nagios, this value should be '/nagios'
 # (without the quotes).
-
+<% if has_variable?("nagios_url_html_path") %>
+url_html_path=<%= nagios_url_html_path %>
+<% else %>
 url_html_path=/nagios3
-
-
+<% end %>
 
 # CONTEXT-SENSITIVE HELP
 # This option determines whether or not a context-sensitive
 # help icon will be displayed for most of the CGIs.
 # Values: 0 = disables context-sensitive help
 #         1 = enables context-sensitive help
-
+<% if has_variable?("nagios_show_context_help") %>
 show_context_help=<%= nagios_show_context_help %>
-
+<% else %>
+show_context_help=0
+<% end %>
 
 # PENDING STATES OPTION
 # This option determines what states should be displayed in the web
 # interface for hosts/services that have not yet been checked.
 # Values: 0 = leave hosts/services that have not been check yet in their original state
 #         1 = mark hosts/services that have not been checked yet as PENDING
-
+<% if has_variable?("nagios_show_context_help") %>
+use_pending_states=<%= nagios_show_context_help %>
+<% else %>
 use_pending_states=1
+<% end %>
 
+<% if has_variable?("nagios_nagios_check_command") %>
+nagios_check_command=<%= nagios_nagios_check_command %>
+<% else %>
 nagios_check_command=/usr/lib/nagios/plugins/check_nagios /var/cache/nagios3/status.dat 5 '/usr/sbin/nagios3'
-
+<% end %>
 
 # AUTHENTICATION USAGE
 # This option controls whether or not the CGIs will use any 
@@ -73,10 +84,11 @@ nagios_check_command=/usr/lib/nagios/plugins/check_nagios /var/cache/nagios3/sta
 # Setting this value to 0 will cause the CGIs to *not* use
 # authentication (bad idea), while any other value will make them
 # use the authentication functions (the default).
-
+<% if has_variable?("nagios_use_authentication") %>
+use_authentication=<%= nagios_use_authentication %>
+<% else %>
 use_authentication=1
-
-
+<% end %>
 
 # DEFAULT USER
 # Setting this variable will define a default user name that can
@@ -91,10 +103,8 @@ use_authentication=1
 # access to the CGIs has been authenticated in some manner!  If you
 # define this variable, anyone who has not authenticated to the web
 # server will inherit all rights you assign to this user!
- 
+
 #default_user_name=guest
-
-
 
 # SYSTEM/PROCESS INFORMATION ACCESS
 # This option is a comma-delimited list of all usernames that
@@ -103,10 +113,11 @@ use_authentication=1
 # default, *no one* has access to this unless you choose to
 # not use authorization.  You may use an asterisk (*) to
 # authorize any user who has authenticated to the web server.
-
+<% if has_variable?("nagios_authorized_for_system_information") %>
+authorized_for_system_information=<%= nagios_authorized_for_system_information %>
+<% else %>
 authorized_for_system_information=nagiosadmin
-
-
+<% end %>
 
 # CONFIGURATION INFORMATION ACCESS
 # This option is a comma-delimited list of all usernames that
@@ -115,10 +126,11 @@ authorized_for_system_information=nagiosadmin
 # for the hosts and services they are contacts for. You may use
 # an asterisk (*) to authorize any user who has authenticated
 # to the web server.
-
+<% if has_variable?("nagios_authorized_for_configuration_information") %>
+authorized_for_configuration_information=<%= nagios_authorized_for_configuration_information %>
+<% else %>
 authorized_for_configuration_information=nagiosadmin
-
-
+<% end %>
 
 # SYSTEM/PROCESS COMMAND ACCESS
 # This option is a comma-delimited list of all usernames that
@@ -128,10 +140,11 @@ authorized_for_configuration_information=nagiosadmin
 # has access to this unless you choose to not use authorization.
 # You may use an asterisk (*) to authorize any user who has
 # authenticated to the web server.
-
+<% if has_variable?("nagios_authorized_for_system_commands") %>
+authorized_for_system_commands=<%= nagios_authorized_for_system_commands %>
+<% else %>
 authorized_for_system_commands=nagiosadmin
-
-
+<% end %>
 
 # GLOBAL HOST/SERVICE VIEW ACCESS
 # These two options are comma-delimited lists of all usernames that
@@ -140,12 +153,17 @@ authorized_for_system_commands=nagiosadmin
 # for hosts or services that they are contacts for (unless you
 # you choose to not use authorization). You may use an asterisk (*)
 # to authorize any user who has authenticated to the web server.
-
-
+<% if has_variable?("nagios_authorized_for_all_services") %>
+authorized_for_all_services=<%= nagios_authorized_for_all_services %>
+<% else %>
 authorized_for_all_services=nagiosadmin
+<% end %>
+
+<% if has_variable?("nagios_authorized_for_all_hosts") %>
+authorized_for_all_hosts=<%= nagios_authorized_for_all_hosts %>
+<% else %>
 authorized_for_all_hosts=nagiosadmin
-
-
+<% end %>
 
 # GLOBAL HOST/SERVICE COMMAND ACCESS
 # These two options are comma-delimited lists of all usernames that
@@ -155,12 +173,17 @@ authorized_for_all_hosts=nagiosadmin
 # that they are contacts for (unless you you choose to not use 
 # authorization).  You may use an asterisk (*) to authorize any
 # user who has authenticated to the web server.
-
+<% if has_variable?("nagios_authorized_for_all_service_commands") %>
+authorized_for_all_service_commands=<%= nagios_authorized_for_all_service_commands %>
+<% else %>
 authorized_for_all_service_commands=nagiosadmin
+<% end %>
+
+<% if has_variable?("nagios_authorized_for_all_host_commands") %>
+authorized_for_all_host_commands=<%= nagios_authorized_for_all_host_commands %>
+<% else %>
 authorized_for_all_host_commands=nagiosadmin
-
-
-
+<% end %>
 
 # STATUSMAP BACKGROUND IMAGE
 # This option allows you to specify an image to be used as a 
@@ -175,8 +198,6 @@ authorized_for_all_host_commands=nagiosadmin
 
 #statusmap_background_image=smbackground.gd2
 
-
-
 # DEFAULT STATUSMAP LAYOUT METHOD
 # This option allows you to specify the default layout method
 # the statusmap CGI should use for drawing hosts.  If you do
@@ -187,11 +208,11 @@ authorized_for_all_host_commands=nagiosadmin
 #       2 = Collapsed tree
 #       3 = Balanced tree
 #       4 = Circular
-#       5 = Circular (Marked Up)
-
+<% if has_variable?("nagios_default_statusmap_layout") %>
+default_statusmap_layout=<%= nagios_default_statusmap_layout %>
+<% else %>
 default_statusmap_layout=5
-
-
+<% end %>
 
 # DEFAULT STATUSWRL LAYOUT METHOD
 # This option allows you to specify the default layout method
@@ -202,10 +223,11 @@ default_statusmap_layout=5
 #       2 = Collapsed tree
 #       3 = Balanced tree
 #       4 = Circular
-
+<% if has_variable?("nagios_default_statuswrl_layout") %>
+default_statuswrl_layout=<%= nagios_default_statuswrl_layout %>
+<% else %>
 default_statuswrl_layout=4
-
-
+<% end %>
 
 # STATUSWRL INCLUDE
 # This option allows you to include your own objects in the 
@@ -227,28 +249,30 @@ default_statuswrl_layout=4
 # notorious for being different on virtually ever *NIX
 # OS and distribution, so you may have to tweak this to
 # work on your system.
-
+<% if has_variable?("nagios_ping_syntax") %>
+ping_syntax=<%= nagios_ping_syntax %>
+<% else %>
 ping_syntax=/bin/ping -n -U -c 5 $HOSTADDRESS$
-
-
+<% end %>
 
 # REFRESH RATE
 # This option allows you to specify the refresh rate in seconds
 # of various CGIs (status, statusmap, extinfo, and outages).  
-
+<% if has_variable?("nagios_refresh_rate") %>
+refresh_rate=<%= nagios_refresh_rate %>
+<% else %>
 refresh_rate=90
-
-
+<% end %>
 
 # ESCAPE HTML TAGS
 # This option determines whether HTML tags in host and service
 # status output is escaped in the web interface.  If enabled,
 # your plugin output will not be able to contain clickable links.
-
+<% if has_variable?("nagios_escape_html_tags") %>
+escape_html_tags=<%= nagios_escape_html_tags %>
+<% else %>
 escape_html_tags=1
-
-
-
+<% end %>
 
 # SOUND OPTIONS
 # These options allow you to specify an optional audio file
@@ -274,17 +298,20 @@ escape_html_tags=1
 #service_unknown_sound=warning.wav
 #normal_sound=noproblem.wav
 
-
-
 # URL TARGET FRAMES
 # These options determine the target frames in which notes and 
 # action URLs will open.
-
+<% if has_variable?("nagios_action_url_target") %>
+action_url_target=<%= nagios_action_url_target %>
+<% else %>
 action_url_target=_blank
+<% end %>
+
+<% if has_variable?("nagios_notes_url_target") %>
+notes_url_target=<%= nagios_notes_url_target %>
+<% else %>
 notes_url_target=_blank
-
-
-
+<% end %>
 
 # LOCK AUTHOR NAMES OPTION
 # This option determines whether users can change the author name 
@@ -292,11 +319,11 @@ notes_url_target=_blank
 # author names will be locked into their contact name, as defined in Nagios.
 # Values: 0 = allow editing author names
 #         1 = lock author names (disallow editing)
-
+<% if has_variable?("nagios_lock_author_names") %>
+lock_author_names=<%= nagios_lock_author_names %>
+<% else %>
 lock_author_names=1
-
-
-
+<% end %>
 
 # SPLUNK INTEGRATION OPTIONS
 # These options allow you to enable integration with Splunk
@@ -311,7 +338,6 @@ lock_author_names=1
 #         1 = enable Splunk integration
 
 #enable_splunk_integration=1
-
 
 # This option should be the URL used to access your instance of Splunk
 

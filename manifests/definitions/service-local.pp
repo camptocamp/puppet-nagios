@@ -16,7 +16,7 @@ define nagios::service::local ($ensure=present, $service_description="") {
     ensure                => $ensure,
     use                   => "generic-service-active",
     host_name             => $fqdn,
-    check_command         => "$name",
+    check_command         => $name,
     tag                   => "nagios",
     service_description   => $desc,
     target                => "$nagios_cfg_dir/services.cfg",

@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::distributed ($ensure=present, $service_description="") {
+define nagios::service::distributed ($ensure=present, $check_command, $service_description="") {
 
   $desc = $service_description ? {
     ""      => $name,
@@ -16,7 +16,7 @@ define nagios::service::distributed ($ensure=present, $service_description="") {
     ensure                => $ensure,
     use                   => "generic-service-active",
     host_name             => $fqdn,
-    check_command         => "$name",
+    check_command         => $check_command,
     tag                   => "nagios",
     service_description   => $desc,
     target                => "$nagios_cfg_dir/services.cfg",

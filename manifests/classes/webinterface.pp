@@ -27,12 +27,14 @@ class nagios::webinterface {
             require => Apache::Vhost[$fqdn],
           }
 
-          # superadmin access
-          line {"nagiosadmin password":
-            line    => "nagiosadmin:${nagiosadmin_password}",
-            ensure  => present,
-            file    => "/var/www/$fqdn/private/nagios-htpasswd",
-            require => File["/var/www/$fqdn/private/nagios-htpasswd"],
+          if $nagiosadmin_password {
+            # superadmin access
+            line {"nagiosadmin password":
+              line    => "nagiosadmin:${nagiosadmin_password}",
+              ensure  => present,
+              file    => "/var/www/$fqdn/private/nagios-htpasswd",
+              require => File["/var/www/$fqdn/private/nagios-htpasswd"],
+            }
           }
 
           file {"/var/www/$fqdn/conf/nagios.conf":

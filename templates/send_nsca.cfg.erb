@@ -1,3 +1,5 @@
+# file managed by puppet
+
 ####################################################
 # Sample NSCA Client Config File 
 # Written by: Ethan Galstad (nagios@nagios.org)
@@ -13,13 +15,11 @@
 # IMPORTANT: You don't want all the users on this system to be able
 # to read the password you specify here, so make sure to set
 # restrictive permissions on this config file!
-
-<% if $nsca_password.nil?  %>
-#password=
+<% if has_variable?("nagios_nsca_password") %>
+password=<%= nagios_nsca_password %>
 <% else %>
-password=<%= $nsca_password %>
+#password=
 <% end %>
-
 
 # ENCRYPTION METHOD
 # This option determines the method by which the send_nsca client will
@@ -62,9 +62,9 @@ password=<%= $nsca_password %>
 #	26 = SAFER+
 #
 
-<% if $nsca_decryption_method.nil? %>
-encryption_method=0
+<% if has_variable?("nagios_nsca_encryption_method") %>
+encryption_method=<%= nagios_nsca_encryption_method %>
 <% else %>
-encryption_method=<%= nsca_decryption_method %>
+encryption_method=0
 <% end %>
 

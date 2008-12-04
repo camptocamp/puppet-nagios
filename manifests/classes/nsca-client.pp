@@ -85,7 +85,7 @@ class nagios::nsca::client {
             require   => File["$nagios_cfg_dir/hosts.cfg"],
           }
     
-          @@nagios_service {"@@check_ssh":
+          @@nagios_service {"@@check_ssh on $fqdn":
             use                   => "generic-service-passive",
             host_name             => $fqdn,
             tag                   => "nagios",

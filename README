@@ -35,8 +35,13 @@ node 'distributed_monitoring_server' {
 
   # active check on distributed monitoring server 
   # and passive check on central server
-  nagios::service::distributed {"check_local_du":}
-  nagios::service::distributed {"check_http":}
+  nagios::service::distributed {"check_local_du on $fqdn":
+    check_command => check_local_du;
+  }
+
+  nagios::service::distributed {"check_http on $fqdn":
+    check_command => check_http;
+  }
 
   # active check only on central server
   nagios::service::remote {"check_url!distributed_monitoring_server!/test/page.php":

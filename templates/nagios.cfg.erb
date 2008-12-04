@@ -1,3 +1,5 @@
+# file managed by puppet
+
 ##############################################################################
 #
 # NAGIOS.CFG - Sample Main Config File for Nagios
@@ -658,7 +660,7 @@ perfdata_timeout=5
 <% if has_variable?("nagios_retain_state_information") %>
 retain_state_information=<%= nagios_retain_state_information %>
 <% else %>
-retain_state_information=1
+retain_state_information=0
 <% end %>
 
 # STATE RETENTION FILE
@@ -696,7 +698,7 @@ retention_update_interval=60
 <% if has_variable?("nagios_use_retained_program_state") %>
 use_retained_program_state=<%= nagios_use_retained_program_state %>
 <% else %>
-use_retained_program_state=1
+use_retained_program_state=0
 <% end %>
 
 # USE RETAINED SCHEDULING INFO
