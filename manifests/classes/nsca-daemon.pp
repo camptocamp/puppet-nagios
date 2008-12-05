@@ -6,49 +6,39 @@
 #
 
 class nagios::nsca::daemon {
-  case $operatingsystem {
-    Debian: {
-      case $lsbdistcodename {
-        etch: {
 
-          if defined (Package["nsca"]) {
-            notice "Package nsca is already defined"
-          } else {
-            package {"nsca":
-              ensure => installed;
-            }
-          }
-
-          # nsca package only post-configure stop, not start
-          exec {"install nsca init script":
-            command => "update-rc.d -f nsca remove && update-rc.d nsca defaults 99 16",
-            unless  => "test -f /etc/rc2.d/S99nsca",
-            require => Package["nsca"],
-          }
-
-          service {"nsca":
-            ensure      => running,
-            hasrestart  => true,
-            require     => Package["nsca"],
-          }
-
-          file {$nagios_nsca_cfg:
-            ensure  => present,
-            owner   => root,
-            group   => root,
-            mode    => 644,
-            content => template("nagios/nsca.cfg.erb"),
-            require => Package["nsca"],
-            notify  => Service["nsca"],
-          }
-
-          Nagios_host <<| tag == "nagios" |>>
-          Nagios_service <<| tag == "nagios" |>>
-
-        }
-        default: {err ("lsbdistcodename $lsbdistcodename not yet implemented !")} 
-      }
+  if defined (Package["nsca"]) {
+    notice "Package nsca is already defined"
+  } else {
+    package {"nsca":
+      ensure => installed;
     }
-    default: {err ("operatingsystem $operatingsystem not yet implemented !")}
   }
+
+  # nsca package only post-configure stop, not start
+  exec {"install nsca init script":
+    command => "update-rc.d -f nsca remove && update-rc.d nsca defaults 99 16",
+    unless  => "test -f /etc/rc2.d/S99nsca",
+    require => Package["nsca"],
+  }
+
+  service {"nsca":
+    ensure      => running,
+    hasrestart  => true,
+    require     => Package["nsca"],
+  }
+
+  file {$nagios_nsca_cfg:
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    content => template("nagios/nsca.cfg.erb"),
+    require => Package["nsca"],
+    notify  => Service["nsca"],
+  }
+
+  Nagios_host <<| tag == "nagios" |>>
+  Nagios_service <<| tag == "nagios" |>>
+
 }

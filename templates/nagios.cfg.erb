@@ -660,7 +660,7 @@ perfdata_timeout=5
 <% if has_variable?("nagios_retain_state_information") %>
 retain_state_information=<%= nagios_retain_state_information %>
 <% else %>
-retain_state_information=0
+retain_state_information=1
 <% end %>
 
 # STATE RETENTION FILE
