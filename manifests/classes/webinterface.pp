@@ -48,7 +48,7 @@ class nagios::webinterface {
      group   => root,
      mode    => 644,
      content => template("nagios/cgi.cfg.erb"),
-     require => Os::Backported_package["nagios3-common"],
+     require => Package["nagios3-common"],
      notify  => Exec["apache2-graceful"],
    }
 }

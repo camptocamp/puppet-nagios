@@ -277,7 +277,7 @@ use_syslog=1
 <% if has_variable?("nagios_log_notifications") %>
 log_notifications=<%= nagios_log_notifications %>
 <% else %>
-log_notifications=1
+log_notifications=0
 <% end %>
 
 # SERVICE RETRY LOGGING OPTION
@@ -286,7 +286,7 @@ log_notifications=1
 <% if has_variable?("nagios_log_service_retries") %>
 log_service_retries=<%= nagios_log_service_retries %>
 <% else %>
-log_service_retries=1
+log_service_retries=0
 <% end %>
 
 # HOST RETRY LOGGING OPTION
@@ -295,7 +295,7 @@ log_service_retries=1
 <% if has_variable?("nagios_log_host_retries") %>
 log_host_retries=<%= nagios_log_host_retries %>
 <% else %>
-log_host_retries=1
+log_host_retries=0
 <% end %>
 
 # EVENT HANDLER LOGGING OPTION
@@ -305,7 +305,7 @@ log_host_retries=1
 <% if has_variable?("nagios_log_event_handlers") %>
 log_event_handlers=<%= nagios_log_event_handlers %>
 <% else %>
-log_event_handlers=1
+log_event_handlers=0
 <% end %>
 
 # INITIAL STATES LOGGING OPTION
@@ -330,7 +330,7 @@ log_initial_states=0
 <% if has_variable?("nagios_log_external_commands") %>
 log_external_commands=<%= nagios_log_external_commands %>
 <% else %>
-log_external_commands=1
+log_external_commands=0
 <% end %>
 
 # PASSIVE CHECKS LOGGING OPTION
@@ -340,7 +340,7 @@ log_external_commands=1
 <% if has_variable?("nagios_log_passive_checks") %>
 log_passive_checks=<%= nagios_log_passive_checks %>
 <% else %>
-log_passive_checks=1
+log_passive_checks=0
 <% end %>
 
 # GLOBAL HOST AND SERVICE EVENT HANDLERS
@@ -1269,7 +1269,7 @@ use_true_regexp_matching=0
 <% if has_variable?("nagios_admin_email") %>
 admin_email=<%= nagios_admin_email %>
 <% else %>
-admin_email=root@localhost
+admin_email=root@<%=fqdn%>
 <% end %>
 
 <% if has_variable?("nagios_admin_pager") %>
