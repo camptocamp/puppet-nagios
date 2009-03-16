@@ -25,14 +25,4 @@ define nagios::webadmin ($ensure=present, $password) {
     notify  => Exec["apache-graceful"],
   }
 
-  file {"/etc/nagios3/cgi.cfg":
-    ensure  => $ensure,
-    owner   => root,
-    group   => root,
-    mode    => 644,
-    content => template("nagios/cgi.cfg.erb"),
-    require => Package["nagios3-common"],
-    notify  => Exec["apache-graceful"],
-  }
-
 }
