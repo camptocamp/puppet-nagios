@@ -13,6 +13,6 @@ Alias       /nagios3             <%= nagios_physical_html_path %>
 
 	AuthName "Nagios Access"
 	AuthType Basic
-	AuthUserFile /var/www/<%= fqdn %>/private/nagios-htpasswd
+	AuthUserFile /var/www/<%= vhost %>/private/nagios-htpasswd
 	require valid-user
 </DirectoryMatch>
