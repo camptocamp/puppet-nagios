@@ -154,25 +154,6 @@ class nagios::base {
     require => File[$nagios_cfg_dir],
   }
 
-  nagios_host {$fqdn:
-    ensure  => present,
-    use     => "generic-host-active",
-    address => $ipaddress,
-    target  => "$nagios_cfg_dir/hosts.cfg",
-    notify  => Exec["nagios-reload"],
-    require => File["$nagios_cfg_dir/hosts.cfg"],
-  }
-
-  nagios_service {"check_ssh":
-    use                 => "generic-service-active",
-    host_name           => $fqdn,
-    check_command       => "check_ssh",
-    service_description => "check_ssh",
-    target              => "$nagios_cfg_dir/services.cfg",
-    notify              => Exec["nagios-reload"],
-    require             => File["$nagios_cfg_dir/services.cfg"],
-  }
-
   nagios_contact {"root":
     contact_name                  => "root",
     alias                         => "Root",

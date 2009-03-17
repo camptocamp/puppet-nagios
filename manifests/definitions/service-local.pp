@@ -5,17 +5,22 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::local ($ensure=present, $service_description="") {
+define nagios::service::local ($ensure=present, $service_description="", $host="") {
     
   $desc = $service_description ? {
     ""      => $name,
     default => $service_description,
   }
 
+  $host_name = $host ? {
+    ""      => $fqdn,
+    default => $host,
+  }
+
   nagios_service {"$name":
     ensure                => $ensure,
     use                   => "generic-service-active",
-    host_name             => $fqdn,
+    host_name             => $host_name,
     check_command         => $name,
     tag                   => "nagios",
     service_description   => $desc,

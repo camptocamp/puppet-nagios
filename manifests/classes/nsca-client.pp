@@ -70,25 +70,4 @@ class nagios::nsca::client {
     notify  => Exec["nagios-reload"],
   }
 
-  @@nagios_host {"@@$fqdn":
-    ensure    => present,
-    use       => "generic-host-passive",
-    address   => $ipaddress,
-    host_name => $fqdn,
-    tag       => "nagios",
-    target    => "$nagios_cfg_dir/hosts.cfg",
-    notify    => Exec["nagios-reload"],
-    require   => File["$nagios_cfg_dir/hosts.cfg"],
-  }
-
-  @@nagios_service {"@@check_ssh on $fqdn":
-    use                   => "generic-service-passive",
-    host_name             => $fqdn,
-    tag                   => "nagios",
-    service_description   => "check_ssh",
-    target                => "$nagios_cfg_dir/services.cfg",
-    notify                => Exec["nagios-reload"],
-    require               => File["$nagios_cfg_dir/services.cfg"],
-  }
-
 }
