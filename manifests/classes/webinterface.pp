@@ -6,6 +6,7 @@
 #
 
 class nagios::webinterface {
+  
   file {"$nagios_root_dir/cgi.cfg":
     ensure  => present,
     owner   => root,
@@ -15,4 +16,10 @@ class nagios::webinterface {
     require => Package["nagios3-common"],
     notify  => Exec["apache-graceful"],
   }
+
+  file {"/etc/apache2/conf.d/nagios3.conf":
+    ensure  => absent,
+    notify  => Exec["apache-graceful"],
+  }
+
 }
