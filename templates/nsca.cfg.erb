@@ -72,7 +72,11 @@ nsca_group=nogroup
 # messages are logged to the syslog facility. 
 # Values: 0 = debugging off, 1 = debugging on
 
+<% if has_variable?("nagios_nsca_debug") %>
+debug=<%= nagios_nsca_debug %>
+<% else %>
 debug=0
+<% end %>
 
 # COMMAND FILE
 # This is the location of the Nagios command file that the daemon
