@@ -17,7 +17,7 @@ define nagios::service::remote ($ensure=present, $service_description="", $host_
     default => $host_name,
   }
 
-  @@nagios_service {"@@$name":                
+  @@nagios_service {"@@$name on $tmp_host_name":                
     ensure                => $ensure,
     use                   => "generic-service-passive",
     host_name             => $tmp_host_name,

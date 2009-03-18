@@ -17,7 +17,7 @@ define nagios::service::local ($ensure=present, $service_description="", $host_n
     default => $host_name,
   }
 
-  nagios_service {"$name":
+  nagios_service {$name:
     ensure                => $ensure,
     use                   => "generic-service-active",
     host_name             => $tmp_host_name,
