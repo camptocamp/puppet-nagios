@@ -28,7 +28,7 @@ class nagios::nsca::daemon {
     require     => Package["nsca"],
   }
 
-  file {$nagios_nsca_cfg:
+  file {"/etc/nsca.cfg":
     ensure  => present,
     owner   => root,
     group   => root,

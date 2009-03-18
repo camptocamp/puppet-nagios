@@ -15,7 +15,7 @@ class nagios::nsca::client {
     }
   }
 
-  file {$nagios_send_nsca_cfg:
+  file {"/etc/send_nsca.cfg":
     ensure  => present,
     owner   => root,
     group   => root,
@@ -30,7 +30,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 755,
     content => template("nagios/submit_ocsp.erb"),
-    require => File[$nagios_send_nsca_cfg],
+    require => File["/etc/send_nsca.cfg"],
   }
 
   file {"/usr/local/bin/submit_ochp":
@@ -39,7 +39,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 755,
     content => template("nagios/submit_ochp.erb"),
-    require => File[$nagios_send_nsca_cfg],
+    require => File["/etc/send_nsca.cfg"],
   }
 
   nagios_command {"submit_ocsp":
