@@ -146,6 +146,7 @@ class nagios::base {
       "$nagios_cfg_dir/contacts.cfg",
       "$nagios_cfg_dir/commands.cfg",
       "$nagios_cfg_dir/contactgroups.cfg",
+      "$nagios_cfg_dir/hostgroups.cfg",
     ]:
     ensure  => present,
     owner   => root,
