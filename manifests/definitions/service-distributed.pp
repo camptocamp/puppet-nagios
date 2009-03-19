@@ -24,7 +24,7 @@ define nagios::service::distributed ($ensure=present, $service_description="") {
     notify                => Exec["nagios-reload"],
   }
 
-  @@nagios_service {"@@$name on $host_name":
+  @@nagios_service {"@@$name on $hostname":
     ensure                => $ensure,
     use                   => "generic-service-passive",
     host_name             => $hostname,
