@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::host::local ($ensure=present, $address="", $alias=undef, hostgroups=undef) {
+define nagios::host::local ($ensure=present, $address="", $alias, hostgroups) {
 
   $addr = $address ? {
     "" => $ipaddress,

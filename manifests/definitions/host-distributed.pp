@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::host::distributed ($ensure=present, $address="", $alias=undef, $hostgroups=undef) {
+define nagios::host::distributed ($ensure=present, $address="", $alias, $hostgroups) {
   
   $addr = $address ? {
     "" => $ipaddress,
@@ -23,16 +23,15 @@ define nagios::host::distributed ($ensure=present, $address="", $alias=undef, $h
   }
 
   @@nagios_host {"@@$name":
-    ensure      => $ensure,
-    use         => "generic-host-passive",
-    address     => $addr,
-    host_name   => $name,
-    hostgroups  => $hostgroups,
-    alias     => $alias,
-    tag       => "nagios",
-    target    => "$nagios_cfg_dir/hosts.cfg",
-    notify    => Exec["nagios-reload"],
-    require   => File["$nagios_cfg_dir/hosts.cfg"],
+    ensure => $ensure,
+    use => "generic-host-passive",
+    address => $addr,
+    host_name => $name,
+    alias => $alias,
+    tag => "nagios",
+    hostgroups => $hostgroups,
+    target => "$nagios_cfg_dir/hosts.cfg",
+    notify => Exec["nagios-reload"],
+    require => File["$nagios_cfg_dir/hosts.cfg"],
   }
-
 }
