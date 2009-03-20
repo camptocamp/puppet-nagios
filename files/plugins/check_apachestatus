@@ -1,0 +1,314 @@
+#!/usr/bin/perl -w
+####################### check_apachestatus_auto.pl #######################
+# Version : 1.1
+# Date : 06 Mar 2009 
+# Author  : Dennis D. Spreen (dennis at spreendigital.de)
+#						Based on check_apachestatus.pl v1.4 by 
+#						  De Bodt Lieven (Lieven.DeBodt at gmail.com)
+#						    Updated by
+#   						  Karsten Behrens (karsten at behrens dot in)
+#		    				  Geoff McQueen (geoff.mcqueen at hiivesystems dot com )
+#				    		  Dave Steinberg (dave at redterror dot net)
+# Licence : GPL - http://www.fsf.org/licenses/gpl.txt
+#############################################################
+#
+# help : ./check_apachestatus_auto.pl -h
+#
+# V1.0 Inital Release
+# V1.1 Works with lighttpd server-status as well, added accesses perfdata
+
+use strict;
+use Getopt::Long;
+use LWP::UserAgent;
+use Time::HiRes qw(gettimeofday tv_interval);
+use Digest::MD5 qw(md5 md5_hex);
+
+
+# Nagios specific
+
+use lib "/usr/local/nagios/libexec";
+use utils qw(%ERRORS $TIMEOUT);
+#my %ERRORS=('OK'=>0,'WARNING'=>1,'CRITICAL'=>2,'UNKNOWN'=>3,'DEPENDENT'=>4);
+
+
+# Globals
+
+my $Version='1.1';
+my $Name=$0;
+
+my $o_host =		undef; 		# hostname 
+my $o_help=		undef; 		# want some help ?
+my $o_port = 		undef; 		# port
+my $o_url =		'';		# url to use, if not the default
+my $o_user =		undef;		# user for auth
+my $o_pass =		'';		# password for auth
+my $o_realm =		'';		# password for auth
+my $o_version= 		undef;  	# print version
+my $o_warn_level=	undef;  	# Number of available slots that will cause a warning
+my $o_crit_level=	undef;  	# Number of available slots that will cause an error
+my $o_timeout=  	15;            	# Default 15s Timeout
+
+my $TempPath = '/tmp/'; # temp path
+my $MaxUptimeDif = 60*30;  # Maximum uptime difference (seconds), default 30 minutes
+
+# functions
+
+sub show_versioninfo { print "$Name version : $Version\n"; }
+
+sub print_usage {
+  print "Usage: $Name -H <host> [-p <port>] [-t <timeout>] [-w <warn_level> -c <crit_level>] [-V] [-u <url>] [-U user -P pass -r realm]\n";
+}
+
+# Get the alarm signal
+$SIG{'ALRM'} = sub {
+  print ("ERROR: Alarm signal (Nagios time-out)\n");
+  exit $ERRORS{"CRITICAL"};
+};
+
+sub help {
+  print "Apache Monitor for Nagios version ",$Version,"\n";
+  print "GPL licence, (c)2009 Dennis D. Spreen\n\n";
+  print_usage();
+  print <<EOT;
+-h, --help
+   print this help message
+-H, --hostname=HOST
+   name or IP address of host to check
+-p, --port=PORT
+   Http port
+-u, --url=URL
+   Specific URL to use, instead of the default http://hostname/server-status
+-U, --user=user
+   Username for basic auth
+-P, --pass=PASS
+   Password for basic auth
+-r, --realm=REALM
+   Realm for basic auth
+-t, --timeout=INTEGER
+   timeout in seconds (Default: $o_timeout)
+-w, --warn=MIN
+   number of available slots that will cause a warning
+   -1 for no warning
+-c, --critical=MIN
+   number of available slots that will cause an error
+-V, --version
+   prints version number
+Note :
+  The script will return
+    * Without warn and critical options:
+        OK       if we are able to connect to the apache server's status page,
+        CRITICAL if we aren't able to connect to the apache server's status page,,
+    * With warn and critical options:
+        OK       if we are able to connect to the apache server's status page and #available slots > <warn_level>,
+        WARNING  if we are able to connect to the apache server's status page and #available slots <= <warn_level>,
+        CRITICAL if we are able to connect to the apache server's status page and #available slots <= <crit_level>,
+        UNKNOWN  if we aren't able to connect to the apache server's status page
+
+EOT
+}
+
+sub check_options {
+  Getopt::Long::Configure ("bundling");
+  GetOptions(
+      'h'     => \$o_help,        'help'          => \$o_help,
+      'H:s'   => \$o_host,        'hostname:s'	  => \$o_host,
+      'u:s'   => \$o_url,         'url:s'	  => \$o_url,
+      'U:s'   => \$o_user,        'user:s'	  => \$o_user,
+      'P:s'   => \$o_pass,        'pass:s'	  => \$o_pass,
+      'r:s'   => \$o_realm,       'realm:s'	  => \$o_realm,
+      'p:i'   => \$o_port,        'port:i'	  => \$o_port,
+      'V'     => \$o_version,     'version'       => \$o_version,
+      'w:i'   => \$o_warn_level,  'warn:i'	  => \$o_warn_level,
+      'c:i'   => \$o_crit_level,  'critical:i'	  => \$o_crit_level,
+      't:i'   => \$o_timeout,     'timeout:i'     => \$o_timeout,
+
+  );
+
+
+  if (defined ($o_help)) { help(); exit $ERRORS{"UNKNOWN"}};
+  if (defined($o_version)) { show_versioninfo(); exit $ERRORS{"UNKNOWN"}};
+  if (((defined($o_warn_level) && !defined($o_crit_level)) || 
+      (!defined($o_warn_level) && defined($o_crit_level))) || 
+      ((defined($o_warn_level) && defined($o_crit_level)) && 
+       (($o_warn_level != -1) &&  ($o_warn_level <= $o_crit_level))
+      )
+     ) { 
+    print "Check warn and crit!\n"; print_usage(); exit $ERRORS{"UNKNOWN"}
+  }
+  # Check compulsory attributes
+  if (!defined($o_host)) { print_usage(); exit $ERRORS{"UNKNOWN"}};
+}
+
+########## MAIN ##########
+
+check_options();
+
+my $ua = LWP::UserAgent->new( protocols_allowed => ['http', 'https'], timeout => $o_timeout);
+my $timing0 = [gettimeofday];
+my $response = undef;
+my $url = undef;
+my $httpserver = 'APACHE'; #assume it is apache by default
+
+if (($o_url =~ m/^http(s?)\:\/\//i) ){
+    $url = $o_url;
+}
+else
+{
+  if (!defined($o_port)) {
+    $url = 'http://' . $o_host . $o_url.'/server-status?auto';
+	} else {
+  	$url = 'http://' . $o_host . ':' . $o_port . $o_url.'/server-status?auto';
+	}
+}
+
+my $req = HTTP::Request->new( GET => $url );
+if (defined($o_user)) {
+  $req->authorization_basic($o_user, $o_pass);
+}
+
+$response = $ua->request($req);
+my $timeelapsed = tv_interval ($timing0, [gettimeofday]);
+
+my $webcontent = undef;
+if ($response->is_success) {
+  $webcontent=$response->content;
+
+  my $Uptime = 0;
+	if($webcontent =~ m/Uptime: (.*?)\n/) {
+	 $Uptime = $1;
+  }
+    
+  my $TotalAccesses = 0;
+	if($webcontent =~ m/Total Accesses: (.*?)\n/) {
+	 $TotalAccesses = $1;
+  }
+  
+  my $TotalKbytes = 0;
+	if($webcontent =~ m/Total kBytes: (.*?)\n/) {
+	 $TotalKbytes = $1;
+  }
+   
+  my $ScoreBoard = '';
+	if($webcontent =~ m/Scoreboard: (.*?)\n/) {
+	 $ScoreBoard = $1;
+  }
+  
+  my $BusyWorkers= 0;
+	if($webcontent =~ m/(BusyWorkers|BusyServers): (.*?)\n/) {
+	 $BusyWorkers = $2;
+	 if ($1 eq 'BusyServers') {
+	 	 $httpserver = 'LIGHTTPD';
+	 }
+  }
+  
+  my $IdleWorkers=0;
+  if($webcontent =~ m/(IdleWorkers|IdleServers): (.*?)\n/) {
+	 $IdleWorkers = $2;
+  }
+  
+  my $TempFile = $TempPath.$o_host.'_check_apachestatus_auto'.md5_hex($url);
+  my $FH;
+  
+  my $LastUptime = 0;
+  my $LastTotalAccesses = 0;
+  my $LastTotalKbytes = 0;
+  
+  if ((-e $TempFile) && (-r $TempFile) && (-w $TempFile))
+  {
+    open ($FH, '<',$TempFile) or exit $ERRORS{"CRITICAL"};
+    $LastUptime = <$FH>;
+    $LastTotalAccesses = <$FH>;
+    $LastTotalKbytes = <$FH>;
+    close ($FH);
+  } 
+ 
+  open ($FH, '>'.$TempFile) or exit $ERRORS{"CRITICAL"};
+  print $FH "$Uptime\n"; 
+  print $FH "$TotalAccesses\n"; 
+  print $FH "$TotalKbytes\n";
+  close ($FH);
+  
+  my $ReqPerSec = 0;
+  my $BytesPerReq = 0;
+  my $BytesPerSec = 0;
+  my $Accesses = 0;
+  
+  if (($Uptime>$LastUptime) && ($Uptime-$LastUptime<$MaxUptimeDif) && ($TotalAccesses>=$LastTotalAccesses) && ($TotalKbytes>=$LastTotalKbytes))
+  {
+  	$ReqPerSec = ($TotalAccesses-$LastTotalAccesses)/($Uptime-$LastUptime);
+  	$BytesPerSec = (($TotalKbytes-$LastTotalKbytes)*1024)/($Uptime-$LastUptime);
+  	
+  	$Accesses = ($TotalAccesses-$LastTotalAccesses);
+  	
+  	if ($TotalAccesses>$LastTotalAccesses)
+  	{
+  	  $BytesPerReq = (($TotalKbytes-$LastTotalKbytes)*1024)/($TotalAccesses-$LastTotalAccesses);
+  	}
+  }
+ 
+  my $CountOpenSlots = ($ScoreBoard =~ tr/\.//);
+  my $TotalSlots = $CountOpenSlots+$IdleWorkers+$BusyWorkers;
+  my $InfoData = '';
+  my $PerfData = '';
+ 
+
+ if ($httpserver eq 'APACHE')
+ {
+ 	 $InfoData = sprintf ("- %.3f sec. response time, Busy/Idle %d/%d, open %d/%d, ReqPerSec %.1f, BytesPerReq %d, ".
+  												"BytesPerSec %d", $timeelapsed, $BusyWorkers, $IdleWorkers, $CountOpenSlots, $TotalSlots, 
+  												$ReqPerSec, $BytesPerReq, $BytesPerSec);
+
+	 $PerfData = sprintf ("Idle=%d;Busy=%d;OpenSlots=%d;Slots=%d;Starting=%d;Reading=%d;Sending=%d;Keepalive=%d;".
+  												"DNS=%d;Closing=%d;Logging=%d;Finishing=%d;ReqPerSec=%f;BytesPerReq=%d;BytesPerSec=%f;Accesses=%d",
+  												($IdleWorkers),($BusyWorkers),($CountOpenSlots),($TotalSlots),($ScoreBoard =~ tr/S//),
+  												($ScoreBoard =~ tr/R//),($ScoreBoard =~ tr/W//),($ScoreBoard =~ tr/K//),($ScoreBoard =~ tr/D//),
+  												($ScoreBoard =~ tr/C//),($ScoreBoard =~ tr/L//),($ScoreBoard =~ tr/G//),
+  												$ReqPerSec, $BytesPerReq,$BytesPerSec,$Accesses);
+ }
+ else
+ {
+ 	 $InfoData = sprintf ("- %.3f sec. response time, Busy/Idle %d/%d, slots %d, ReqPerSec %.1f, BytesPerReq %d, ".
+  												"BytesPerSec %d", $timeelapsed, $BusyWorkers, $IdleWorkers, $TotalSlots, 
+  												$ReqPerSec, $BytesPerReq, $BytesPerSec);
+
+	 $PerfData = sprintf ("Idle=%d;Busy=%d;Slots=%d;".
+	 												 "Connect=%d;Close=%d;HardError=%d;".
+	 												 "Read=%d;ReadPost=%d;Write=%d;".
+	 												 "HandleRequest=%d;RequestStart=%d;ReqestEnd=%d;".
+	 												 "ResponseStart=%d;ResponseEnd=%d;".
+	 												 "ReqPerSec=%f;BytesPerReq=%d;BytesPerSec=%f;Accesses=%d",
+  												($IdleWorkers),($BusyWorkers),($TotalSlots),
+  												($ScoreBoard =~ tr/\.//),($ScoreBoard =~ tr/C//),($ScoreBoard =~ tr/E//),
+  												($ScoreBoard =~ tr/r//),($ScoreBoard =~ tr/R//),($ScoreBoard =~ tr/W//),
+  												($ScoreBoard =~ tr/h//),($ScoreBoard =~ tr/q//),($ScoreBoard =~ tr/q//),
+  												($ScoreBoard =~ tr/s//),($ScoreBoard =~ tr/s//),
+  												$ReqPerSec, $BytesPerReq,$BytesPerSec,$Accesses);
+ } 	 						
+  
+  
+  
+  if (defined($o_crit_level) && ($o_crit_level != -1)) {
+    if (($CountOpenSlots + $IdleWorkers) <= $o_crit_level) {
+      print($httpserver." CRITICAL ".$InfoData.'|'.$PerfData);
+      exit $ERRORS{"CRITICAL"}
+    }
+  } 
+  if (defined($o_warn_level) && ($o_warn_level != -1)) {
+    if (($CountOpenSlots + $IdleWorkers) <= $o_warn_level) {
+      print($httpserver." WARNING ".$InfoData.'|'.$PerfData);
+      exit $ERRORS{"WARNING"}
+    }
+  }
+
+  print($httpserver." OK ".$InfoData.'|'.$PerfData);
+  exit $ERRORS{"OK"}
+}
+else {
+  if (defined($o_warn_level) || defined($o_crit_level)) {
+    printf("UNKNOWN %s\n", $response->status_line);
+    exit $ERRORS{"UNKNOWN"}
+  } else {
+    printf("CRITICAL %s\n", $response->status_line);
+    exit $ERRORS{"CRITICAL"}
+  }
+}
