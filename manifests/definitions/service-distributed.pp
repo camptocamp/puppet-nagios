@@ -5,17 +5,22 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::distributed ($ensure=present, $service_description="") {
+define nagios::service::distributed ($ensure=present, $service_description="", $host_name="") {
 
   $desc = $service_description ? {
-    ""      => $name,
+    "" => $name,
     default => $service_description,
   }
+
+  $tmp_hostname = $host_name ? {
+    ""  => $hostname,
+    default => $host_name,
+  } 
 
   nagios_service {$name:
     ensure                => $ensure,
     use                   => "generic-service-active",
-    host_name             => $hostname,
+    host_name             => $tmp_hostname,
     check_command         => $name,
     tag                   => "nagios",
     service_description   => $desc,
@@ -27,7 +32,7 @@ define nagios::service::distributed ($ensure=present, $service_description="") {
   @@nagios_service {"@@$name on $hostname":
     ensure                => $ensure,
     use                   => "generic-service-passive",
-    host_name             => $hostname,
+    host_name             => $tmp_hostname,
     tag                   => "nagios",
     service_description   => $desc,
     target                => "$nagios_cfg_dir/services.cfg",

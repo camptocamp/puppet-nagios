@@ -621,7 +621,7 @@ service_check_timeout=60
 <% if has_variable?("nagios_host_check_timeout") %>
 host_check_timeout=<%= nagios_host_check_timeout %>
 <% else %>
-host_check_timeout=30
+host_check_timeout=60
 <% end %>
 
 <% if has_variable?("nagios_event_handler_timeout") %>
