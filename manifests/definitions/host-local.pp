@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::host::local ($ensure=present, $address="", $nagios_alias, hostgroups) {
+define nagios::host::local ($ensure=present, $address="", $nagios_alias, hostgroups, $contact_groups) {
 
   $addr = $address ? {
     "" => $ipaddress,
@@ -18,6 +18,7 @@ define nagios::host::local ($ensure=present, $address="", $nagios_alias, hostgro
     address => $addr,
     alias => $nagios_alias,
     hostgroups => $hostgroups,
+    contact_groups => $contact_groups,
     target => "$nagios_cfg_dir/hosts.cfg",
     notify => Exec["nagios-reload"],
     require => File["$nagios_cfg_dir/hosts.cfg"],
