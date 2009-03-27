@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::local ($ensure=present, $service_description="") {
+define nagios::service::local ($ensure=present, $service_description="", $contact_groups) {
     
   $desc = $service_description ? {
     ""      => $name,
@@ -19,6 +19,7 @@ define nagios::service::local ($ensure=present, $service_description="") {
     check_command         => $name,
     tag                   => "nagios",
     service_description   => $desc,
+    contact_groups        => $contact_groups,
     target                => "$nagios_cfg_dir/services.cfg",
     require               => File["$nagios_cfg_dir/services.cfg"],
     notify                => Exec["nagios-reload"],

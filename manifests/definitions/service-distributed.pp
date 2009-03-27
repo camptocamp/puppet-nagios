@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::distributed ($ensure=present, $service_description="", $host_name="") {
+define nagios::service::distributed ($ensure=present, $service_description="", $host_name="", contact_groups) {
 
   $desc = $service_description ? {
     "" => $name,
@@ -38,6 +38,7 @@ define nagios::service::distributed ($ensure=present, $service_description="", $
     target                => "$nagios_cfg_dir/services.cfg",
     require               => File["$nagios_cfg_dir/services.cfg"],
     notify                => Exec["nagios-reload"],
+    contact_groups        => $contact_groups,
   }
 
 }
