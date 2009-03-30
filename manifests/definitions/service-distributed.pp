@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::distributed ($ensure=present, $service_description="", $host_name="", contact_groups) {
+define nagios::service::distributed ($ensure=present, $service_description="", $host_name="", $contact_groups) {
 
   $desc = $service_description ? {
     "" => $name,
