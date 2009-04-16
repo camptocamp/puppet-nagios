@@ -5,20 +5,15 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::host::local ($ensure=present, $address="", $nagios_alias, hostgroups, $contact_groups) {
-
-  $addr = $address ? {
-    "" => $ipaddress,
-    default => $address,
-  }
+define nagios::host::local ($ensure=present, $address=false, $nagios_alias=false, hostgroups=false, $contact_groups=false) {
 
   nagios_host {$name:
     ensure => $ensure,
     use => "generic-host-active",
-    address => $addr,
-    alias => $nagios_alias,
-    hostgroups => $hostgroups,
-    contact_groups => $contact_groups,
+    address => $address ? {false => $ipaddress, default => $address},
+    alias => $nagios_alias ? {false => undef, default => $nagios_alias},
+    hostgroups => $hostgroups ? {false => undef, default => $hostgroups},
+    contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
     target => "$nagios_cfg_dir/hosts.cfg",
     notify => Exec["nagios-reload"],
     require => File["$nagios_cfg_dir/hosts.cfg"],
