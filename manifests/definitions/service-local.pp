@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::local ($ensure=present, $service_description=false, $contact_groups=false) {
+define nagios::service::local ($ensure=present, $service_description=false, host_name=false, $contact_groups=false) {
 
   nagios_service {$name:
     ensure                => $ensure,
