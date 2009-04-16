@@ -8,4 +8,3 @@
 #  $3 = The first line of text output from the last host check (i.e. "Ping OK").
 
 /usr/bin/printf "%b" "$1\t$2\t$3\n" | /usr/sbin/send_nsca -H <%= nagios_nsca_server %> -c /etc/send_nsca.cfg
-
