@@ -22,8 +22,8 @@ log_file=/var/log/nagios3/nagios.log
 # You can split your object definitions across several config files
 # if you wish (as shown below), or keep them all in a single config file.
 
-# Definitions for monitoring a router/switch
-#cfg_file=/etc/nagios3/objects/switch.cfg
+# Folder to add custom definitions (without puppet)
+cfg_dir=/etc/nagios3/nagios.d
 
 # You can also tell Nagios to process all config files (with a .cfg
 # extension) in a particular directory by using the cfg_dir
@@ -31,7 +31,7 @@ log_file=/var/log/nagios3/nagios.log
 <% if has_variable?("nagios_cfg_dir") %>
 cfg_dir=<%= nagios_cfg_dir %>
 <% else %>
-cfg_dir=/etc/nagios3/auto-fdsklfjsdklfjl
+cfg_dir=/etc/nagios3/auto-puppet
 <% end %>
 
 # OBJECT CACHE FILE

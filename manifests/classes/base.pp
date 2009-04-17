@@ -67,11 +67,17 @@ class nagios::base {
     onlyif      => "/usr/sbin/nagios3 -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",
   }
 
-  file {[$nagios_cfg_dir, $nagios_root_dir]:
+  file {[$nagios_cfg_dir, $nagios_root_dir, "$nagios_root_dir/nagios.d"]:
     ensure  => directory,
     owner   => root,
     group   => root,
     mode    => 755,
+    require => [Package["nagios3"], Package["nagios3-common"]],
+  }
+
+  file {"$nagios_root_dir/conf.d":
+    ensure => absent,
+    force => true,
     require => [Package["nagios3"], Package["nagios3-common"]],
   }
 
