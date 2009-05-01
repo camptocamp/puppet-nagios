@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::host::local ($ensure=present, $address=false, $nagios_alias=false, hostgroups=false, $contact_groups=false) {
+define nagios::host::local ($ensure=present, $address=false, $nagios_alias=false, $hostgroups=false, $contact_groups=false) {
 
   nagios_host {$name:
     ensure => $ensure,
