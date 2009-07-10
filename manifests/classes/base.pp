@@ -39,6 +39,15 @@ class nagios::base {
     default: {err ("operatingsystem $operatingsystem not yet implemented !")}
   }
 
+  file {"/etc/default/nagios3":
+    ensure => present,
+    owner => root,
+    group => root,
+    mode => 644,
+    content => template("nagios/etc/default/nagios3.erb"),
+    notify => [ Package["nagios3"], Exec["nagios3-restart"] ],
+  }
+
   file {"/var/lib/nagios3":
     ensure  => directory,
     owner   => nagios,
@@ -55,13 +64,19 @@ class nagios::base {
     require => Package["nagios3-common"],
   }
 
-  service { "nagios3":
+  service {"nagios3":
     ensure      => running,
     hasrestart  => true,
     require     => Package["nagios3"],
   }
 
-  exec { "nagios-reload":
+  exec {"nagios3-restart":
+    command => "/etc/init.d/nagios3 restart",
+    refreshonly => true,
+    onlyif => "/usr/sbin/nagios3 -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",
+  }
+
+  exec {"nagios-reload":
     command     => "/etc/init.d/nagios3 reload",
     refreshonly => true,
     onlyif      => "/usr/sbin/nagios3 -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",

@@ -1,0 +1,17 @@
+# file managed by puppet
+
+# location of the nagios configuration file
+NAGIOSCFG="/etc/nagios3/nagios.cfg"
+
+# location of the CGI configuration file
+CGICFG="/etc/nagios3/cgi.cfg"
+
+# nicelevel to run nagios daemon with
+<% if has_variable?("nagios_daemon_niceness") %>
+NICENESS=<%= nagios_daemon_niceness %>
+<% else %>
+NICENESS=5
+<% end %>
+
+# if you use pam_tmpdir, you need to explicitly set TMPDIR:
+#TMPDIR=/tmp
