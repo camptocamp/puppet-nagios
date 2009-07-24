@@ -639,7 +639,7 @@ notification_timeout=30
 <% if has_variable?("nagios_ocsp_timeout") %>
 ocsp_timeout=<%= nagios_ocsp_timeout %>
 <% else %>
-ocsp_timeout=5
+ocsp_timeout=10
 <% end %>
 
 <% if has_variable?("nagios_perfdata_timeout") %>
