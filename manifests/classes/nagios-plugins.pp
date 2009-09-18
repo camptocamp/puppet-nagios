@@ -19,6 +19,7 @@ class nagios::plugins {
     owner => root,
     group => root,
     mode => 755,
+    require => Package["nagios-plugins"],
   }
   
 }
