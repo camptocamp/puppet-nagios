@@ -8,10 +8,10 @@
 define nagios::hostgroup::local ($ensure=present, $nagios_alias=false) {
 
   nagios_hostgroup {$name:
-    ensure => $ensure,
-    alias => $nagios_alias ? {false => undef, default => $nagios_alias},
-    target => "$nagios_cfg_dir/hostgroups.cfg",
-    notify => Exec["nagios-reload"],
+    ensure  => $ensure,
+    alias   => $nagios_alias ? {false => undef, default => $nagios_alias},
+    target  => "$nagios_cfg_dir/hostgroups.cfg",
+    notify  => Exec["nagios-reload"],
     require => File["$nagios_cfg_dir/hostgroups.cfg"],
   }
 
