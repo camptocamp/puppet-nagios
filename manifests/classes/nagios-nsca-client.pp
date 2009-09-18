@@ -1,0 +1,84 @@
+#
+# modules/nagios/manifests/nsca-client.pp
+# manage distributed monitoring with nagios
+# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
+# See LICENSE for the full license granted to you.
+#
+
+class nagios::nsca::client {
+
+  if defined (Package["nsca"]) {
+    notice "Package nsca is already defined"
+  } else {
+    package {"nsca":
+      ensure => installed;
+    }
+  }
+  
+  case $operatingsystem {
+    RedHat: { 
+      $nagios_command_file = '/var/log/nagios/rw/nagios.cmd'
+      $nagios_nsca_password = 'Lei6eihi'
+      $nagios_nsca_decryption_method = 8
+      package {"nsca-client": ensure => present, } }
+    default: {}
+  }
+
+  file {"/etc/send_nsca.cfg":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    content => template("nagios/send_nsca.cfg.erb"),
+    require => [Package["nsca"], Class["nagios::base"]],
+  }
+
+  file {"/usr/local/bin/submit_ocsp":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 755,
+    content => template("nagios/submit_ocsp.erb"),
+    require => [File["/etc/send_nsca.cfg"], Class["nagios::base"]],
+  }
+
+  file {"/usr/local/bin/submit_ochp":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 755,
+    content => template("nagios/submit_ochp.erb"),
+    require => [File["/etc/send_nsca.cfg"], Class["nagios::base"]],
+  }
+
+  nagios_command {"submit_ocsp":
+    ensure        => present,
+    command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
+    target        => "$nagios_cfg_dir/commands.cfg",
+    notify        => Exec["nagios-reload"],
+    require       => [File["/usr/local/bin/submit_ocsp"], File["$nagios_cfg_dir/commands.cfg"], Class["nagios::base"]],
+  }
+
+  nagios_command {"submit_ochp":
+    ensure        => present,
+    command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
+    target        => "$nagios_cfg_dir/commands.cfg",
+    notify        => Exec["nagios-reload"],
+    require       => [File["/usr/local/bin/submit_ochp"], File["$nagios_cfg_dir/commands.cfg"], Class["nagios::base"]],
+  }
+
+  common::concatfilepart {"submit_ocsp":
+    file    => $nagios_main_config_file,
+    content => "ocsp_command=submit_ocsp\n",
+    notify  => Exec["nagios-reload"],
+    require => Class["nagios::base"],
+  }
+
+  common::concatfilepart {"submit_ochp":
+    file    => $nagios_main_config_file,
+    content => "ochp_command=submit_ochp\n",
+    notify  => Exec["nagios-reload"],
+    require => Class["nagios::base"],
+  }
+
+}
