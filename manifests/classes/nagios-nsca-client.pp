@@ -19,7 +19,7 @@ class nagios::nsca::client {
     RedHat: { 
       $nagios_command_file = '/var/log/nagios/rw/nagios.cmd'
       $nagios_nsca_password = 'Lei6eihi'
-      $nagios_nsca_decryption_method = 8
+      $nagios_nsca_encryption_method = 8
       package {"nsca-client": ensure => present, } }
     default: {}
   }
@@ -31,6 +31,7 @@ class nagios::nsca::client {
     mode    => 644,
     content => template("nagios/send_nsca.cfg.erb"),
     require => [Package["nsca"], Class["nagios::base"]],
+    notify  => Service["nagios"],
   }
 
   file {"/usr/local/bin/submit_ocsp":
