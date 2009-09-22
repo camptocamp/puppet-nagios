@@ -45,10 +45,6 @@ class nagios::nsca::server {
       }
     }
     RedHat: {
-      $nagios_command_file = '/var/log/nagios/rw/nagios.cmd'
-      $nagios_nsca_password = 'Lei6eihi'
-      $nagios_nsca_decryption_method = 8
-
       exec {"install nsca init script":
         command => "chkconfig nsca on",
         unless  => "chkconfig --list | egrep -q 'nsca.*on'",
