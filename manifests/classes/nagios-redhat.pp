@@ -18,41 +18,6 @@ class nagios::redhat {
     ensure => present,
     alias  => "nagios3",
   }
-  # for now, nagios-plugins-all fails to install
-  # when we have net-snmp already installed.. so:
-  if defined(Package["net-snmp"]) {
-    package {"nagios-plugins-all":
-      ensure => present,
-      notify => Package["net-snmp"],
-    }
-  } else { 
-    if defined(Package["net-snmp-utils"]) {
-      package {"nagios-plugins-all":
-        ensure => present,
-        notify => Package["net-snmp-utils"],
-      }
-    } else {
-      if defined(Package["net-snmp-libs"]) {
-        package {"nagios-plugins-all":
-          ensure => present,
-          notify => Package["net-snmpi-libs"],
-        }
-      } else {
-        if defined(Package["net-snmp-perl"]) {
-          package {"nagios-plugins-all":
-            ensure => present,
-            notify => Package["net-snmp-perl"],
-          }
-        } else {
-          package {"nagios-plugins-all":
-            ensure => present,
-          }
-        }
-      }
-    }
-  }
-
-
 
   service {"nagios":
     ensure      => running,
