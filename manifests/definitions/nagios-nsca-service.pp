@@ -11,7 +11,8 @@ define nagios::nsca::service ($ensure=present,
                               $host_name=false,
                               $contact_groups=false, 
                               $use_active="generic-service-active", 
-                              $use_passive="generic-service-passive"
+                              $use_passive="generic-service-passive",
+                              package=false
                               ) {
 
   nagios_service {$name:
@@ -38,4 +39,13 @@ define nagios::nsca::service ($ensure=present,
     contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
   }
 
+  if $package {
+    if defined( Package["$package"] ) {
+      notice "$package already defined"
+    } else {
+      package {$package:
+        ensure => present,
+      }
+    }
+  }
 }

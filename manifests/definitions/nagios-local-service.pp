@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::local::service ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $contact_groups=false) {
+define nagios::local::service ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $contact_groups=false, $package=false) {
 
   nagios_service {$name:
     ensure                => $ensure,
@@ -20,4 +20,13 @@ define nagios::local::service ($ensure=present, $export_for=$fqdn, $service_desc
     notify                => Exec["nagios-reload"],
   }
 
+  if $package {
+    if defined(Package["$package"]) {
+      notice "$package already defined"
+    } else {
+      package {$package:
+        ensure => present,
+      }
+    }
+  }
 }
