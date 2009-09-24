@@ -20,7 +20,9 @@ class nagios::redhat {
   }
 
   service {"nagios":
-    ensure      => running,
+    ensure      => true,
+    enable      => true,
+    hasstatus   => true,
     hasrestart  => true,
     require     => Package["nagios3"],
   }
