@@ -22,9 +22,10 @@ class nagios::redhat {
   service {"nagios":
     ensure      => running,
     enable      => true,
-    hasstatus   => true,
+    hasstatus   => false,
     hasrestart  => true,
     require     => Package["nagios3"],
+    pattern     => "/usr/sbin/nagios -d /etc/nagios/nagios.cfg",
   }
 
   exec {"nagios-restart":
