@@ -20,7 +20,7 @@ class nagios::redhat {
   }
 
   service {"nagios":
-    ensure      => true,
+    ensure      => running,
     enable      => true,
     hasstatus   => true,
     hasrestart  => true,
