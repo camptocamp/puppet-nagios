@@ -48,12 +48,20 @@ class nagios::base {
     notify  => Exec["nagios-reload"],
   }
 
+  case $operatingsystem {
+    Debian: { $nagios_mail_path = '/usr/bin/mail' }
+
+    Redhat: { $nagios_mail_path = '/bin/mail' }
+
+    default: { err ("operatingsystem $operatingsystem not yet implemented !") }
+  }
+
   file {"$nagios_cfg_dir/generic-command.cfg":
     ensure  => present,
     owner   => root,
     group   => root,
     mode    => 644,
-    source  => "puppet:///nagios/generic-command.cfg",
+    content => template("nagios/generic-command.cfg.erb"),
     require => [Class["nagios::os"], File[$nagios_cfg_dir]],
     notify  => Exec["nagios-reload"],
   }
