@@ -1,4 +1,4 @@
-class nagios::debian {
+class nagios::debian::packages {
   case $lsbdistcodename {
     etch: {
       
@@ -26,20 +26,23 @@ class nagios::debian {
     }
     default: {err ("lsbdistcodename $lsbdistcodename not yet implemented !")}
   }
+}
 
+class nagios::debian {
+  include nagios::debian::packages
   file {"/etc/default/nagios3":
     ensure => present,
     owner => root,
     group => root,
     mode => 644,
     content => template("nagios/etc/default/nagios3.erb"),
-    notify => [ Package["nagios3-common"], Exec["nagios-restart"] ],
+    notify => [ Class["nagios::debian::packages"], Exec["nagios-restart"] ],
   }
 
   service {"nagios3":
     ensure      => running,
     hasrestart  => true,
-    require     => Class["nagios::packages"],
+    require     => Class["nagios::debian::packages"],
     alias       => "nagios",
   }
 
