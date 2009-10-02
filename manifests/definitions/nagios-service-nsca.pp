@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::nsca::service ($ensure=present,
+define nagios::service::nsca ($ensure=present,
                               $service_description=false, 
                               $export_for,
                               $host_name=false,

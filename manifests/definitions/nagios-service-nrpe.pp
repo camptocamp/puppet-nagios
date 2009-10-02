@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::nrpe::service ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $contact_groups=false) {
+define nagios::service::nrpe ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $contact_groups=false) {
 
   nagios_service {$name:
     ensure                => $ensure,
