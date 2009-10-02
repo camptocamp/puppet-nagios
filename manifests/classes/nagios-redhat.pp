@@ -24,7 +24,7 @@ class nagios::redhat {
     enable      => true,
     hasstatus   => false,
     hasrestart  => true,
-    require     => Package["nagios3"],
+    require     => Package["nagios"],
     pattern     => "/usr/sbin/nagios -d /etc/nagios/nagios.cfg",
   }
 
@@ -32,26 +32,21 @@ class nagios::redhat {
     command => "/etc/init.d/nagios restart",
     refreshonly => true,
     onlyif => "/usr/sbin/nagios -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",
+    require => Package["nagios"],
   }
 
   exec {"nagios-reload":
     command     => "/etc/init.d/nagios reload",
     refreshonly => true,
     onlyif      => "/usr/sbin/nagios -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",
+    require     => Package["nagios"],
   }
 
-  file {"/etc/default/nagios":
-    ensure => present,
-    owner => root,
-    group => root,
-    mode => 644,
-    content => template("nagios/etc/default/nagios3.erb"),
-    notify => [ Package["nagios"], Exec["nagios-restart"] ],
-  }
+  file {"/etc/default/nagios": ensure => absent }
 
   file {"/etc/nagios3":
     ensure  => "/etc/nagios",
-    require => Package["nagios3"],
+    require => Package["nagios"],
   }
 
   file {["/var/run/nagios3/",
@@ -63,6 +58,7 @@ class nagios::redhat {
     owner  => nagios,
     group  => nagios,
     mode   => 0744,
+    require => Package["nagios"],
   }
 
   case $architecture {
@@ -98,6 +94,7 @@ class nagios::redhat {
     owner  => nagios,
     group  => $group,
     mode   => 0755,
+    require => Package["nagios"],
   }
   exec {"create node":
     require => File["/var/log/nagios/rw"],
