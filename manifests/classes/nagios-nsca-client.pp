@@ -69,14 +69,12 @@ class nagios::nsca::client {
     file    => $nagios_main_config_file,
     content => "ocsp_command=submit_ocsp\n",
     notify  => Exec["nagios-reload"],
-    require => File["/etc/send_nsca.cfg"],
   }
 
   common::concatfilepart {"submit_ochp":
     file    => $nagios_main_config_file,
     content => "ochp_command=submit_ochp\n",
     notify  => Exec["nagios-reload"],
-    require => File["/etc/send_nsca.cfg"],
   }
 
 }
