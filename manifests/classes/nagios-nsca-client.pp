@@ -37,7 +37,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 755,
     content => template("nagios/submit_ocsp.erb"),
-    require => Class["nagios::base"],
+    require => File["/etc/send_nsca.cfg"],
   }
 
   file {"/usr/local/bin/submit_ochp":
@@ -46,7 +46,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 755,
     content => template("nagios/submit_ochp.erb"),
-    require => Class["nagios::base"],
+    require => File["/etc/send_nsca.cfg"],
   }
 
   nagios_command {"submit_ocsp":
@@ -54,7 +54,7 @@ class nagios::nsca::client {
     command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
     target        => "$nagios_cfg_dir/commands.cfg",
     notify        => Exec["nagios-reload"],
-    require       => Class["nagios::base"],
+    require       => File["/etc/send_nsca.cfg"],
   }
 
   nagios_command {"submit_ochp":
@@ -62,21 +62,21 @@ class nagios::nsca::client {
     command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
     target        => "$nagios_cfg_dir/commands.cfg",
     notify        => Exec["nagios-reload"],
-    require       => Class["nagios::base"],
+    require       => File["/etc/send_nsca.cfg"],
   }
 
   common::concatfilepart {"submit_ocsp":
     file    => $nagios_main_config_file,
     content => "ocsp_command=submit_ocsp\n",
     notify  => Exec["nagios-reload"],
-    require => Class["nagios::base"],
+    require => File["/etc/send_nsca.cfg"],
   }
 
   common::concatfilepart {"submit_ochp":
     file    => $nagios_main_config_file,
     content => "ochp_command=submit_ochp\n",
     notify  => Exec["nagios-reload"],
-    require => Class["nagios::base"],
+    require => File["/etc/send_nsca.cfg"],
   }
 
 }
