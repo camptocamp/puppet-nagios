@@ -59,6 +59,7 @@ class nagios::redhat {
     group  => nagios,
     mode   => 0744,
     require => Package["nagios"],
+    before  => Service["nagios"],
   }
 
   case $architecture {
