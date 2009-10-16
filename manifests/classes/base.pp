@@ -13,10 +13,10 @@ class nagios::base {
     owner   => nagios,
     group   => nagios,
     mode    => 751,
-    require => [Class["nagios::os"], Package["nagios"]],
+    require => Class["nagios::os"],
   }
 
-  file {[$nagios_cfg_dir, $nagios_root_dir, "$nagios_root_dir/nagios.d"]:
+  file {[$nagios_cfg_dir, "$nagios_root_dir/nagios.d"]:
     ensure  => directory,
     owner   => root,
     group   => root,
@@ -81,19 +81,53 @@ class nagios::base {
   }
 
   # default objects files
-  file {[
-      "$nagios_cfg_dir/hosts.cfg",
-      "$nagios_cfg_dir/services.cfg",
-      "$nagios_cfg_dir/contacts.cfg",
-      "$nagios_cfg_dir/commands.cfg",
-      "$nagios_cfg_dir/contactgroups.cfg",
-      "$nagios_cfg_dir/hostgroups.cfg",
-    ]:
+  file {"$nagios_cfg_dir/hosts.cfg":
     ensure  => present,
     owner   => root,
     group   => root,
     mode    => 644,
-    require => File[$nagios_cfg_dir],
+    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    alias   => "nagios_hosts.cfg",
+  }
+  file {"$nagios_cfg_dir/services.cfg":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    alias   => "nagios_services.cfg",
+  }
+  file {"$nagios_cfg_dir/contacts.cfg":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    alias   => "nagios_contacts.cfg",
+  }
+  file {"$nagios_cfg_dir/commands.cfg":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    alias   => "nagios_commands.cfg",
+  }
+  file {"$nagios_cfg_dir/contactgroups.cfg":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    alias   => "nagios_contactgroups.cfg",
+  }
+  file {"$nagios_cfg_dir/hostgroups.cfg":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    alias   => "nagios_hostgroups.cfg",
   }
 
   nagios_contact {"root":
@@ -108,7 +142,7 @@ class nagios::base {
     email                         => "root",
     target                        => "$nagios_cfg_dir/contacts.cfg",
     notify                        => Exec["nagios-reload"],
-    require                       => File["$nagios_cfg_dir/contacts.cfg"],
+    require                       => [File["$nagios_cfg_dir/contacts.cfg"], Class["nagios::os"]],
   }
 
   nagios_contactgroup {"admins":
