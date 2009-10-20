@@ -27,7 +27,6 @@ define nagios::host::nsca ($ensure=present, $export_for, $address=false, $nagios
     hostgroups => $hostgroups ? {false => undef, default => $hostgroups},
     target     => "$nagios_cfg_dir/hosts.cfg",
     notify     => Exec["nagios-reload"],
-    require    => File["$nagios_cfg_dir/hosts.cfg"],
     contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
   }
 }

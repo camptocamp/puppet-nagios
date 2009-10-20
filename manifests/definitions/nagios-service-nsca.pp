@@ -34,7 +34,6 @@ define nagios::service::nsca ($ensure=present,
     tag => "nagios-${export_for}",
     service_description => $service_description,
     target => "$nagios_cfg_dir/services.cfg",
-    require => File["$nagios_cfg_dir/services.cfg"],
     notify => Exec["nagios-reload"],
     contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
   }
