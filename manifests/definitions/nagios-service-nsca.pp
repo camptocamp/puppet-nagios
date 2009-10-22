@@ -23,7 +23,7 @@ define nagios::service::nsca ($ensure=present,
     tag => "nagios-${export_for}",
     service_description => $service_description,
     target => "$nagios_cfg_dir/services.cfg",
-    require => File["$nagios_cfg_dir/services.cfg"],
+    require => File["nagios_services.cfg"],
     notify => Exec["nagios-reload"],
   }
 
@@ -33,7 +33,7 @@ define nagios::service::nsca ($ensure=present,
     host_name => $host_name ? {false => $hostname, default => $host_name},
     tag => "nagios-${export_for}",
     service_description => $service_description,
-    target => "$nagios_cfg_dir/services.cfg",
+    target     => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/services.cfg", default => "$nagios_cfg_dir/hosts.cfg"},
     notify => Exec["nagios-reload"],
     contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
   }

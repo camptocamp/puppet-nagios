@@ -12,7 +12,7 @@ define nagios::local::hostgroup ($ensure=present, $nagios_alias=false) {
     alias   => $nagios_alias ? {false => undef, default => $nagios_alias},
     target  => "$nagios_cfg_dir/hostgroups.cfg",
     notify  => Exec["nagios-reload"],
-    require => File["$nagios_cfg_dir/hostgroups.cfg"],
+    require => File["nagios_hostgroups.cfg"],
   }
 
 }

@@ -16,7 +16,7 @@ define nagios::service::local ($ensure=present, $export_for=$fqdn, $service_desc
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     target                => "$nagios_cfg_dir/services.cfg",
-    require               => File["$nagios_cfg_dir/services.cfg"],
+    require               => File["nagios_services.cfg"],
     notify                => Exec["nagios-reload"],
   }
 
