@@ -33,7 +33,7 @@ define nagios::service::nsca ($ensure=present,
     host_name => $host_name ? {false => $hostname, default => $host_name},
     tag => "nagios-${export_for}",
     service_description => $service_description,
-    target     => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/services.cfg", default => "$nagios_cfg_dir/hosts.cfg"},
+    target     => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/services.cfg", default => "$nagios_cfg_dir/services.cfg"},
     notify => Exec["nagios-reload"],
     contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
   }

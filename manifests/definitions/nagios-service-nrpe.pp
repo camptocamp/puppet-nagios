@@ -28,7 +28,7 @@ define nagios::service::nrpe ($ensure=present, $export_for=$fqdn, $service_descr
     tag                   => "nagios-nrpe-${export_for}",
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
-    target                => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/services.cfg", default => "$nagios_cfg_dir/hosts.cfg"},
+    target                => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/services.cfg", default => "$nagios_cfg_dir/services.cfg"},
     notify                => Exec["nagios-reload"],
   }
 }
