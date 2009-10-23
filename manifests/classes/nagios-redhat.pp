@@ -45,8 +45,7 @@ class nagios::redhat {
   file {"/etc/default/nagios": ensure => absent }
 
   file {"/etc/nagios3":
-    ensure  => "/etc/nagios",
-    require => Package["nagios"],
+    ensure  => absent,
   }
 
   file {["/var/run/nagios3/",
