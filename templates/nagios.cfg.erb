@@ -23,7 +23,11 @@ log_file=/var/log/nagios3/nagios.log
 # if you wish (as shown below), or keep them all in a single config file.
 
 # Folder to add custom definitions (without puppet)
+<% if has_variable?("nagios_root_dir") %>
+cfg_dir=<%= nagios_root_dir %>/nagios.d
+<% else -%>
 cfg_dir=/etc/nagios3/nagios.d
+<% end -%>
 
 # You can also tell Nagios to process all config files (with a .cfg
 # extension) in a particular directory by using the cfg_dir
@@ -74,7 +78,11 @@ precached_object_file=/var/cache/nagios3/objects.precache
 <% if has_variable?("nagios_resource_file") %>
 resource_file=<%= nagios_resource_file %>
 <% else %>
+<% if has_variable?('nagios_root_dir') -%>
+resource_file=<%= nagios_root_dir %>/resource.cfg
+<% else -%>
 resource_file=/etc/nagios3/resource.cfg
+<% end -%>
 <% end %>
 
 # STATUS FILE
