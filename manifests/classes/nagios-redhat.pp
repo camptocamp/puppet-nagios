@@ -95,6 +95,7 @@ class nagios::redhat {
     group  => $group,
     mode   => 0755,
     require => Package["nagios"],
+    seltype => "nagios_spool_t",
   }
   exec {"create node":
     require => File["/var/log/nagios/rw"],
