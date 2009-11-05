@@ -12,7 +12,7 @@ define nagios::service::nsca ($ensure=present,
                               $contact_groups=false, 
                               $use_active="generic-service-active", 
                               $use_passive="generic-service-passive",
-                              package=false
+                              $package=false
                               ) {
 
   nagios_service {$name:
