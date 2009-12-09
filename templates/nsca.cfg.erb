@@ -97,8 +97,11 @@ command_file=/var/lib/nagios3/rw/nagios.cmd
 # it starts Nagios.  Or you may simply choose to ignore any
 # check results received while Nagios was not running...
 
+<% if has_variable?("nagios_nsca_alternate_dump_file") %>
+alternate_dump_file=<%= nagios_nsca_alternate_dump_file %>
+<% else %>
 alternate_dump_file=/var/run/nagios/nsca.dump
-
+<% end %>
 
 # AGGREGATED WRITES OPTION
 # This option determines whether or not the nsca daemon will
