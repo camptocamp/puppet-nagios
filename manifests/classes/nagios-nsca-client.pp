@@ -16,8 +16,14 @@ class nagios::nsca::client {
   }
   
   case $operatingsystem {
-    RedHat: { 
-      package {"nsca-client": ensure => present,} }
+
+    RedHat,Fedora,CentOS: {
+      if defined (Package["nsca-client"]) {
+        notice "Package nsca-client is already defined"
+      } else {
+        package { "nsca-client": ensure => installed }
+      }
+    }
     default: {}
   }
 
