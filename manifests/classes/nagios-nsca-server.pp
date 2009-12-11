@@ -27,23 +27,6 @@ class nagios::nsca::server {
   Nagios_host <<| tag == "nagios-${fqdn}" |>>
   Nagios_service <<| tag == "nagios-${fqdn}" |>>
 
-
-  nagios_command {"submit_ocsp":
-    ensure        => present,
-    command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
-    target        => "$nagios_cfg_dir/commands.cfg",
-    notify        => Exec["nagios-reload"],
-    require       => Class["nagios::base"],
-  }
-
-  nagios_command {"submit_ochp":
-    ensure        => present,
-    command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
-    target        => "$nagios_cfg_dir/commands.cfg",
-    notify        => Exec["nagios-reload"],
-    require       => Class["nagios::base"],
-  }
-
   file {"/etc/nagios/nsca.cfg":
     ensure  => present,
     owner   => root,
