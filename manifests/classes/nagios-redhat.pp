@@ -95,8 +95,16 @@ class nagios::redhat {
     group  => $group,
     mode   => 0755,
     require => Package["nagios"],
-    seltype => "nagios_spool_t",
   }
+
+  if $lsbmajdistrelease == 5 {
+    File["/var/log/nagios/rw"] {
+      seltype => "nagios_spool_t",
+    }
+  }
+
+
+
   exec {"create node":
     require => File["/var/log/nagios/rw"],
     command => "mknod -m 0664 /var/log/nagios/rw/nagios.cmd p && chown nagios:${group} /var/log/nagios/rw/nagios.cmd",
