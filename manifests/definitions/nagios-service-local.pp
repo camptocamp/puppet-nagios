@@ -5,11 +5,11 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::local ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $contact_groups=false, $package=false) {
+define nagios::service::local ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $contact_groups=false, $package=false, $use="generic-service-active") {
 
   nagios_service {$name:
     ensure                => $ensure,
-    use                   => "generic-service-active",
+    use                   => $use,
     host_name             => $host_name ? {false => $hostname, default => $host_name},
     check_command         => $name,
     tag                   => "nagios-${export_for}",

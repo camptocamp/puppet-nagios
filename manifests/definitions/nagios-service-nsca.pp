@@ -15,27 +15,24 @@ define nagios::service::nsca ($ensure=present,
                               $package=false
                               ) {
 
-  nagios_service {$name:
-    ensure => $ensure,
-    use => $use_active,
-    host_name => $host_name ? {false => $hostname, default => $host_name},
-    check_command => $name,
-    tag => "nagios-${export_for}",
-    service_description => $service_description,
-    target => "$nagios_cfg_dir/services.cfg",
-    require => File["nagios_services.cfg"],
-    notify => Exec["nagios-reload"],
+  nagios::service::local {$name:
+    ensure      => $ensure,
+    use         => $use_active,
+    export_for  => $export_for,
+    host_name   => $host_name ? {false => $hostname, default => $host_name},
+    contact_groups      => $contact_groups,
+    service_description => $service_description, 
   }
 
   @@nagios_service {"@@$name on $hostname":
-    ensure => $ensure,
-    use => $use_passive,
+    ensure    => $ensure,
+    use       => $use_passive,
     host_name => $host_name ? {false => $hostname, default => $host_name},
-    tag => "nagios-${export_for}",
+    tag       => "nagios-${export_for}",
+    target    => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/services.cfg", default => "$nagios_cfg_dir/services.cfg"},
+    notify    => Exec["nagios-reload"],
+    contact_groups      => $contact_groups ? {false => undef, default => $contact_groups},
     service_description => $service_description,
-    target     => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/services.cfg", default => "$nagios_cfg_dir/services.cfg"},
-    notify => Exec["nagios-reload"],
-    contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
   }
 
   if $package {
