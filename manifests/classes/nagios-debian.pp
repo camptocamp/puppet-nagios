@@ -50,16 +50,14 @@ class nagios::debian {
   }
 
   exec {"nagios-restart":
-    command => "/etc/init.d/nagios3 restart",
+    command => "/usr/sbin/nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 restart",
     refreshonly => true,
-    onlyif => "/usr/sbin/nagios3 -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",
     require => Class["nagios::debian::packages"],
   }
 
   exec {"nagios-reload":
-    command     => "/etc/init.d/nagios3 reload",
+    command     => "/usr/sbin/nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 reload",
     refreshonly => true,
-    onlyif      => "/usr/sbin/nagios3 -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",
     require     => Class["nagios::debian::packages"],
   }
 

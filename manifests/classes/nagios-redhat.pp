@@ -29,16 +29,14 @@ class nagios::redhat {
   }
 
   exec {"nagios-restart":
-    command => "/etc/init.d/nagios restart",
+    command => "/usr/sbin/nagios -v ${nagios_main_config_file} && /etc/init.d/nagios restart",
     refreshonly => true,
-    onlyif => "/usr/sbin/nagios -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",
     require => Package["nagios"],
   }
 
   exec {"nagios-reload":
-    command     => "/etc/init.d/nagios reload",
+    command     => "/usr/sbin/nagios -v ${nagios_main_config_file} && /etc/init.d/nagios reload",
     refreshonly => true,
-    onlyif      => "/usr/sbin/nagios -v $nagios_main_config_file |/bin/grep -q 'Things look okay'",
     require     => Package["nagios"],
   }
 
