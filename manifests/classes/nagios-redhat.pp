@@ -59,20 +59,18 @@ class nagios::redhat {
     before  => Service["nagios"],
   }
 
-  case $architecture {
-    "i386": { $user1 = "/usr/lib/nagios/plugins" }
-    "x86_64": { $user1 = "/usr/lib64/nagios/plugins" }
-  }
-
   file {"$nagios_root_dir/resource.cfg":
     ensure  => present,
     mode    => 0644,
     owner   => root,
     group   => root,
-    content => "
-# file managed by puppet
-\$USER1\$=$user1
-",
+  }
+
+  nagios::resource { "USER1":
+    value => $architecture ? {
+      "i386"   => "/usr/lib/nagios/plugins",
+      "x86_64" => "/usr/lib64/nagios/plugins",
+    },
   }
 
   common::concatfilepart {"main":

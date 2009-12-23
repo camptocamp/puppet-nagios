@@ -74,4 +74,14 @@ class nagios::debian {
     content => template("nagios/nagios.cfg.erb"),
     notify  => Exec["nagios-reload"],
   }
+
+  file {"$nagios_root_dir/resource.cfg":
+    ensure  => present,
+    mode    => 0644,
+    owner   => root,
+    group   => root,
+  }
+
+  nagios::resource { "USER1": value => "/usr/lib/nagios/plugins" }
+
 }
