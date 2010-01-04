@@ -13,7 +13,7 @@ class nagios::base {
     owner   => nagios,
     group   => nagios,
     mode    => 751,
-    require => Class["nagios::os"],
+    require => [Class["nagios::os"], Package["nagios3"]],
   }
 
   file {[$nagios_cfg_dir, "$nagios_root_dir/nagios.d"]:

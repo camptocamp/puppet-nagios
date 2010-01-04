@@ -77,6 +77,7 @@ class nagios::redhat {
     file    => $nagios_main_config_file,
     content => template("nagios/nagios.cfg.erb"),
     notify  => Exec["nagios-reload"],
+    require => Package["nagios3"],
   }
 
   if defined( Class["apache"] ) {

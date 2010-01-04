@@ -73,6 +73,7 @@ class nagios::debian {
     file    => $nagios_main_config_file,
     content => template("nagios/nagios.cfg.erb"),
     notify  => Exec["nagios-reload"],
+    require => Package["nagios3"],
   }
 
   file {"$nagios_root_dir/resource.cfg":
