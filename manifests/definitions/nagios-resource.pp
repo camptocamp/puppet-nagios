@@ -20,5 +20,6 @@ define nagios::resource ($ensure="present", $value) {
     file    => "$nagios_root_dir/resource.cfg",
     content => "\$${name}\$=\"${value}\"\n",
     notify  => Exec["nagios-reload"],
+    require => Package["nagios3"],
   }
 }
