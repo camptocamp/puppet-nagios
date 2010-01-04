@@ -6,6 +6,16 @@
 
 define nagios::host::remote ($ensure=present, $export_for, $address=false, $nagios_alias=false, $hostgroups=false, $contact_groups=false, $target=undef) {
 
+  nagios_host {$name:
+    ensure  => $ensure,
+    use     => "generic-host-active",
+    address => $address ? {false => $ipaddress, default => $address},
+    alias   => $nagios_alias ? {false => undef, default => $nagios_alias},
+    target  => "$nagios_cfg_dir/hosts.cfg",
+    notify  => Exec["nagios-reload"],
+    require => File["$nagios_cfg_dir/hosts.cfg"],
+  }
+
   @@nagios_host {"@@${name}":
     ensure     => $ensure,
     use        => "generic-host-active",
