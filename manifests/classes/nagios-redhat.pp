@@ -1,18 +1,28 @@
 class nagios::redhat {
 
-  $nagios_log_file = "/var/log/nagios/nagios.log"
-  $nagios_lock_file = "/var/run/nagios.pid"
+  
+  # logs
   $nagios_debug_level = "0"
   $nagios_debug_verbosity = "0"
+  $nagios_log_file = "/var/log/nagios/nagios.log"
   $nagios_debug_file = "/var/log/nagios/nagios.debug"
-  $nagios_state_retention_file = "/var/log/nagios/retention.dat"
-  $nagios_p1_file = "/usr/sbin/p1.pl"
   $nagios_log_archive_path ="/var/log/nagios/archives"
-  $nagios_temp_file = "/var/log/nagios/nagios.tmp"
-  $nagios_command_file = "/var/log/nagios/rw/nagios.cmd"
-  $nagios_status_file = "/var/log/nagios/status.dat"
-  $nagios_precached_object_file = "/var/log/nagios/objects.precache"
-  $nagios_object_cache_file = "/var/log/nagios/objects.cache"
+
+  # /var/run stuff
+  $nagios_rw = "/var/run/nagios/rw/"
+  $nagios_lock_file = "/var/run/nagios.pid"
+  $nagios_state_retention_file = "/var/run/nagios/retention.dat"
+  $nagios_temp_file = "/var/run/nagios/nagios.tmp"
+  $nagios_command_file = "/var/run/nagios/rw/nagios.cmd"
+  $nagios_status_file = "/var/run/nagios/status.dat"
+  $nagios_precached_object_file = "/var/run/nagios/objects.precache"
+  $nagios_object_cache_file = "/var/run/nagios/objects.cache"
+
+  # /var/lib stuff
+  $nagios_check_result_path = "/var/lib/nagios/spool/checkresults"
+
+  # misc stuff
+  $nagios_p1_file = "/usr/sbin/p1.pl"
 
   package {"nagios":
     ensure => present,
@@ -46,10 +56,11 @@ class nagios::redhat {
     ensure  => absent,
   }
 
-  file {["/var/run/nagios3/",
-         "/var/lib/nagios3/spool/",
-         "/var/cache/nagios3/",
-         "/var/lib/nagios3/spool/checkresults"
+  file {["/var/run/nagios/",
+         "/var/lib/nagios",
+         "/var/lib/nagios/spool/",
+         "/var/cache/nagios/",
+         "/var/lib/nagios/spool/checkresults",
         ]:
     ensure => directory,
     owner  => nagios,
@@ -57,6 +68,7 @@ class nagios::redhat {
     mode   => 0744,
     require => Package["nagios"],
     before  => Service["nagios"],
+    seltype  => "nagios_log_t",
   }
 
   file {"$nagios_root_dir/resource.cfg":
@@ -86,7 +98,7 @@ class nagios::redhat {
     $group = "nagios"
   }
 
-  file {"/var/log/nagios/rw":
+  file {$nagios_rw:
     ensure => directory,
     owner  => nagios,
     group  => $group,
@@ -95,16 +107,14 @@ class nagios::redhat {
   }
 
   if $lsbmajdistrelease == 5 {
-    File["/var/log/nagios/rw"] {
-      seltype => "nagios_spool_t",
+    File["$nagios_rw"] {
+      seltype => "nagios_log_t",
     }
   }
 
-
-
   exec {"create node":
-    require => File["/var/log/nagios/rw"],
-    command => "mknod -m 0664 /var/log/nagios/rw/nagios.cmd p && chown nagios:${group} /var/log/nagios/rw/nagios.cmd",
-    unless  => "test -p /var/log/nagios/rw/nagios.cmd"
+    require => File["$nagios_rw"],
+    command => "mknod -m 0664 $nagios_command_file p && chown nagios:${group} $nagios_command_file",
+    unless  => "test -p $nagios_command_file"
   }
 }
