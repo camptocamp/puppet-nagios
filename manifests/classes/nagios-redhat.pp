@@ -117,4 +117,9 @@ class nagios::redhat {
     command => "mknod -m 0664 $nagios_command_file p && chown nagios:${group} $nagios_command_file",
     unless  => "test -p $nagios_command_file"
   }
+  exec {"chcon on $nagios_command_file":
+    require => Exec["create node"],
+    command => "chcon -t nagios_spool_t $nagios_command_file",
+    unless  => "ls -Z $nagios_command_file | grep -q nagios_spool_t",
+  }
 }
