@@ -13,7 +13,7 @@ class nagios::webinterface {
       $nagios_main_config_file = "/etc/nagios/nagios.cfg"
       $nagios_physical_html_path = "/usr/share/nagios"
       $nagios_url_html_path = "/nagios"
-      $nagios_nagios_check_command = "/usr/lib64/nagios/plugins/check_nagios /var/cache/nagios3/status.dat 5 '/usr/sbin/nagios'"
+      $nagios_nagios_check_command = "/usr/lib64/nagios/plugins/check_nagios /var/run/nagios/status.dat 5 '/usr/sbin/nagios'"
 
       package {["nagios-www", "php", "nagios-plugins-nagios"]:
         ensure => present,
