@@ -68,7 +68,6 @@ class nagios::redhat {
     mode   => 0744,
     require => Package["nagios"],
     before  => Service["nagios"],
-    seltype  => "nagios_log_t",
   }
 
   file {"$nagios_root_dir/resource.cfg":
@@ -107,8 +106,18 @@ class nagios::redhat {
   }
 
   if $lsbmajdistrelease == 5 {
-    File["$nagios_rw"] {
+    File["/var/run/nagios/",
+         "/var/lib/nagios",
+         "/var/lib/nagios/spool/",
+         "/var/cache/nagios/",
+         "/var/lib/nagios/spool/checkresults",
+         "$nagios_rw"] {
       seltype => "nagios_log_t",
+    }
+    exec {"chcon on $nagios_command_file":
+      require => Exec["create node"],
+      command => "chcon -t nagios_spool_t $nagios_command_file",
+      unless  => "ls -Z $nagios_command_file | grep -q nagios_spool_t",
     }
   }
 
@@ -116,10 +125,5 @@ class nagios::redhat {
     require => File["$nagios_rw"],
     command => "mknod -m 0664 $nagios_command_file p && chown nagios:${group} $nagios_command_file",
     unless  => "test -p $nagios_command_file"
-  }
-  exec {"chcon on $nagios_command_file":
-    require => Exec["create node"],
-    command => "chcon -t nagios_spool_t $nagios_command_file",
-    unless  => "ls -Z $nagios_command_file | grep -q nagios_spool_t",
   }
 }
