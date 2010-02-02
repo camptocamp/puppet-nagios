@@ -8,26 +8,18 @@
 class nagios::base {
   include nagios::os
 
-  file {"/var/lib/nagios3":
-    ensure  => directory,
-    owner   => nagios,
-    group   => nagios,
-    mode    => 751,
-    require => [Class["nagios::os"], Package["nagios3"]],
-  }
-
   file {[$nagios_cfg_dir, "$nagios_root_dir/nagios.d"]:
     ensure  => directory,
     owner   => root,
     group   => root,
     mode    => 755,
-    require => Class["nagios::os"],
+    require => Package["nagios"],
   }
 
   file {"$nagios_root_dir/conf.d":
-    ensure => absent,
-    force => true,
-    require => Class["nagios::os"],
+    ensure  => absent,
+    force   => true,
+    require => File[$nagios_cfg_dir],
   }
 
   file {$nagios_main_config_file:
@@ -35,7 +27,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    require => Class["nagios::os"],
+    require => Package["nagios"],
   }
 
   file {"$nagios_cfg_dir/generic-host.cfg":
@@ -44,7 +36,7 @@ class nagios::base {
     group   => root,
     mode    => 644,
     source  => "puppet:///nagios/generic-host.cfg",
-    require => [Class["nagios::os"], File[$nagios_cfg_dir]],
+    require => File[$nagios_cfg_dir],
     notify  => Exec["nagios-reload"],
   }
 
@@ -62,7 +54,7 @@ class nagios::base {
     group   => root,
     mode    => 644,
     content => template("nagios/generic-command.cfg.erb"),
-    require => [Class["nagios::os"], File[$nagios_cfg_dir]],
+    require => File[$nagios_cfg_dir],
     notify  => Exec["nagios-reload"],
   }
 
@@ -72,7 +64,7 @@ class nagios::base {
     group   => root,
     mode    => 644,
     source  => "puppet:///nagios/generic-timeperiod.cfg",
-    require => [Class["nagios::os"], File[$nagios_cfg_dir]],
+    require => File[$nagios_cfg_dir],
     notify  => Exec["nagios-reload"],
   }
 
@@ -86,7 +78,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    require => File[$nagios_cfg_dir],
     alias   => "nagios_hosts.cfg",
   }
   file {"$nagios_cfg_dir/services.cfg":
@@ -94,7 +86,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    require => File[$nagios_cfg_dir],
     alias   => "nagios_services.cfg",
   }
   file {"$nagios_cfg_dir/contacts.cfg":
@@ -102,7 +94,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    require => File[$nagios_cfg_dir],
     alias   => "nagios_contacts.cfg",
   }
   file {"$nagios_cfg_dir/commands.cfg":
@@ -110,7 +102,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    require => File[$nagios_cfg_dir],
     alias   => "nagios_commands.cfg",
   }
   file {"$nagios_cfg_dir/contactgroups.cfg":
@@ -118,7 +110,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    require => File[$nagios_cfg_dir],
     alias   => "nagios_contactgroups.cfg",
   }
   file {"$nagios_cfg_dir/hostgroups.cfg":
@@ -126,7 +118,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    require => [File[$nagios_cfg_dir], Class["nagios::os"]],
+    require => File[$nagios_cfg_dir],
     alias   => "nagios_hostgroups.cfg",
   }
 
@@ -142,7 +134,7 @@ class nagios::base {
     email                         => "root",
     target                        => "$nagios_cfg_dir/contacts.cfg",
     notify                        => Exec["nagios-reload"],
-    require                       => [File["$nagios_cfg_dir/contacts.cfg"], Class["nagios::os"]],
+    require                       => File["$nagios_cfg_dir/contacts.cfg"],
   }
 
   nagios_contactgroup {"admins":
@@ -151,6 +143,6 @@ class nagios::base {
     members           => "root",
     target            => "$nagios_cfg_dir/contactgroups.cfg",
     notify            => Exec["nagios-reload"],
-    require           => [Nagios_Contact["root"], File["$nagios_cfg_dir/contactgroups.cfg"]],
+    require           => Nagios_Contact["root"],
   }
 }

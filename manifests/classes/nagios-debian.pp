@@ -3,7 +3,6 @@ class nagios::debian::packages {
     etch: {
       
       os::backported_package {[
-          "nagios3",
           "nagios3-common",
           "nagios-plugins",
           "nagios-plugins-standard",
@@ -11,17 +10,24 @@ class nagios::debian::packages {
         ]:
         ensure => installed,
       }
+      os::backported_package {"nagios3":
+        ensure => installed,
+        alias  => "nagios",
+      }
     }
     
     lenny: {
       package {[
-        "nagios3",
         "nagios3-common",
         "nagios-plugins",
         "nagios-plugins-standard",
         "nagios-plugins-basic",
         ]:
         ensure => installed,
+      }
+      package {"nagios3":
+        ensure => installed,
+        alias  => "nagios",
       }
     }
     default: {err ("lsbdistcodename $lsbdistcodename not yet implemented !")}
@@ -38,41 +44,46 @@ class nagios::debian {
     group => root,
     mode => 644,
     content => template("nagios/etc/default/nagios3.erb"),
-    notify => Exec["nagios-restart"],
-    require => Class["nagios::debian::packages"],
+    require => Package["nagios3"],
   }
 
   service {"nagios3":
     ensure      => running,
     hasrestart  => true,
-    require     => Class["nagios::debian::packages"],
+    require     => Package["nagios3"],
     alias       => "nagios",
   }
 
   exec {"nagios-restart":
     command => "/usr/sbin/nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 restart",
     refreshonly => true,
-    require => Class["nagios::debian::packages"],
   }
 
   exec {"nagios-reload":
     command     => "/usr/sbin/nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 reload",
     refreshonly => true,
-    require     => Class["nagios::debian::packages"],
   }
+
+  file {"/var/lib/nagios3":
+    ensure  => directory,
+    owner   => nagios,
+    group   => nagios,
+    mode    => 751,
+  }
+
 
   file {"/var/lib/nagios3/rw":
     ensure  => directory,
     owner   => nagios,
     group   => www-data,
     mode    => 2710,
-    require => Class["nagios::debian::packages"],
+    require => File["/var/lib/nagios3"],
   }
 
   common::concatfilepart {"main":
     file    => $nagios_main_config_file,
     content => template("nagios/nagios.cfg.erb"),
-    notify  => Exec["nagios-reload"],
+    before  => Service["nagios"],
     require => Package["nagios3"],
   }
 

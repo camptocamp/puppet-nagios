@@ -33,7 +33,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 644,
     content => template("nagios/send_nsca.cfg.erb"),
-    require => [Package["nsca"], Class["nagios::base"]],
+    require => Package["nsca"],
     notify  => Service["nagios"],
   }
 
