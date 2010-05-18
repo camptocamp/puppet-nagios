@@ -23,6 +23,17 @@ class nagios::base {
         }
 
         lenny: {
+          apt::preferences {[
+            "nagios3",
+            "nagios3-common",
+            "nagios-plugins",
+            "nagios-plugins-standard",
+            "nagios-plugins-basic"
+            ]:
+            pin => "release a=${lsbdistcodename}-backports",
+            priority => "1100";
+          }
+
           package {[
             "nagios3",
             "nagios3-common",
