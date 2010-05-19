@@ -25,6 +25,8 @@ class nagios::base {
         lenny: {
           apt::preferences {[
             "nagios3",
+            "nagios3-doc",
+            "nagios3-cgi",
             "nagios3-common",
             "nagios-plugins",
             "nagios-plugins-standard",
@@ -36,6 +38,8 @@ class nagios::base {
 
           package {[
             "nagios3",
+            "nagios3-doc",
+            "nagios3-cgi",
             "nagios3-common",
             "nagios-plugins",
             "nagios-plugins-standard",
@@ -104,6 +108,8 @@ class nagios::base {
   file {"$nagios_root_dir/conf.d":
     ensure => absent,
     force => true,
+    recurse => true,
+    purge => true,
     require => [Package["nagios3"], Package["nagios3-common"]],
   }
 
