@@ -17,9 +17,4 @@ class nagios::webinterface {
     notify  => Exec["apache-graceful"],
   }
 
-  file {"/etc/apache2/conf.d/nagios3.conf":
-    ensure  => absent,
-    notify  => Exec["apache-graceful"],
-  }
-
 }

@@ -121,6 +121,11 @@ class nagios::base {
     require => Package["nagios3-common"],
   }
 
+  file {"/etc/apache2/conf.d/nagios3.conf":
+    ensure => absent,
+    notify  => Exec["nagios-reload"],
+  }
+
   common::concatfilepart {"main":
     file    => $nagios_main_config_file,
     content => template("nagios/nagios.cfg.erb"),
