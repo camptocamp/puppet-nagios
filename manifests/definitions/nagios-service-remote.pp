@@ -4,14 +4,17 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::remote ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $contact_groups=false, $normal_check_interval=false, $retry_check_interval=false, $target=undef) {
+define nagios::service::remote ($ensure=present, $export_for="", $service_description=false, $host_name=false, $contact_groups=false, $normal_check_interval=false, $retry_check_interval=false, $target=undef) {
 
   @@nagios_service {"@@${name} on ${hostname}":
     ensure                => $ensure,
     use                   => "generic-service-active",
     host_name             => $host_name ? {false => $hostname, default => $host_name},
     check_command         => $name,
-    tag                   => "nagios-${export_for}",
+    tag                   => $export_for ? {
+                               ""      => "nagios-${fqdn}",
+                               default => $export_for,
+                             },
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},

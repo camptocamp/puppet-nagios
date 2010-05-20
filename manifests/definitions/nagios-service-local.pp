@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::local ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $check_command=false, $contact_groups=false, $normal_check_interval=false, $retry_check_interval=false, $package=false, $use="generic-service-active") {
+define nagios::service::local ($ensure=present, $export_for="", $service_description=false, $host_name=false, $check_command=false, $contact_groups=false, $normal_check_interval=false, $retry_check_interval=false, $package=false, $use="generic-service-active") {
 
   nagios_service {$name:
     ensure                => $ensure,
@@ -15,7 +15,10 @@ define nagios::service::local ($ensure=present, $export_for=$fqdn, $service_desc
       false   => $name,
       default => $check_command,
     },
-    tag                   => "nagios-${export_for}",
+    tag                   => $export_for ? {
+                               ""      => "nagios-${fqdn}",
+                               default => $export_for,
+                             },
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},

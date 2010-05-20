@@ -5,14 +5,17 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::nrpe ($ensure=present, $export_for=$fqdn, $service_description=false, $host_name=false, $contact_groups=false, $normal_check_interval=false, $retry_check_interval=false) {
+define nagios::service::nrpe ($ensure=present, $export_for="", $service_description=false, $host_name=false, $contact_groups=false, $normal_check_interval=false, $retry_check_interval=false) {
 
   nagios_service {$name:
     ensure                => $ensure,
     use                   => "generic-service-active",
     host_name             => $host_name ? {false => $hostname, default => $host_name},
     check_command         => $name,
-    tag                   => "nagios-nrpe-${export_for}",
+    tag                   => $export_for ? {
+                               ""      => "nagios-nrpe-${fqdn}",
+                               default => $export_for,
+                             },
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
@@ -27,7 +30,10 @@ define nagios::service::nrpe ($ensure=present, $export_for=$fqdn, $service_descr
     use                   => "generic-service-active",
     host_name             => $host_name ? {false => $hostname, default => $host_name},
     check_command         => "nrpe_${name}",
-    tag                   => "nagios-nrpe-${export_for}",
+    tag                   => $export_for ? {
+                               ""      => "nagios-nrpe-${fqdn}",
+                               default => $export_for,
+                             },
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},

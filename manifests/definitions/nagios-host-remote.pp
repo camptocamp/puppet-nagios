@@ -19,7 +19,7 @@ define nagios::host::remote ($ensure=present, $export_for, $address=false, $nagi
   @@nagios_host {"@@${name}":
     ensure     => $ensure,
     use        => "generic-host-active",
-    tag        => "nagios-${export_for}",
+    tag        => $export_for,
     host_name  => $name,
     address    => $address ? {false => $ipaddress, default => $address},
     alias      => $nagios_alias ? {false => undef, default => $nagios_alias},
