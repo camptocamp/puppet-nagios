@@ -12,7 +12,7 @@ define nagios::config::command ($ensure=present, $command_line, $target="$nagios
     command_line  => $command_line,
     target        => $target,
     notify        => Exec["nagios-reload"],
-    require       => File[$target],
+    require       => [File[$target], Class["nagios::base"]],
   }
 
 }

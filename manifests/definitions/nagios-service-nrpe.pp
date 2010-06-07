@@ -21,7 +21,7 @@ define nagios::service::nrpe ($ensure=present, $export_for="", $service_descript
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
     target                => "$nagios_cfg_dir/services.cfg",
-    require               => File["nagios_services.cfg"],
+    require               => [File["nagios_services.cfg"], Class["nagios::base"]],
     notify                => Exec["nagios-reload"],
   }
 

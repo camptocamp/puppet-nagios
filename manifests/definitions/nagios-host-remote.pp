@@ -13,7 +13,7 @@ define nagios::host::remote ($ensure=present, $export_for, $address=false, $nagi
     alias   => $nagios_alias ? {false => undef, default => $nagios_alias},
     target  => "$nagios_cfg_dir/hosts.cfg",
     notify  => Exec["nagios-reload"],
-    require => File["$nagios_cfg_dir/hosts.cfg"],
+    require => [File["$nagios_cfg_dir/hosts.cfg"], Class["nagios::base"]],
   }
 
   @@nagios_host {"@@${name}":

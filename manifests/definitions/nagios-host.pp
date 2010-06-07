@@ -15,7 +15,7 @@ define nagios::host ($ensure=present, $address=false, $nagios_alias=false, $host
     hostgroups => $hostgroups ? {false => undef, default => $hostgroups},
     target     => "$nagios_cfg_dir/hosts.cfg",
     notify     => Exec["nagios-reload"],
-    require    => File["nagios_hosts.cfg"],
+    require    => [File["nagios_hosts.cfg"], Class["nagios::base"]],
     contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
   }
 
