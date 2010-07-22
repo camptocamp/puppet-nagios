@@ -1,19 +1,20 @@
 class nagios::nrpe::client {
-  case $operatingsystem {
-  
-    Debian: {
-      package {"nagios-nrpe-server":
-        ensure => present,
-      }
-    }
 
-    RedHat: {
-      package {"nrpe":
-        ensure => present,
-      }
-    }
-
-    default: {err ("operatingsystem $operatingsystem not yet implemented !")}
-  
+  package { "nrpe":
+    name    => $operatingsystem ? {
+      /Debian|Ubuntu/ => "nagios-nrpe-server",
+      /RedHat|CentOS/ => "nrpe",
+    },
+    ensure  => present,
   }
+
+  service { "nrpe":
+    name    => $operatingsystem ? {
+      /Debian|Ubuntu/ => "nagios-nrpe-server",
+      /RedHat|CentOS/ => "nrpe",
+    },
+    ensure  => running,
+    require => Package["nrpe"],
+  }
+
 }
