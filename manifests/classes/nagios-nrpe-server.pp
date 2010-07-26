@@ -6,7 +6,6 @@ class nagios::nrpe::server {
         ensure => present,
       }
     }
-
     RedHat: {
       package {"nagios-plugins-nrpe":
         ensure => present,
@@ -15,4 +14,9 @@ class nagios::nrpe::server {
 
     default: {err ("operatingsystem $operatingsystem not yet implemented !")}
   }
+
+  Nagios_host <<| tag == "nagios-${fqdn}" |>>
+  Nagios_service <<| tag == "nagios-${fqdn}" |>>
+  Nagios_command <<| tag == "nagios-${fqdn}" |>>
+
 }

@@ -26,6 +26,7 @@ class nagios::nsca::server {
 
   Nagios_host <<| tag == "nagios-${fqdn}" |>>
   Nagios_service <<| tag == "nagios-${fqdn}" |>>
+  Nagios_command <<| tag == "nagios-${fqdn}" |>>
 
   file {"/etc/nagios/nsca.cfg":
     ensure  => present,
