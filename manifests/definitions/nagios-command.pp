@@ -7,16 +7,15 @@
 
 define nagios::command (
   $ensure=present,
-  $command_line,
-  $target="$nagios_cfg_dir/commands.cfg"
+  $command_line
   ) {
 
   nagios_command {$name:
     ensure        => $ensure,
     command_line  => $command_line,
-    target        => $target,
+    target        => "${nagios_cfg_dir}/commands.cfg",
     notify        => Exec["nagios-reload"],
-    require       => [File[$target], Class["nagios::base"]],
+    require       => [File["${nagios_cfg_dir}/commands.cfg"], Class["nagios::base"]],
   }
 
 }

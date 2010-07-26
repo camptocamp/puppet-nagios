@@ -10,8 +10,7 @@ define nagios::host::remote (
   $address=false,
   $nagios_alias=false,
   $hostgroups=false,
-  $contact_groups=false,
-  $target=undef
+  $contact_groups=false
   ) {
 
   nagios_host {$name:
@@ -19,7 +18,7 @@ define nagios::host::remote (
     use     => "generic-host-active",
     address => $address ? {false => $ipaddress, default => $address},
     alias   => $nagios_alias ? {false => undef, default => $nagios_alias},
-    target  => "$nagios_cfg_dir/hosts.cfg",
+    target  => "${nagios_cfg_dir}/hosts.cfg",
     notify  => Exec["nagios-reload"],
     require => [File["$nagios_cfg_dir/hosts.cfg"], Class["nagios::base"]],
   }
@@ -32,7 +31,7 @@ define nagios::host::remote (
     address    => $address ? {false => $ipaddress, default => $address},
     alias      => $nagios_alias ? {false => undef, default => $nagios_alias},
     hostgroups => $hostgroups ? {false => undef, default => $hostgroups},
-    target     => $target,
+    target     => "${nagios_cfg_dir}/hosts.cfg",
     notify     => Exec["nagios-reload"],
     require    => File["nagios_hosts.cfg"],
     contact_groups => $contact_groups ? {false => undef, default => $contact_groups},

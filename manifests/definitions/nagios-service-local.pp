@@ -34,7 +34,7 @@ define nagios::service::local (
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
-    target                => "$nagios_cfg_dir/services.cfg",
+    target                => "${nagios_cfg_dir}/services.cfg",
     require               => [File["nagios_services.cfg"], Class["nagios::base"]],
     notify                => Exec["nagios-reload"],
   }

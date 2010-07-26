@@ -19,7 +19,7 @@ define nagios::host::nsca (
     use     => "generic-host-active",
     address => $address ? {false => $ipaddress, default => $address},
     alias   => $nagios_alias ? {false => undef, default => $nagios_alias},
-    target  => "$nagios_cfg_dir/hosts.cfg",
+    target  => "${nagios_cfg_dir}/hosts.cfg",
     notify  => Exec["nagios-reload"],
     require => [File["$nagios_cfg_dir/hosts.cfg"], Class["nagios::base"]],
   }
@@ -32,7 +32,7 @@ define nagios::host::nsca (
     alias      => $nagios_alias ? {false => undef, default => $nagios_alias},
     tag        => $export_for,
     hostgroups => $hostgroups ? {false => undef, default => $hostgroups},
-    target     => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/hosts.cfg", default => "$nagios_cfg_dir/hosts.cfg"},
+    target     => "${nagios_cfg_dir}/hosts.cfg",
     notify     => Exec["nagios-reload"],
     contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
   }

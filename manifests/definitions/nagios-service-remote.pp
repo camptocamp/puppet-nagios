@@ -12,8 +12,7 @@ define nagios::service::remote (
   $host_name=false,
   $contact_groups=false,
   $normal_check_interval=false,
-  $retry_check_interval=false,
-  $target=undef
+  $retry_check_interval=false
   ) {
 
   @@nagios_service {"@@${name} on ${hostname}":
@@ -29,7 +28,7 @@ define nagios::service::remote (
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
-    target                => $target,
+    target                => "${nagios_cfg_dir}/services.cfg",
     require               => File["nagios_services.cfg"],
     notify                => Exec["nagios-reload"],
   }
@@ -37,6 +36,7 @@ define nagios::service::remote (
   @@nagios_command {"${name}_on_${hostname}":
     ensure       => $ensure,
     command_line => $command_line,
+    target       => "${nagios_cfg_dir}/commands.cfg",
     tag          => $export_for ? {
                       ""      => "nagios-${fqdn}",
                       default => $export_for,

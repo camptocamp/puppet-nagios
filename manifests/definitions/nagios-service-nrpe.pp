@@ -28,7 +28,7 @@ define nagios::service::nrpe (
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
-    target                => "$nagios_cfg_dir/services.cfg",
+    target                => "${nagios_cfg_dir}/services.cfg",
     require               => [File["nagios_services.cfg"], Class["nagios::base"]],
     notify                => Exec["nagios-reload"],
   }
@@ -46,7 +46,7 @@ define nagios::service::nrpe (
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
-    target                => $nagios_master_cfg_config? { true => "$nagios_master_cfg_config_value/services.cfg", default => "$nagios_cfg_dir/services.cfg"},
+    target                => "${nagios_cfg_dir}/services.cfg",
     notify                => Exec["nagios-reload"],
   }
 }
