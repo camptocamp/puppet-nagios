@@ -9,6 +9,7 @@ define nagios::service::nsca (
   $ensure=present,
   $service_description=false,
   $export_for,
+  $command_line,
   $host_name=false,
   $contact_groups=false,
   $normal_check_interval=false,
@@ -21,6 +22,7 @@ define nagios::service::nsca (
   nagios::service::local {$name:
     ensure      => $ensure,
     use         => $use_active,
+    command_line => $command_line,
     export_for  => $export_for,
     host_name   => $host_name ? {false => $hostname, default => $host_name},
     contact_groups      => $contact_groups,

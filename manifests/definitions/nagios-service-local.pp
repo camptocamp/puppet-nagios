@@ -8,6 +8,7 @@
 define nagios::service::local (
   $ensure=present,
   $export_for="",
+  $command_line,
   $service_description=false,
   $host_name=false,
   $check_command=false,
@@ -37,6 +38,11 @@ define nagios::service::local (
     target                => "${nagios_cfg_dir}/services.cfg",
     require               => [File["nagios_services.cfg"], Class["nagios::base"]],
     notify                => Exec["nagios-reload"],
+  }
+
+  nagios::command { $codename:
+    ensure => $ensure,
+    command_line => $command_line,
   }
 
   if $package {
