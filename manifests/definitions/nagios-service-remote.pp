@@ -6,8 +6,8 @@
 
 define nagios::service::remote (
   $ensure=present,
-  $export_for="",
-  $command_line=false,
+  $export_for,
+  $command_line,
   $service_description=false,
   $host_name=false,
   $contact_groups=false,
