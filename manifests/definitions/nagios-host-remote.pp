@@ -4,7 +4,15 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::host::remote ($ensure=present, $export_for, $address=false, $nagios_alias=false, $hostgroups=false, $contact_groups=false, $target=undef) {
+define nagios::host::remote (
+  $ensure=present,
+  $export_for,
+  $address=false,
+  $nagios_alias=false,
+  $hostgroups=false,
+  $contact_groups=false,
+  $target=undef
+  ) {
 
   nagios_host {$name:
     ensure  => $ensure,

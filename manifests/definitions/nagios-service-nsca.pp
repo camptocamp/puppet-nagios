@@ -5,17 +5,18 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::nsca ($ensure=present,
-                              $service_description=false, 
-                              $export_for,
-                              $host_name=false,
-                              $contact_groups=false, 
-                              $normal_check_interval=false,
-                              $retry_check_interval=false,
-                              $use_active="generic-service-active", 
-                              $use_passive="generic-service-passive",
-                              $package=false
-                              ) {
+define nagios::service::nsca (
+  $ensure=present,
+  $service_description=false,
+  $export_for,
+  $host_name=false,
+  $contact_groups=false,
+  $normal_check_interval=false,
+  $retry_check_interval=false,
+  $use_active="generic-service-active",
+  $use_passive="generic-service-passive",
+  $package=false
+  ) {
 
   nagios::service::local {$name:
     ensure      => $ensure,

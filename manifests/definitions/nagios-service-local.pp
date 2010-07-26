@@ -5,7 +5,18 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::service::local ($ensure=present, $export_for="", $service_description=false, $host_name=false, $check_command=false, $contact_groups=false, $normal_check_interval=false, $retry_check_interval=false, $package=false, $use="generic-service-active") {
+define nagios::service::local (
+  $ensure=present,
+  $export_for="",
+  $service_description=false,
+  $host_name=false,
+  $check_command=false,
+  $contact_groups=false,
+  $normal_check_interval=false,
+  $retry_check_interval=false,
+  $package=false,
+  $use="generic-service-active"
+  ) {
 
   nagios_service {$name:
     ensure                => $ensure,

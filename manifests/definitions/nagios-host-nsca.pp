@@ -5,7 +5,14 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::host::nsca ($ensure=present, $export_for, $address=false, $nagios_alias=false, $hostgroups=false, $contact_groups=false) {
+define nagios::host::nsca (
+  $ensure=present,
+  $export_for,
+  $address=false,
+  $nagios_alias=false,
+  $hostgroups=false,
+  $contact_groups=false
+  ) {
 
   nagios_host {$name:
     ensure  => $ensure,

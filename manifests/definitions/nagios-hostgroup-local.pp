@@ -5,7 +5,10 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::local::hostgroup ($ensure=present, $nagios_alias=false) {
+define nagios::local::hostgroup (
+  $ensure=present,
+  $nagios_alias=false
+  ) {
 
   nagios_hostgroup {$name:
     ensure  => $ensure,
