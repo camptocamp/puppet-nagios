@@ -5,7 +5,7 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::config::command ($ensure=present, $command_line, $target="$nagios_cfg_dir/commands.cfg") {
+define nagios::command ($ensure=present, $command_line, $target="$nagios_cfg_dir/commands.cfg") {
 
   nagios_command {$name:
     ensure        => $ensure,
