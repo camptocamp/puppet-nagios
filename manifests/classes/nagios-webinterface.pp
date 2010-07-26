@@ -25,7 +25,7 @@ class nagios::webinterface {
         notify  => Exec["apache-graceful"],
       }
 
-      file {"$nagios_root_dir/cgi.cfg":
+      file {"${nagios_root_dir}/cgi.cfg":
         ensure  => present,
         owner   => root,
         group   => root,
@@ -64,7 +64,7 @@ allow httpd_t nagios_log_t:file read;
     }
 
     Debian: {
-      file {"$nagios_root_dir/cgi.cfg":
+      file {"${nagios_root_dir}/cgi.cfg":
         ensure  => present,
         owner   => root,
         group   => root,

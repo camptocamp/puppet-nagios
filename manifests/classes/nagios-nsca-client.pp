@@ -58,7 +58,7 @@ class nagios::nsca::client {
   nagios_command {"submit_ocsp":
     ensure        => present,
     command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
-    target        => "$nagios_cfg_dir/commands.cfg",
+    target        => "${nagios_cfg_dir}/commands.cfg",
     notify        => Exec["nagios-reload"],
     require       => [File["/etc/send_nsca.cfg"], Class["nagios::base"]],
   }
@@ -66,7 +66,7 @@ class nagios::nsca::client {
   nagios_command {"submit_ochp":
     ensure        => present,
     command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
-    target        => "$nagios_cfg_dir/commands.cfg",
+    target        => "${nagios_cfg_dir}/commands.cfg",
     notify        => Exec["nagios-reload"],
     require       => [File["/etc/send_nsca.cfg"], Class["nagios::base"]],
   }

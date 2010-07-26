@@ -70,7 +70,7 @@ class nagios::redhat {
     before  => Service["nagios"],
   }
 
-  file {"$nagios_root_dir/resource.cfg":
+  file {"${nagios_root_dir}/resource.cfg":
     ensure  => present,
     mode    => 0644,
     owner   => root,
