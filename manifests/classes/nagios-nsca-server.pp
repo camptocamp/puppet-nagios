@@ -28,13 +28,13 @@ class nagios::nsca::server {
   Nagios_service <<| tag == "nagios-${fqdn}" |>>
   Nagios_command <<| tag == "nagios-${fqdn}" |>>
 
-  file {"/etc/nagios/nsca.cfg":
+  file {"${nagios_root_dir}/nsca.cfg":
     ensure  => present,
     owner   => root,
-    group   => root,
-    mode    => 644,
+    group   => nagios,
+    mode    => 640,
     content => template("nagios/nsca.cfg.erb"),
-    require => Package["nsca"],
+    require => [Package["nsca"], Package["nagios"], Class["nagios::base"]],
     notify  => Service["nsca"],
   }
 

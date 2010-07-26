@@ -27,13 +27,13 @@ class nagios::nsca::client {
     default: {}
   }
 
-  file {"/etc/send_nsca.cfg":
+  file { "${nagios_root_dir}/send_nsca.cfg":
     ensure  => present,
     owner   => root,
-    group   => root,
-    mode    => 644,
+    group   => nagios,
+    mode    => 640,
     content => template("nagios/send_nsca.cfg.erb"),
-    require => Package["nsca"],
+    require => [Package["nsca"], Package["nagios"], Class["nagios::base"]],
     notify  => Service["nagios"],
   }
 
@@ -43,7 +43,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 755,
     content => template("nagios/submit_ocsp.erb"),
-    require => File["/etc/send_nsca.cfg"],
+    require => File["${nagios_root_dir}/send_nsca.cfg"],
   }
 
   file {"/usr/local/bin/submit_ochp":
@@ -52,7 +52,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 755,
     content => template("nagios/submit_ochp.erb"),
-    require => File["/etc/send_nsca.cfg"],
+    require => File["${nagios_root_dir}/send_nsca.cfg"],
   }
 
   nagios_command {"submit_ocsp":
@@ -60,7 +60,9 @@ class nagios::nsca::client {
     command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
     target        => "${nagios_cfg_dir}/commands.cfg",
     notify        => Exec["nagios-reload"],
-    require       => [File["/etc/send_nsca.cfg"], Class["nagios::base"]],
+    require       => [
+      File["${nagios_root_dir}/send_nsca.cfg"],
+      Class["nagios::base"]],
   }
 
   nagios_command {"submit_ochp":
@@ -68,7 +70,9 @@ class nagios::nsca::client {
     command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
     target        => "${nagios_cfg_dir}/commands.cfg",
     notify        => Exec["nagios-reload"],
-    require       => [File["/etc/send_nsca.cfg"], Class["nagios::base"]],
+    require       => [
+      File["${nagios_root_dir}/send_nsca.cfg"],
+      Class["nagios::base"]],
   }
 
   common::concatfilepart {"submit_ocsp":
@@ -82,5 +86,8 @@ class nagios::nsca::client {
     content => "ochp_command=submit_ochp\n",
     notify  => Exec["nagios-reload"],
   }
+
+  #TODO: remove this resource in a while
+  file { "/etc/send_nsca.cfg": ensure => absent }
 
 }
