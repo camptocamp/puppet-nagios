@@ -28,7 +28,12 @@ class nagios::nsca::server {
   Nagios_service <<| tag == "nagios-${fqdn}" |>>
   Nagios_command <<| tag == "nagios-${fqdn}" |>>
 
-  file {"${nagios_root_dir}/nsca.cfg":
+  case $operatingsystem {
+    Debian: { $nagios_nsca_cfg = "/etc/nsca.cfg" }
+    default: { $nagios_nsca_cfg = "${nagios_root_dir}/nsca.cfg" }
+  }
+
+  file {"${nagios_nsca_cfg}":
     ensure  => present,
     owner   => root,
     group   => nagios,
