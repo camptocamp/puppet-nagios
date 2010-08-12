@@ -7,30 +7,20 @@
 
 define nagios::service::nrpe (
   $ensure=present,
-  $export_for="",
   $service_description=false,
+  $export_for="",
+  $command_line,
   $host_name=false,
   $contact_groups=false,
   $normal_check_interval=false,
   $retry_check_interval=false
   ) {
 
-  nagios_service {$name:
-    ensure                => $ensure,
-    use                   => "generic-service-active",
-    host_name             => $host_name ? {false => $hostname, default => $host_name},
-    check_command         => $name,
-    tag                   => $export_for ? {
-                               ""      => "nagios-nrpe-${fqdn}",
-                               default => $export_for,
-                             },
-    service_description   => $service_description ? {false => undef, default => $service_description},
-    contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
-    normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
-    retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
-    target                => "${nagios_cfg_dir}/services.cfg",
-    require               => [File["nagios_services.cfg"], Class["nagios::base"]],
-    notify                => Exec["nagios-reload"],
+  augeas { "set nrpe command ${name}":
+    context   => "/files/etc/nagios/nrpe.cfg",
+    changes   => "set command[.][./${name} =~ regexp('.*')]/${name} '${command_line}'",
+    load_path => "/usr/share/augeas/lenses/contrib/",
+    notify    => Service["nrpe"],
   }
 
   @@nagios_service {"@@$name on $hostname":
