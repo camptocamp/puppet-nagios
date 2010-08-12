@@ -27,7 +27,7 @@ define nagios::service::nrpe (
     ensure                => $ensure,
     use                   => "generic-service-active",
     host_name             => $host_name ? {false => $hostname, default => $host_name},
-    check_command         => "nrpe_${name}",
+    check_command         => "nrpe_${name}_on_${hostname}",
     tag                   => $export_for ? {
                                ""      => "nagios-nrpe-${fqdn}",
                                default => $export_for,
@@ -37,6 +37,17 @@ define nagios::service::nrpe (
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
     target                => "${nagios_cfg_dir}/services.cfg",
+    require               => File["nagios_services.cfg"],
     notify                => Exec["nagios-reload"],
   }
+
+  @@nagios_command {"nrpe_${name}_on_${hostname}":
+    ensure       => $ensure,
+    command_line => "\$USER1\$/check_nrpe -H ${fqdn} -u -t 120 -c ${name}",
+    target       => "${nagios_cfg_dir}/commands.cfg",
+    tag          => $export_for,
+    require      => File["nagios_commands.cfg"],
+    notify       => Exec["nagios-reload"],
+  }
+
 }
