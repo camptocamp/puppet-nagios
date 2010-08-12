@@ -13,7 +13,8 @@ define nagios::service::nrpe (
   $host_name=false,
   $contact_groups=undef,
   $normal_check_interval=undef,
-  $retry_check_interval=undef
+  $retry_check_interval=undef,
+  $package=false
   ) {
 
   augeas { "set nrpe command ${name}":
@@ -56,6 +57,14 @@ define nagios::service::nrpe (
       File["nagios_commands.cfg"],
     ],
     notify       => Exec["nagios-reload"],
+  }
+
+  if $package {
+    if !defined(Package[$package]) {
+      package { $package:
+        ensure => present,
+      }
+    }
   }
 
 }

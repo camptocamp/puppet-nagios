@@ -54,10 +54,8 @@ define nagios::service::nsca (
   }
 
   if $package {
-    if defined( Package["$package"] ) {
-      notice "$package already defined"
-    } else {
-      package {$package:
+    if !defined(Package[$package]) {
+      package { $package:
         ensure => present,
       }
     }
