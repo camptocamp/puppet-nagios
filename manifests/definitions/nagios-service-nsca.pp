@@ -42,6 +42,10 @@ define nagios::service::nsca (
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
     service_description   => $service_description,
+    require   => [
+      Class["nagios::base"],
+      File["nagios_services.cfg"],
+    ],
   }
 
   if $package {

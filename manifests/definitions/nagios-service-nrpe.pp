@@ -21,6 +21,7 @@ define nagios::service::nrpe (
     changes   => "set command[.][./${name} =~ regexp('.*')]/${name} '${command_line}'",
     load_path => "/usr/share/augeas/lenses/contrib/",
     notify    => Service["nrpe"],
+    require   => Package["nrpe"],
   }
 
   @@nagios_service {"@@$name on $hostname":
@@ -34,7 +35,11 @@ define nagios::service::nrpe (
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
     target                => "${nagios_cfg_dir}/services.cfg",
-    require               => File["nagios_services.cfg"],
+    require               => [
+      Class["nagios::base"],
+      File["nagios_services.cfg"],
+      Nagios_command["nrpe_${name}_on_${hostname}"],
+    ],
     notify                => Exec["nagios-reload"],
   }
 
@@ -43,7 +48,10 @@ define nagios::service::nrpe (
     command_line => "\$USER1\$/check_nrpe -H ${fqdn} -u -t 120 -c ${name}",
     target       => "${nagios_cfg_dir}/commands.cfg",
     tag          => $export_for,
-    require      => File["nagios_commands.cfg"],
+    require      => [
+      Class["nagios::base"],
+      File["nagios_commands.cfg"],
+    ],
     notify       => Exec["nagios-reload"],
   }
 

@@ -15,7 +15,10 @@ define nagios::local::hostgroup (
     alias   => $nagios_alias ? {false => undef, default => $nagios_alias},
     target  => "$nagios_cfg_dir/hostgroups.cfg",
     notify  => Exec["nagios-reload"],
-    require => [File["nagios_hostgroups.cfg"], Class["nagios::base"]],
+    require => [
+      Class["nagios::base"],
+      File["nagios_hostgroups.cfg"],
+    ],
   }
 
 }

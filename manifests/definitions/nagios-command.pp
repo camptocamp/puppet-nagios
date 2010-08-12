@@ -15,7 +15,10 @@ define nagios::command (
     command_line  => $command_line,
     target        => "${nagios_cfg_dir}/commands.cfg",
     notify        => Exec["nagios-reload"],
-    require       => [File["${nagios_cfg_dir}/commands.cfg"], Class["nagios::base"]],
+    require       => [
+      Class["nagios::base"],
+      File["nagios_commands.cfg"],
+    ],
   }
 
 }

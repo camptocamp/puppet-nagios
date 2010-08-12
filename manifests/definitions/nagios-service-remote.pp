@@ -26,7 +26,11 @@ define nagios::service::remote (
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
     retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
     target                => "${nagios_cfg_dir}/services.cfg",
-    require               => File["nagios_services.cfg"],
+    require               => [
+      Class["nagios::base"],
+      File["nagios_services.cfg"],
+      Nagios_command["${name}_on_${hostname}"],
+    ],
     notify                => Exec["nagios-reload"],
   }
 
@@ -35,7 +39,10 @@ define nagios::service::remote (
     command_line => $command_line,
     target       => "${nagios_cfg_dir}/commands.cfg",
     tag          => $export_for,
-    require      => File["nagios_commands.cfg"],
+    require      => [
+      Class["nagios::base"],
+      File["nagios_commands.cfg"],
+    ],
     notify       => Exec["nagios-reload"],
   }
 
