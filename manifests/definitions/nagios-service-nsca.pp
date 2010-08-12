@@ -23,7 +23,6 @@ define nagios::service::nsca (
     ensure       => $ensure,
     use          => $use_active,
     command_line => $command_line,
-    export_for   => $export_for,
     host_name    => $host_name ? {
       false => $hostname,
       default => $host_name,
