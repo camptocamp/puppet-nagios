@@ -11,21 +11,24 @@ define nagios::service::nsca (
   $export_for,
   $command_line,
   $host_name=false,
-  $contact_groups=false,
-  $normal_check_interval=false,
-  $retry_check_interval=false,
+  $contact_groups=undef,
+  $normal_check_interval=undef,
+  $retry_check_interval=undef,
   $use_active="generic-service-active",
   $use_passive="generic-service-passive",
   $package=false
   ) {
 
   nagios::service::local {$name:
-    ensure      => $ensure,
-    use         => $use_active,
+    ensure       => $ensure,
+    use          => $use_active,
     command_line => $command_line,
-    export_for  => $export_for,
-    host_name   => $host_name ? {false => $hostname, default => $host_name},
-    contact_groups      => $contact_groups,
+    export_for   => $export_for,
+    host_name    => $host_name ? {
+      false => $hostname,
+      default => $host_name,
+    },
+    contact_groups        => $contact_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
     service_description   => $service_description,
@@ -34,13 +37,16 @@ define nagios::service::nsca (
   @@nagios_service {"@@$name on $hostname":
     ensure    => $ensure,
     use       => $use_passive,
-    host_name => $host_name ? {false => $hostname, default => $host_name},
+    host_name => $host_name ? {
+      false => $hostname,
+      default => $host_name,
+    },
     tag       => $export_for,
     target    => "${nagios_cfg_dir}/services.cfg",
     notify    => Exec["nagios-reload"],
-    contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
-    normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
-    retry_check_interval  => $retry_check_interval ? {false => undef, default => $retry_check_interval},
+    contact_groups        => $contact_groups,
+    normal_check_interval => $normal_check_interval,
+    retry_check_interval  => $retry_check_interval,
     service_description   => $service_description,
     require   => [
       Class["nagios::base"],

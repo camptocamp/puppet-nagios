@@ -9,16 +9,19 @@ define nagios::host::nsca (
   $ensure=present,
   $export_for,
   $address=false,
-  $nagios_alias=false,
-  $hostgroups=false,
-  $contact_groups=false
+  $nagios_alias=undef,
+  $hostgroups=undef,
+  $contact_groups=undef
   ) {
 
   nagios_host {$name:
     ensure  => $ensure,
     use     => "generic-host-active",
-    address => $address ? {false => $ipaddress, default => $address},
-    alias   => $nagios_alias ? {false => undef, default => $nagios_alias},
+    address => $address ? {
+      false => $ipaddress,
+      default => $address,
+    },
+    alias   => $nagios_alias,
     target  => "${nagios_cfg_dir}/hosts.cfg",
     notify  => Exec["nagios-reload"],
     require => [
@@ -30,13 +33,16 @@ define nagios::host::nsca (
   @@nagios_host {"@@$name":
     ensure     => $ensure,
     use        => "generic-host-passive",
-    address    => $address ? {false => $ipaddress, default => $address},
+    address    => $address ? {
+      false => $ipaddress,
+      default => $address,
+    },
     host_name  => $name,
-    alias      => $nagios_alias ? {false => undef, default => $nagios_alias},
+    alias      => $nagios_alias,
     tag        => $export_for,
-    hostgroups => $hostgroups ? {false => undef, default => $hostgroups},
+    hostgroups => $hostgroups,
     target     => "${nagios_cfg_dir}/hosts.cfg",
-    contact_groups => $contact_groups ? {false => undef, default => $contact_groups},
+    contact_groups => $contact_groups,
     notify     => Exec["nagios-reload"],
     require => [
       Class["nagios::base"],
