@@ -7,7 +7,7 @@
 
 define nagios::service::local (
   $ensure=present,
-  $export_for="",
+  $export_for,
   $command_line,
   $service_description=false,
   $host_name=false,
@@ -27,10 +27,7 @@ define nagios::service::local (
       false   => $name,
       default => $check_command,
     },
-    tag                   => $export_for ? {
-                               ""      => "nagios-${fqdn}",
-                               default => $export_for,
-                             },
+    tag                   => $export_for,
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},

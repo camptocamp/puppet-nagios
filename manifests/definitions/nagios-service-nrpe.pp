@@ -8,7 +8,7 @@
 define nagios::service::nrpe (
   $ensure=present,
   $service_description=false,
-  $export_for="",
+  $export_for,
   $command_line,
   $host_name=false,
   $contact_groups=false,
@@ -28,10 +28,7 @@ define nagios::service::nrpe (
     use                   => "generic-service-active",
     host_name             => $host_name ? {false => $hostname, default => $host_name},
     check_command         => "nrpe_${name}_on_${hostname}",
-    tag                   => $export_for ? {
-                               ""      => "nagios-nrpe-${fqdn}",
-                               default => $export_for,
-                             },
+    tag                   => $export_for,
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},

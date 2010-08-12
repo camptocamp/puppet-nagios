@@ -20,10 +20,7 @@ define nagios::service::remote (
     use                   => "generic-service-active",
     host_name             => $host_name ? {false => $hostname, default => $host_name},
     check_command         => "${name}_on_${hostname}",
-    tag                   => $export_for ? {
-                               ""      => "nagios-${fqdn}",
-                               default => $export_for,
-                             },
+    tag                   => $export_for,
     service_description   => $service_description ? {false => undef, default => $service_description},
     contact_groups        => $contact_groups ? {false => undef, default => $contact_groups},
     normal_check_interval => $normal_check_interval ? {false => undef, default => $normal_check_interval},
@@ -37,10 +34,7 @@ define nagios::service::remote (
     ensure       => $ensure,
     command_line => $command_line,
     target       => "${nagios_cfg_dir}/commands.cfg",
-    tag          => $export_for ? {
-                      ""      => "nagios-${fqdn}",
-                      default => $export_for,
-                    },
+    tag          => $export_for,
     require      => File["nagios_commands.cfg"],
     notify       => Exec["nagios-reload"],
   }
