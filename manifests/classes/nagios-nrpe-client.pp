@@ -14,6 +14,7 @@ class nagios::nrpe::client {
       /RedHat|CentOS/ => "nrpe",
     },
     ensure  => running,
+    enable  => true,
     require => Package["nrpe"],
   }
 
