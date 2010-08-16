@@ -5,14 +5,10 @@
 # See LICENSE for the full license granted to you.
 #
 
-define nagios::local::hostgroup (
-  $ensure=present,
-  $nagios_alias=undef
-  ) {
+define nagios::local::hostgroup ($ensure=present) {
 
-  nagios_hostgroup {$name:
+  nagios_hostgroup { $name:
     ensure  => $ensure,
-    alias   => $nagios_alias,
     target  => "$nagios_cfg_dir/hostgroups.cfg",
     notify  => Exec["nagios-reload"],
     require => [
