@@ -119,6 +119,19 @@ class nagios::redhat {
       command => "chcon -t nagios_spool_t $nagios_command_file",
       unless  => "ls -Z $nagios_command_file | grep -q nagios_spool_t",
     }
+    file {[$nagios_state_retention_file,
+          $nagios_temp_file,
+          $nagios_status_file,
+          $nagios_precached_object_file,
+          $nagios_object_cache_file]:
+      ensure => present,
+      seltype => "nagios_log_t",
+      owner   => nagios,
+      group   => nagios,
+      require => File["/var/run/nagios"],
+    }
+    File[$nagios_state_retention_file] { mode => 0600 }
+    File[$nagios_status_file] { mode => 0664 }
   }
 
   exec {"create node":
