@@ -105,7 +105,7 @@ class nagios::redhat {
     require => Package["nagios"],
   }
 
-  if $lsbmajdistrelease == 5 {
+  if $lsbmajdistrelease == 5 and $operatingsystem == 'RedHat' {
     File["/var/run/nagios/",
          "/var/lib/nagios",
          "/var/lib/nagios/spool/",
