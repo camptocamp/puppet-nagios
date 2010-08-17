@@ -56,10 +56,10 @@ class nagios::redhat {
     ensure  => absent,
   }
 
-  file {["/var/run/nagios/",
+  file {["/var/run/nagios",
          "/var/lib/nagios",
-         "/var/lib/nagios/spool/",
-         "/var/cache/nagios/",
+         "/var/lib/nagios/spool",
+         "/var/cache/nagios",
          "/var/lib/nagios/spool/checkresults",
         ]:
     ensure => directory,
@@ -106,10 +106,10 @@ class nagios::redhat {
   }
 
   if $lsbmajdistrelease == 5 and $operatingsystem == 'RedHat' {
-    File["/var/run/nagios/",
+    File["/var/run/nagios",
          "/var/lib/nagios",
-         "/var/lib/nagios/spool/",
-         "/var/cache/nagios/",
+         "/var/lib/nagios/spool",
+         "/var/cache/nagios",
          "/var/lib/nagios/spool/checkresults",
          "$nagios_rw"] {
       seltype => "nagios_log_t",
