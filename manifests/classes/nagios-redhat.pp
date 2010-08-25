@@ -13,14 +13,6 @@ class nagios::redhat inherits nagios::base {
     pattern     => "/usr/sbin/nagios -d /etc/nagios/nagios.cfg",
   }
 
-  Exec["nagios-restart"] {
-    command => "nagios -v ${nagios::params::conffile} && /etc/init.d/nagios restart",
-  }
-
-  Exec["nagios-reload"] {
-    command => "nagios -v ${nagios::params::conffile} && /etc/init.d/nagios reload",
-  }
-
   #TODO: make this reliable:
   if defined( Class["apache"] ) {
     $group = "apache"

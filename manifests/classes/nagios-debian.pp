@@ -42,14 +42,6 @@ class nagios::debian inherits nagios::base {
     name => "nagios3",
   }
 
-  Exec["nagios-restart"] {
-    command => "nagios3 -v ${nagios::params::conffile} && /etc/init.d/nagios3 restart",
-  }
-
-  Exec["nagios-reload"] {
-    command => "nagios3 -v ${nagios::params::conffile} && /etc/init.d/nagios3 reload",
-  }
-
   File["nagios read-write dir"] {
     group => "www-data",
     mode  => 2710,

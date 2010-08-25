@@ -31,12 +31,12 @@ class nagios::base {
   }
 
   exec { "nagios-restart":
-    command     => undef,
+    command     => "${nagios::params::basename} -v ${nagios::params::conffile} && /etc/init.d/${nagios::params::basename} restart",
     refreshonly => true,
   }
 
   exec { "nagios-reload":
-    command     => undef,
+    command     => "${nagios::params::basename} -v ${nagios::params::conffile} && /etc/init.d/${nagios::params::basename} reload",
     refreshonly => true,
   }
 
