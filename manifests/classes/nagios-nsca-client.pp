@@ -29,7 +29,11 @@ class nagios::nsca::client {
     default: {}
   }
 
-  file { "${nagios_root_dir}/send_nsca.cfg":
+  # variables used in ERB template
+  $nsca_server = $nagios_nsca_server
+  $nsca_cfg = "${nagios::params::rootdir}/send_nsca.cfg"
+
+  file { "${nagios::params::rootdir}/send_nsca.cfg":
     ensure  => present,
     owner   => root,
     group   => nagios,
@@ -45,7 +49,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 755,
     content => template("nagios/submit_ocsp.erb"),
-    require => File["${nagios_root_dir}/send_nsca.cfg"],
+    require => File["${nagios::params::rootdir}/send_nsca.cfg"],
   }
 
   file {"/usr/local/bin/submit_ochp":
@@ -54,7 +58,7 @@ class nagios::nsca::client {
     group   => root,
     mode    => 755,
     content => template("nagios/submit_ochp.erb"),
-    require => File["${nagios_root_dir}/send_nsca.cfg"],
+    require => File["${nagios::params::rootdir}/send_nsca.cfg"],
   }
 
   file { "${nagios::params::resourcedir}/command-nsca_client.cfg":
@@ -66,7 +70,7 @@ class nagios::nsca::client {
     command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
     target        => "${nagios::params::resourcedir}/command-nsca_client.cfg",
     notify        => Exec["nagios-reload"],
-    require       => File["${nagios_root_dir}/send_nsca.cfg"],
+    require       => File["${nagios::params::rootdir}/send_nsca.cfg"],
   }
 
   nagios_command {"submit_ochp":
@@ -74,7 +78,7 @@ class nagios::nsca::client {
     command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
     target        => "${nagios::params::resourcedir}/command-nsca_client.cfg",
     notify        => Exec["nagios-reload"],
-    require       => File["${nagios_root_dir}/send_nsca.cfg"],
+    require       => File["${nagios::params::rootdir}/send_nsca.cfg"],
   }
 
   common::concatfilepart {"submit_ocsp":

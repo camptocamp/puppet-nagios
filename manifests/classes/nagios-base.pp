@@ -54,7 +54,7 @@ class nagios::base {
 
   /* other common resources below */
 
-  file { [$nagios_cfg_dir, "${nagios_root_dir}/nagios.d"]:
+  file { ["${nagios::params::rootdir}/auto-puppet", "${nagios::params::rootdir}/nagios.d"]:
     ensure  => directory,
     owner   => root,
     group   => root,
@@ -62,7 +62,7 @@ class nagios::base {
     require => Package["nagios"],
   }
 
-  file { "${nagios_root_dir}/conf.d":
+  file { "${nagios::params::rootdir}/conf.d":
     ensure  => absent,
     force   => true,
     require => Package["nagios"],
@@ -89,7 +89,7 @@ class nagios::base {
     require => Package["nagios"],
   }
 
-  file {"${nagios_cfg_dir}/generic-host.cfg":
+  file {"${nagios::params::resourcedir}/generic-host.cfg":
     ensure  => present,
     owner   => root,
     group   => root,
@@ -98,7 +98,7 @@ class nagios::base {
     notify  => Exec["nagios-reload"],
   }
 
-  file {"${nagios_cfg_dir}/generic-command.cfg":
+  file {"${nagios::params::resourcedir}/generic-command.cfg":
     ensure  => present,
     owner   => root,
     group   => root,
@@ -107,7 +107,7 @@ class nagios::base {
     notify  => Exec["nagios-reload"],
   }
 
-  file {"${nagios_cfg_dir}/generic-timeperiod.cfg":
+  file {"${nagios::params::resourcedir}/generic-timeperiod.cfg":
     ensure  => present,
     owner   => root,
     group   => root,
@@ -116,7 +116,7 @@ class nagios::base {
     notify  => Exec["nagios-reload"],
   }
 
-  file {"${nagios_cfg_dir}/generic-service.cfg":
+  file {"${nagios::params::resourcedir}/generic-service.cfg":
     ensure  => present,
   }
 

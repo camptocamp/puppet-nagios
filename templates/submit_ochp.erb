@@ -8,4 +8,4 @@
 #  $2 = A string indicating the current state of the host ("UP", "DOWN", or "UNREACHABLE").
 #  $3 = The first line of text output from the last host check (i.e. "Ping OK").
 
-/usr/bin/printf "%b" "$1\t$2\t$3\n" | /usr/sbin/send_nsca -H <%= nagios_nsca_server %> -c <%= nagios_root_dir %>/send_nsca.cfg
+/usr/bin/printf "%b" "$1\t$2\t$3\n" | /usr/sbin/send_nsca -H <%= nsca_server %> -c <%= nsca_cfg %>

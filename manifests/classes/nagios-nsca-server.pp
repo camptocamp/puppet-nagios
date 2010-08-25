@@ -7,6 +7,8 @@
 
 class nagios::nsca::server {
 
+  include nagios::params
+
   if defined (Package["nsca"]) {
     notice "Package nsca is already defined"
   } else {
@@ -30,7 +32,7 @@ class nagios::nsca::server {
 
   case $operatingsystem {
     Debian: { $nagios_nsca_cfg = "/etc/nsca.cfg" }
-    default: { $nagios_nsca_cfg = "${nagios_root_dir}/nsca.cfg" }
+    default: { $nagios_nsca_cfg = "${nagios::params::rootdir}/nsca.cfg" }
   }
 
   file {"${nagios_nsca_cfg}":

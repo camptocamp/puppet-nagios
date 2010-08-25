@@ -15,9 +15,11 @@ http://nagios.sourceforge.net/docs/3_0/configmain.html#resource_file
 */
 define nagios::resource ($ensure="present", $value) {
 
+  include nagios::params
+
   common::concatfilepart { $name:
     ensure  => $ensure,
-    file    => "$nagios_root_dir/resource.cfg",
+    file    => "${nagios::params::rootdir}/resource.cfg",
     content => "\$${name}\$=\"${value}\"\n",
     notify  => Exec["nagios-reload"],
     require => Package["nagios"],

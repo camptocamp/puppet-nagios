@@ -1,7 +1,9 @@
 define nagios::template($ensure=present, $content, $conf_type) {
 
+  include nagios::params
+
   # set rights and owner
-  file {"${nagios_cfg_dir}/${conf_type}-${name}.cfg":
+  file {"${nagios::params::resourcedir}/${conf_type}-${name}.cfg":
     ensure => $ensure,
     owner  => root,
     group  => root,
