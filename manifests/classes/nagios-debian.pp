@@ -1,5 +1,7 @@
 class nagios::debian inherits nagios::base {
 
+  /* Common resources between base, redhat, and debian */
+
   case $lsbdistcodename {
     etch: {
       
@@ -34,6 +36,27 @@ class nagios::debian inherits nagios::base {
     default: {err ("lsbdistcodename $lsbdistcodename not yet implemented !")}
   }
 
+  Service["nagios"] {
+    name => "nagios3",
+  }
+
+  Exec["nagios-restart"] {
+    command => "nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 restart",
+  }
+
+  Exec["nagios-reload"] {
+    command => "nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 reload",
+  }
+
+  File["nagios read-write dir"] {
+    path    => "/var/lib/nagios3/rw",
+    group   => "www-data",
+    mode    => 2710,
+  }
+
+
+  /* debian specific resources below */
+
   file {"/etc/default/nagios3":
     ensure => present,
     owner => root,
@@ -41,23 +64,6 @@ class nagios::debian inherits nagios::base {
     mode => 644,
     content => template("nagios/etc/default/nagios3.erb"),
     require => Package["nagios3"],
-  }
-
-  service {"nagios3":
-    ensure      => running,
-    hasrestart  => true,
-    require     => Package["nagios3"],
-    alias       => "nagios",
-  }
-
-  exec {"nagios-restart":
-    command => "/usr/sbin/nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 restart",
-    refreshonly => true,
-  }
-
-  exec {"nagios-reload":
-    command     => "/usr/sbin/nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 reload",
-    refreshonly => true,
   }
 
   file {"/var/lib/nagios3":
@@ -68,28 +74,11 @@ class nagios::debian inherits nagios::base {
   }
 
 
-  file {"/var/lib/nagios3/rw":
-    ensure  => directory,
-    owner   => nagios,
-    group   => www-data,
-    mode    => 2710,
-    require => File["/var/lib/nagios3"],
-  }
-
   common::concatfilepart {"main":
     file    => $nagios_main_config_file,
     content => template("nagios/nagios.cfg.erb"),
     before  => Service["nagios"],
     require => Package["nagios3"],
   }
-
-  file {"${nagios_root_dir}/resource.cfg":
-    ensure  => present,
-    mode    => 0644,
-    owner   => root,
-    group   => root,
-  }
-
-  nagios::resource { "USER1": value => "/usr/lib/nagios/plugins" }
 
 }

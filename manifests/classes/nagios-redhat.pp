@@ -1,6 +1,6 @@
 class nagios::redhat inherits nagios::base {
 
-  
+
   # logs
   $nagios_debug_level = "0"
   $nagios_debug_verbosity = "0"
@@ -9,7 +9,6 @@ class nagios::redhat inherits nagios::base {
   $nagios_log_archive_path ="/var/log/nagios/archives"
 
   # /var/run stuff
-  $nagios_rw = "/var/run/nagios/rw/"
   $nagios_lock_file = "/var/run/nagios.pid"
   $nagios_state_retention_file = "/var/run/nagios/retention.dat"
   $nagios_temp_file = "/var/run/nagios/nagios.tmp"
@@ -24,36 +23,53 @@ class nagios::redhat inherits nagios::base {
   # misc stuff
   $nagios_p1_file = "/usr/sbin/p1.pl"
 
-  package {"nagios":
+
+  /* Common resources between base, redhat, and debian */
+
+  package { "nagios":
     ensure => present,
-    alias  => "nagios3",
   }
 
-  service {"nagios":
-    ensure      => running,
-    enable      => true,
+  Service["nagios"] {
     hasstatus   => false,
-    hasrestart  => true,
-    require     => Package["nagios"],
     pattern     => "/usr/sbin/nagios -d /etc/nagios/nagios.cfg",
   }
 
-  exec {"nagios-restart":
-    command => "/usr/sbin/nagios -v ${nagios_main_config_file} && /etc/init.d/nagios restart",
-    refreshonly => true,
-    require => Package["nagios"],
+  Exec["nagios-restart"] {
+    command => "nagios -v ${nagios_main_config_file} && /etc/init.d/nagios restart",
   }
 
-  exec {"nagios-reload":
-    command     => "/usr/sbin/nagios -v ${nagios_main_config_file} && /etc/init.d/nagios reload",
-    refreshonly => true,
-    require     => Package["nagios"],
+  Exec["nagios-reload"] {
+    command => "nagios -v ${nagios_main_config_file} && /etc/init.d/nagios reload",
   }
+
+  #TODO: make this reliable:
+  if defined( Class["apache"] ) {
+    $group = "apache"
+  } else {
+    $group = "nagios"
+  }
+
+  File["nagios read-write dir"] {
+    path    => "/var/run/nagios/rw/",
+    group   => $group,
+    mode    => 0755,
+    seltype => "nagios_log_t",
+  }
+
+  /* redhat specific resources below */
 
   file {"/etc/default/nagios": ensure => absent }
 
   file {"/etc/nagios3":
     ensure  => absent,
+  }
+
+  common::concatfilepart {"main":
+    file    => $nagios_main_config_file,
+    content => template("nagios/nagios.cfg.erb"),
+    notify  => Exec["nagios-reload"],
+    require => Package["nagios"],
   }
 
   file {["/var/run/nagios",
@@ -70,48 +86,12 @@ class nagios::redhat inherits nagios::base {
     before  => Service["nagios"],
   }
 
-  file {"${nagios_root_dir}/resource.cfg":
-    ensure  => present,
-    mode    => 0644,
-    owner   => root,
-    group   => root,
-  }
-
-  nagios::resource { "USER1":
-    value => $architecture ? {
-      "i386"   => "/usr/lib/nagios/plugins",
-      "x86_64" => "/usr/lib64/nagios/plugins",
-    },
-  }
-
-  common::concatfilepart {"main":
-    file    => $nagios_main_config_file,
-    content => template("nagios/nagios.cfg.erb"),
-    notify  => Exec["nagios-reload"],
-    require => Package["nagios3"],
-  }
-
-  if defined( Class["apache"] ) {
-    $group = "apache"
-  } else {
-    $group = "nagios"
-  }
-
-  file {$nagios_rw:
-    ensure => directory,
-    owner  => nagios,
-    group  => $group,
-    mode   => 0755,
-    require => Package["nagios"],
-  }
-
   if $lsbmajdistrelease == 5 and $operatingsystem == 'RedHat' {
     File["/var/run/nagios",
          "/var/lib/nagios",
          "/var/lib/nagios/spool",
          "/var/cache/nagios",
-         "/var/lib/nagios/spool/checkresults",
-         "$nagios_rw"] {
+         "/var/lib/nagios/spool/checkresults"] {
       seltype => "nagios_log_t",
     }
     exec {"chcon on $nagios_command_file":
@@ -135,8 +115,8 @@ class nagios::redhat inherits nagios::base {
   }
 
   exec {"create node":
-    require => File["$nagios_rw"],
     command => "mknod -m 0664 $nagios_command_file p && chown nagios:${group} $nagios_command_file",
-    unless  => "test -p $nagios_command_file"
+    unless  => "test -p $nagios_command_file",
+    require => File["nagios read-write dir"],
   }
 }

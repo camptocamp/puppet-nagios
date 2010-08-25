@@ -17,6 +17,43 @@ class nagios::base {
     default: { err ("operatingsystem $operatingsystem not yet implemented !") }
   }
 
+  /* Common resources between base, redhat, and debian */
+
+  service { "nagios":
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    require    => Package["nagios"],
+  }
+
+  exec { "nagios-restart":
+    command     => undef,
+    refreshonly => true,
+  }
+
+  exec { "nagios-reload":
+    command     => undef,
+    refreshonly => true,
+  }
+
+  file { "nagios read-write dir":
+    ensure  => directory,
+    owner   => "nagios",
+    require => Package["nagios"],
+  }
+
+  file {"${nagios::params::rootdir}/resource.cfg":
+    ensure  => present,
+    mode    => 0644,
+    owner   => root,
+    group   => root,
+  }
+
+  nagios::resource { "USER1": value => "${nagios::params::user1}" }
+
+
+  /* other common resources below */
+
   file { [$nagios_cfg_dir, "${nagios_root_dir}/nagios.d"]:
     ensure  => directory,
     owner   => root,
