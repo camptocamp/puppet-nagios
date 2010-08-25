@@ -18,11 +18,15 @@ define nagios::service::local (
   $use="generic-service-active"
   ) {
 
-  nagios_service {$name:
+  include nagios::params
+
+  $fname = regsubst($name, "\W", "_", "G")
+
+  nagios_service { $name:
     ensure                => $ensure,
     use                   => $use,
     host_name             => $host_name ? {
-      false => $hostname,
+      false   => $hostname,
       default => $host_name,
     },
     check_command         => $check_command ? {
@@ -33,7 +37,7 @@ define nagios::service::local (
     contact_groups        => $contact_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
-    target                => "${nagios_cfg_dir}/services.cfg",
+    target                => "${nagios::params::resourcedir}/service-${fname}.cfg",
     require               => [
       Class["nagios::base"],
       File["nagios_services.cfg"],
@@ -43,7 +47,7 @@ define nagios::service::local (
   }
 
   nagios::command { $codename:
-    ensure => $ensure,
+    ensure       => $ensure,
     command_line => $command_line,
   }
 

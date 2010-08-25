@@ -7,9 +7,13 @@
 
 define nagios::local::hostgroup ($ensure=present) {
 
+  include nagios::params
+
+  $fname = regsubst($name, "\W", "_", "G")
+
   nagios_hostgroup { $name:
     ensure  => $ensure,
-    target  => "$nagios_cfg_dir/hostgroups.cfg",
+    target  => "${nagios::params::resourcedir}/hostgroup-${fname}.cfg",
     notify  => Exec["nagios-reload"],
     require => [
       Class["nagios::base"],

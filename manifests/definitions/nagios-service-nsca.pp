@@ -19,12 +19,16 @@ define nagios::service::nsca (
   $package=false
   ) {
 
-  nagios::service::local {$name:
+  include nagios::params
+
+  $fname = regsubst($name, "\W", "_", "G")
+
+  nagios::service::local { $name:
     ensure       => $ensure,
     use          => $use_active,
     command_line => $command_line,
     host_name    => $host_name ? {
-      false => $hostname,
+      false   => $hostname,
       default => $host_name,
     },
     contact_groups        => $contact_groups,
@@ -33,15 +37,15 @@ define nagios::service::nsca (
     service_description   => $service_description,
   }
 
-  @@nagios_service {"@@$name on $hostname":
+  @@nagios_service { "@@$name on $hostname":
     ensure    => $ensure,
     use       => $use_passive,
     host_name => $host_name ? {
-      false => $hostname,
+      false   => $hostname,
       default => $host_name,
     },
     tag       => $export_for,
-    target    => "${nagios_cfg_dir}/services.cfg",
+    target    => "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg",
     notify    => Exec["nagios-reload"],
     contact_groups        => $contact_groups,
     normal_check_interval => $normal_check_interval,

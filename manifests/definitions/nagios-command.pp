@@ -10,10 +10,14 @@ define nagios::command (
   $command_line
   ) {
 
-  nagios_command {$name:
+  include nagios::params
+
+  $fname = regsubst($name, "\W", "_", "G")
+
+  nagios_command { $name:
     ensure        => $ensure,
     command_line  => $command_line,
-    target        => "${nagios_cfg_dir}/commands.cfg",
+    target        => "${nagios::params::resourcedir}/command-${fname}.cfg",
     notify        => Exec["nagios-reload"],
     require       => [
       Class["nagios::base"],

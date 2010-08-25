@@ -13,15 +13,19 @@ define nagios::host::remote (
   $contact_groups=undef
   ) {
 
-  nagios_host {$name:
+  include nagios::params
+
+  $fname = regsubst($name, "\W", "_", "G")
+
+  nagios_host { $name:
     ensure  => $ensure,
     use     => "generic-host-active",
     address => $address ? {
-      false => $ipaddress,
+      false   => $ipaddress,
       default => $address,
     },
     alias   => $nagios_alias,
-    target  => "${nagios_cfg_dir}/hosts.cfg",
+    target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify  => Exec["nagios-reload"],
     require => [
       Class["nagios::base"],
@@ -29,21 +33,21 @@ define nagios::host::remote (
     ],
   }
 
-  @@nagios_host {"@@${name}":
+  @@nagios_host { "@@${name}":
     ensure     => $ensure,
     use        => "generic-host-active",
     tag        => $export_for,
     host_name  => $name,
     address    => $address ? {
-      false => $ipaddress,
+      false   => $ipaddress,
       default => $address,
     },
     alias      => $nagios_alias,
     hostgroups => $hostgroups,
     contact_groups => $contact_groups,
-    target     => "${nagios_cfg_dir}/hosts.cfg",
+    target     => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify     => Exec["nagios-reload"],
-    require => [
+    require    => [
       Class["nagios::base"],
       File["nagios_hosts.cfg"],
     ],

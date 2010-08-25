@@ -14,15 +14,19 @@ define nagios::host::nsca (
   $contact_groups=undef
   ) {
 
-  nagios_host {$name:
+  include nagios::params
+
+  $fname = regsubst($name, "\W", "_", "G")
+
+  nagios_host { $name:
     ensure  => $ensure,
     use     => "generic-host-active",
     address => $address ? {
-      false => $ipaddress,
+      false   => $ipaddress,
       default => $address,
     },
     alias   => $nagios_alias,
-    target  => "${nagios_cfg_dir}/hosts.cfg",
+    target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify  => Exec["nagios-reload"],
     require => [
       Class["nagios::base"],
@@ -30,21 +34,21 @@ define nagios::host::nsca (
     ],
   }
 
-  @@nagios_host {"@@$name":
+  @@nagios_host { "@@$name":
     ensure     => $ensure,
     use        => "generic-host-passive",
     address    => $address ? {
-      false => $ipaddress,
+      false   => $ipaddress,
       default => $address,
     },
     host_name  => $name,
     alias      => $nagios_alias,
     tag        => $export_for,
     hostgroups => $hostgroups,
-    target     => "${nagios_cfg_dir}/hosts.cfg",
+    target     => "${nagios::params::resourcedir}/host-${fname}.cfg",
     contact_groups => $contact_groups,
     notify     => Exec["nagios-reload"],
-    require => [
+    require    => [
       Class["nagios::base"],
       File["nagios_hosts.cfg"],
     ],

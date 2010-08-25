@@ -15,11 +15,15 @@ define nagios::service::remote (
   $retry_check_interval=undef
   ) {
 
-  @@nagios_service {"@@${name} on ${hostname}":
+  include nagios::params
+
+  $fname = regsubst($name, "\W", "_", "G")
+
+  @@nagios_service { "@@${name} on ${hostname}":
     ensure                => $ensure,
     use                   => "generic-service-active",
     host_name             => $host_name ? {
-      false => $hostname,
+      false   => $hostname,
       default => $host_name,
     },
     check_command         => "${name}_on_${hostname}",
@@ -28,7 +32,7 @@ define nagios::service::remote (
     contact_groups        => $contact_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
-    target                => "${nagios_cfg_dir}/services.cfg",
+    target                => "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg",
     require               => [
       Class["nagios::base"],
       File["nagios_services.cfg"],
@@ -37,10 +41,10 @@ define nagios::service::remote (
     notify                => Exec["nagios-reload"],
   }
 
-  @@nagios_command {"${name}_on_${hostname}":
+  @@nagios_command { "${name}_on_${hostname}":
     ensure       => $ensure,
     command_line => $command_line,
-    target       => "${nagios_cfg_dir}/commands.cfg",
+    target       => "${nagios::params::resourcedir}/command-${fname}_on_${hostname}.cfg",
     tag          => $export_for,
     require      => [
       Class["nagios::base"],
