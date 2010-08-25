@@ -2,13 +2,6 @@ class nagios::redhat inherits nagios::base {
 
   include nagios::params
 
-  # variables used in ERB template
-  $basename = "${nagios::params::basename}"
-  $nagios_p1_file = "/usr/sbin/p1.pl"
-  $nagios_debug_level = "0"
-  $nagios_debug_verbosity = "0"
-
-
   /* Common resources between base, redhat, and debian */
 
   package { "nagios":
@@ -46,13 +39,6 @@ class nagios::redhat inherits nagios::base {
   file {"/etc/default/nagios": ensure => absent }
 
   file {"/etc/nagios3": ensure => absent }
-
-  common::concatfilepart {"main":
-    file    => "${nagios::params::conffile}",
-    content => template("nagios/nagios.cfg.erb"),
-    notify  => Exec["nagios-reload"],
-    require => Package["nagios"],
-  }
 
   if $lsbmajdistrelease == 5 and $operatingsystem == 'RedHat' {
     File["/var/run/nagios",

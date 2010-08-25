@@ -9,6 +9,12 @@ class nagios::base {
 
   include nagios::params
 
+  # variables used in ERB template
+  $basename = "${nagios::params::basename}"
+  $nagios_p1_file = "${nagios::params::p1file}"
+  $nagios_debug_level = "0"
+  $nagios_debug_verbosity = "0"
+
   case $operatingsystem {
     /Debian|Ubuntu/ : { $nagios_mail_path = '/usr/bin/mail' }
     /RedHat|CentOS|Fedora/ : { $nagios_mail_path = '/bin/mail' }
@@ -64,6 +70,13 @@ class nagios::base {
   }
 
   nagios::resource { "USER1": value => "${nagios::params::user1}" }
+
+  common::concatfilepart {"main":
+    file    => "${nagios::params::conffile}",
+    content => template("nagios/nagios.cfg.erb"),
+    notify  => Exec["nagios-restart"],
+    require => Package["nagios"],
+  }
 
 
   /* other common resources below */

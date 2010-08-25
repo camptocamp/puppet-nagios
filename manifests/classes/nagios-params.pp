@@ -13,6 +13,11 @@ class nagios::params {
     },
   }
 
+  $p1file = $operatingsystem ? {
+    /Debian|Ubuntu/ => "/usr/lib/nagios3/p1.pl",
+    /RedHat|CentOS|Fedora/ => "/usr/sbin/p1.pl",
+  }
+
   $resourcedir = "/etc/nagios.d"
   $rootdir     = "/etc/${basename}"
   $conffile    = "${rootdir}/nagios.cfg"
