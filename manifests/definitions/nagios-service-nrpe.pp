@@ -42,7 +42,7 @@ define nagios::service::nrpe (
     contact_groups        => $contact_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
-    target                => "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg",
+    target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg",
     require               => [
       Class["nagios::base"],
       File["nagios_services.cfg"],
@@ -51,14 +51,14 @@ define nagios::service::nrpe (
     notify                => Exec["nagios-reload"],
   }
 
-  @@file { "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg":
+  @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
     ensure => $ensure,
   }
 
   @@nagios_command { "nrpe_${name}_on_${hostname}":
     ensure       => $ensure,
     command_line => "\$USER1\$/check_nrpe -H ${fqdn} -u -t 120 -c ${name}",
-    target       => "${nagios::params::resourcedir}/command-nrpe_${fname}_on_${hostname}.cfg",
+    target       => "${nagios::params::resourcedir}/collected-command-nrpe_${fname}_on_${hostname}.cfg",
     tag          => $export_for,
     require      => [
       Class["nagios::base"],
@@ -67,7 +67,7 @@ define nagios::service::nrpe (
     notify       => Exec["nagios-reload"],
   }
 
-  @@file { "${nagios::params::resourcedir}/command-nrpe_${fname}_on_${hostname}.cfg":
+  @@file { "${nagios::params::resourcedir}/collected-command-nrpe_${fname}_on_${hostname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
   }

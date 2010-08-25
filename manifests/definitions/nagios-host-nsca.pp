@@ -49,7 +49,7 @@ define nagios::host::nsca (
     alias      => $nagios_alias,
     tag        => $export_for,
     hostgroups => $hostgroups,
-    target     => "${nagios::params::resourcedir}/host-${fname}.cfg",
+    target     => "${nagios::params::resourcedir}/collected-host-${fname}.cfg",
     contact_groups => $contact_groups,
     notify     => Exec["nagios-reload"],
     require    => [
@@ -58,7 +58,7 @@ define nagios::host::nsca (
     ],
   }
 
-  @@file { "${nagios::params::resourcedir}/host-${fname}.cfg":
+  @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
   }

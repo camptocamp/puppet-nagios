@@ -45,7 +45,7 @@ define nagios::service::nsca (
       default => $host_name,
     },
     tag       => $export_for,
-    target    => "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg",
+    target    => "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg",
     notify    => Exec["nagios-reload"],
     contact_groups        => $contact_groups,
     normal_check_interval => $normal_check_interval,
@@ -57,7 +57,7 @@ define nagios::service::nsca (
     ],
   }
 
-  @@file { "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg":
+  @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
   }

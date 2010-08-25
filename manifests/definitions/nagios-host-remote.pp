@@ -50,7 +50,7 @@ define nagios::host::remote (
     alias      => $nagios_alias,
     hostgroups => $hostgroups,
     contact_groups => $contact_groups,
-    target     => "${nagios::params::resourcedir}/host-${fname}.cfg",
+    target     => "${nagios::params::resourcedir}/collected-host-${fname}.cfg",
     notify     => Exec["nagios-reload"],
     require    => [
       Class["nagios::base"],
@@ -58,7 +58,7 @@ define nagios::host::remote (
     ],
   }
 
-  @@file { "${nagios::params::resourcedir}/host-${fname}.cfg":
+  @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
   }
