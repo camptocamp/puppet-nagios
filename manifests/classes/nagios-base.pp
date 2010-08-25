@@ -81,17 +81,12 @@ class nagios::base {
 
   /* other common resources below */
 
-  file { ["${nagios::params::rootdir}/auto-puppet", "${nagios::params::rootdir}/nagios.d"]:
-    ensure  => directory,
-    owner   => root,
-    group   => root,
-    mode    => 755,
-    require => Package["nagios"],
-  }
-
-  file { "${nagios::params::rootdir}/conf.d":
+  file { ["${nagios::params::rootdir}/conf.d",
+          "${nagios::params::rootdir}/auto-puppet",
+          "${nagios::params::rootdir}/nagios.d"]:
     ensure  => absent,
     force   => true,
+    recurse => true,
     require => Package["nagios"],
   }
 
