@@ -3,7 +3,7 @@ class nagios::nrpe::client {
   package { "nrpe":
     name    => $operatingsystem ? {
       /Debian|Ubuntu/ => "nagios-nrpe-server",
-      /RedHat|CentOS/ => "nrpe",
+      /RedHat|CentOS|Fedora/ => "nrpe",
     },
     ensure  => present,
   }
@@ -11,7 +11,7 @@ class nagios::nrpe::client {
   service { "nrpe":
     name    => $operatingsystem ? {
       /Debian|Ubuntu/ => "nagios-nrpe-server",
-      /RedHat|CentOS/ => "nrpe",
+      /RedHat|CentOS|Fedora/ => "nrpe",
     },
     ensure  => running,
     enable  => true,

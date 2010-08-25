@@ -1,12 +1,12 @@
 class nagios::nrpe::server {
   case $operatingsystem {
     
-    Debian: {
+    /Debian|Ubuntu/: {
       package {"nagios-nrpe-plugin":
         ensure => present,
       }
     }
-    RedHat: {
+    /RedHat|CentOS|Fedora/: {
       package {"nagios-plugins-nrpe":
         ensure => present,
       }

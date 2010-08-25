@@ -27,7 +27,7 @@ class nagios::webinterface {
 
   case $operatingsystem {
 
-    RedHat: {
+    /RedHat|CentOS|Fedora/: {
       package {["nagios-www", "php", "nagios-plugins-nagios"]:
         ensure => present,
       }
@@ -66,7 +66,7 @@ allow httpd_t nagios_log_t:file read;
       }
     }
 
-    Debian: {
+    /Debian|Ubuntu/: {
       file {"/etc/apache2/conf.d/nagios3.conf":
         ensure  => absent,
         notify  => Exec["apache-graceful"],

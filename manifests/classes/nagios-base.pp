@@ -11,9 +11,7 @@ class nagios::base {
 
   case $operatingsystem {
     /Debian|Ubuntu/ : { $nagios_mail_path = '/usr/bin/mail' }
-
-    /RedHat|CentOS/ : { $nagios_mail_path = '/bin/mail' }
-
+    /RedHat|CentOS|Fedora/ : { $nagios_mail_path = '/bin/mail' }
     default: { err ("operatingsystem $operatingsystem not yet implemented !") }
   }
 
