@@ -35,7 +35,7 @@ class nagios::nsca::client {
     group   => nagios,
     mode    => 640,
     content => template("nagios/send_nsca.cfg.erb"),
-    require => [Package["nsca"], Package["nagios"], Class["nagios::base"]],
+    require => [Package["nsca"], Package["nagios"]],
     notify  => Service["nagios"],
   }
 
@@ -66,9 +66,7 @@ class nagios::nsca::client {
     command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
     target        => "${nagios::params::resourcedir}/command-nsca_client.cfg",
     notify        => Exec["nagios-reload"],
-    require       => [
-      File["${nagios_root_dir}/send_nsca.cfg"],
-      Class["nagios::base"]],
+    require       => File["${nagios_root_dir}/send_nsca.cfg"],
   }
 
   nagios_command {"submit_ochp":
@@ -76,9 +74,7 @@ class nagios::nsca::client {
     command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
     target        => "${nagios::params::resourcedir}/command-nsca_client.cfg",
     notify        => Exec["nagios-reload"],
-    require       => [
-      File["${nagios_root_dir}/send_nsca.cfg"],
-      Class["nagios::base"]],
+    require       => File["${nagios_root_dir}/send_nsca.cfg"],
   }
 
   common::concatfilepart {"submit_ocsp":

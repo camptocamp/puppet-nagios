@@ -19,7 +19,6 @@ define nagios::command (
     command_line  => $command_line,
     target        => "${nagios::params::resourcedir}/command-${fname}.cfg",
     notify        => Exec["nagios-reload"],
-    require       => Class["nagios::base"],
   }
 
   file { "${nagios::params::resourcedir}/command-${fname}.cfg":

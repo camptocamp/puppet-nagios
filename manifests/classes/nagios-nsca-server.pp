@@ -39,7 +39,7 @@ class nagios::nsca::server {
     group   => nagios,
     mode    => 640,
     content => template("nagios/nsca.cfg.erb"),
-    require => [Package["nsca"], Package["nagios"], Class["nagios::base"]],
+    require => [Package["nsca"], Package["nagios"]],
     notify  => Service["nsca"],
   }
 
