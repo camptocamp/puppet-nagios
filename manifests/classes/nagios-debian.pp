@@ -34,7 +34,7 @@ class nagios::debian::packages {
   }
 }
 
-class nagios::debian {
+class nagios::debian inherits nagios::base {
 
   include nagios::debian::packages
 

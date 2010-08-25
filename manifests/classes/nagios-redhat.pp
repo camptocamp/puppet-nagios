@@ -1,4 +1,4 @@
-class nagios::redhat {
+class nagios::redhat inherits nagios::base {
 
   
   # logs

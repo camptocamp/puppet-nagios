@@ -7,8 +7,6 @@
 
 class nagios::base {
 
-  include nagios::os
-
   include nagios::params
 
   case $operatingsystem {
