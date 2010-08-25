@@ -36,11 +36,11 @@ class nagios::redhat inherits nagios::base {
   }
 
   Exec["nagios-restart"] {
-    command => "nagios -v ${nagios_main_config_file} && /etc/init.d/nagios restart",
+    command => "nagios -v ${nagios::params::conffile} && /etc/init.d/nagios restart",
   }
 
   Exec["nagios-reload"] {
-    command => "nagios -v ${nagios_main_config_file} && /etc/init.d/nagios reload",
+    command => "nagios -v ${nagios::params::conffile} && /etc/init.d/nagios reload",
   }
 
   #TODO: make this reliable:
@@ -66,7 +66,7 @@ class nagios::redhat inherits nagios::base {
   }
 
   common::concatfilepart {"main":
-    file    => $nagios_main_config_file,
+    file    => "${nagios::params::conffile}",
     content => template("nagios/nagios.cfg.erb"),
     notify  => Exec["nagios-reload"],
     require => Package["nagios"],

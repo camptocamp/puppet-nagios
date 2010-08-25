@@ -81,7 +81,7 @@ class nagios::base {
     notify  => Exec["nagios-reload"],
   }
 
-  file {$nagios_main_config_file:
+  file { "${nagios::params::conffile}":
     ensure  => present,
     owner   => root,
     group   => root,

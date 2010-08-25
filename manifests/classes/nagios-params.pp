@@ -15,4 +15,5 @@ class nagios::params {
 
   $resourcedir = "/etc/nagios.d"
   $rootdir     = "/etc/${basename}"
+  $conffile    = "${rootdir}/nagios.cfg"
 }

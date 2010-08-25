@@ -16,7 +16,7 @@ class nagios::nsca::client {
       ensure => installed;
     }
   }
-  
+
   case $operatingsystem {
 
     RedHat,Fedora,CentOS: {
@@ -78,13 +78,13 @@ class nagios::nsca::client {
   }
 
   common::concatfilepart {"submit_ocsp":
-    file    => $nagios_main_config_file,
+    file    => "${nagios::params::conffile}",
     content => "ocsp_command=submit_ocsp\n",
     notify  => Exec["nagios-reload"],
   }
 
   common::concatfilepart {"submit_ochp":
-    file    => $nagios_main_config_file,
+    file    => "${nagios::params::conffile}",
     content => "ochp_command=submit_ochp\n",
     notify  => Exec["nagios-reload"],
   }

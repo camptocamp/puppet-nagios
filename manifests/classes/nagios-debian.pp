@@ -4,7 +4,7 @@ class nagios::debian inherits nagios::base {
 
   case $lsbdistcodename {
     etch: {
-      
+
       os::backported_package {[
           "nagios3-common",
           "nagios-plugins",
@@ -18,7 +18,7 @@ class nagios::debian inherits nagios::base {
         alias  => "nagios",
       }
     }
-    
+
     lenny: {
       package {[
         "nagios3-common",
@@ -41,11 +41,11 @@ class nagios::debian inherits nagios::base {
   }
 
   Exec["nagios-restart"] {
-    command => "nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 restart",
+    command => "nagios3 -v ${nagios::params::conffile} && /etc/init.d/nagios3 restart",
   }
 
   Exec["nagios-reload"] {
-    command => "nagios3 -v ${nagios_main_config_file} && /etc/init.d/nagios3 reload",
+    command => "nagios3 -v ${nagios::params::conffile} && /etc/init.d/nagios3 reload",
   }
 
   File["nagios read-write dir"] {
@@ -75,7 +75,7 @@ class nagios::debian inherits nagios::base {
 
 
   common::concatfilepart {"main":
-    file    => $nagios_main_config_file,
+    file    => "${nagios::params::conffile}",
     content => template("nagios/nagios.cfg.erb"),
     before  => Service["nagios"],
     require => Package["nagios3"],
