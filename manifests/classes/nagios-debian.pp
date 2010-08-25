@@ -1,5 +1,13 @@
 class nagios::debian inherits nagios::base {
 
+  include nagios::params
+
+  # variables used in ERB template
+  $basename = "${nagios::params::basename}"
+  $nagios_p1_file = "/usr/lib/nagios3/p1.pl"
+  $nagios_debug_level = "0"
+  $nagios_debug_verbosity = "0"
+
   /* Common resources between base, redhat, and debian */
 
   case $lsbdistcodename {
@@ -49,9 +57,12 @@ class nagios::debian inherits nagios::base {
   }
 
   File["nagios read-write dir"] {
-    path    => "/var/lib/nagios3/rw",
-    group   => "www-data",
-    mode    => 2710,
+    group => "www-data",
+    mode  => 2710,
+  }
+
+  File["/var/lib/nagios3"] {
+    mode => 751,
   }
 
 
@@ -64,13 +75,6 @@ class nagios::debian inherits nagios::base {
     mode => 644,
     content => template("nagios/etc/default/nagios3.erb"),
     require => Package["nagios3"],
-  }
-
-  file {"/var/lib/nagios3":
-    ensure  => directory,
-    owner   => nagios,
-    group   => nagios,
-    mode    => 751,
   }
 
 

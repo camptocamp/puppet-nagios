@@ -1,27 +1,12 @@
 class nagios::redhat inherits nagios::base {
 
+  include nagios::params
 
-  # logs
+  # variables used in ERB template
+  $basename = "${nagios::params::basename}"
+  $nagios_p1_file = "/usr/sbin/p1.pl"
   $nagios_debug_level = "0"
   $nagios_debug_verbosity = "0"
-  $nagios_log_file = "/var/log/nagios/nagios.log"
-  $nagios_debug_file = "/var/log/nagios/nagios.debug"
-  $nagios_log_archive_path ="/var/log/nagios/archives"
-
-  # /var/run stuff
-  $nagios_lock_file = "/var/run/nagios.pid"
-  $nagios_state_retention_file = "/var/run/nagios/retention.dat"
-  $nagios_temp_file = "/var/run/nagios/nagios.tmp"
-  $nagios_command_file = "/var/run/nagios/rw/nagios.cmd"
-  $nagios_status_file = "/var/run/nagios/status.dat"
-  $nagios_precached_object_file = "/var/run/nagios/objects.precache"
-  $nagios_object_cache_file = "/var/run/nagios/objects.cache"
-
-  # /var/lib stuff
-  $nagios_check_result_path = "/var/lib/nagios/spool/checkresults"
-
-  # misc stuff
-  $nagios_p1_file = "/usr/sbin/p1.pl"
 
 
   /* Common resources between base, redhat, and debian */
@@ -51,7 +36,6 @@ class nagios::redhat inherits nagios::base {
   }
 
   File["nagios read-write dir"] {
-    path    => "/var/run/nagios/rw/",
     group   => $group,
     mode    => 0755,
     seltype => "nagios_log_t",
@@ -61,9 +45,7 @@ class nagios::redhat inherits nagios::base {
 
   file {"/etc/default/nagios": ensure => absent }
 
-  file {"/etc/nagios3":
-    ensure  => absent,
-  }
+  file {"/etc/nagios3": ensure => absent }
 
   common::concatfilepart {"main":
     file    => "${nagios::params::conffile}",
@@ -72,51 +54,40 @@ class nagios::redhat inherits nagios::base {
     require => Package["nagios"],
   }
 
-  file {["/var/run/nagios",
-         "/var/lib/nagios",
-         "/var/lib/nagios/spool",
-         "/var/cache/nagios",
-         "/var/lib/nagios/spool/checkresults",
-        ]:
-    ensure => directory,
-    owner  => nagios,
-    group  => nagios,
-    mode   => 0744,
-    require => Package["nagios"],
-    before  => Service["nagios"],
-  }
-
   if $lsbmajdistrelease == 5 and $operatingsystem == 'RedHat' {
     File["/var/run/nagios",
+         "/var/log/nagios",
          "/var/lib/nagios",
          "/var/lib/nagios/spool",
-         "/var/cache/nagios",
-         "/var/lib/nagios/spool/checkresults"] {
+         "/var/lib/nagios/spool/checkresults",
+         "/var/cache/nagios"] {
       seltype => "nagios_log_t",
     }
-    exec {"chcon on $nagios_command_file":
+
+    exec { "chcon /var/lib/nagios/rw/nagios.cmd":
       require => Exec["create node"],
-      command => "chcon -t nagios_spool_t $nagios_command_file",
-      unless  => "ls -Z $nagios_command_file | grep -q nagios_spool_t",
+      command => "chcon -t nagios_spool_t /var/lib/nagios/rw/nagios.cmd",
+      unless  => "ls -Z /var/lib/nagios/rw/nagios.cmd | grep -q nagios_spool_t",
     }
-    file {[$nagios_state_retention_file,
-          $nagios_temp_file,
-          $nagios_status_file,
-          $nagios_precached_object_file,
-          $nagios_object_cache_file]:
-      ensure => present,
+
+    file {["/var/lib/nagios/retention.dat",
+           "/var/cache/nagios/nagios.tmp",
+           "/var/cache/nagios/status.dat",
+           "/var/cache/nagios/objects.precache",
+           "/var/cache/nagios/objects.cache"]:
+      ensure  => present,
       seltype => "nagios_log_t",
       owner   => nagios,
       group   => nagios,
       require => File["/var/run/nagios"],
     }
-    File[$nagios_state_retention_file] { mode => 0600 }
-    File[$nagios_status_file] { mode => 0664 }
+    File["/var/lib/nagios/retention.dat"] { mode => 0600 }
+    File["/var/cache/nagios/status.dat"]  { mode => 0664 }
   }
 
   exec {"create node":
-    command => "mknod -m 0664 $nagios_command_file p && chown nagios:${group} $nagios_command_file",
-    unless  => "test -p $nagios_command_file",
+    command => "mknod -m 0664 /var/lib/nagios/rw/nagios.cmd p && chown nagios:${group} /var/lib/nagios/rw/nagios.cmd",
+    unless  => "test -p /var/lib/nagios/rw/nagios.cmd",
     require => File["nagios read-write dir"],
   }
 }

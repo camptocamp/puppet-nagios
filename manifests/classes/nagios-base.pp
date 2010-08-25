@@ -36,9 +36,25 @@ class nagios::base {
 
   file { "nagios read-write dir":
     ensure  => directory,
+    path    => "/var/lib/${nagios::params::basename}/rw",
     owner   => "nagios",
     require => Package["nagios"],
   }
+
+  file {["/var/run/${nagios::params::basename}",
+         "/var/log/${nagios::params::basename}",
+         "/var/lib/${nagios::params::basename}",
+         "/var/lib/${nagios::params::basename}/spool",
+         "/var/lib/${nagios::params::basename}/spool/checkresults",
+         "/var/cache/${nagios::params::basename}"]:
+    ensure  => directory,
+    owner   => nagios,
+    group   => nagios,
+    mode    => 0755,
+    require => Package["nagios"],
+    before  => Service["nagios"],
+  }
+
 
   file {"${nagios::params::rootdir}/resource.cfg":
     ensure  => present,
