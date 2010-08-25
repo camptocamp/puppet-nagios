@@ -7,14 +7,27 @@
 
 class nagios::webinterface {
 
+  include nagios::params
+
+  # variables used in erb template.
+  $nagios_main_config_file     = "${nagios::params::conffile}"
+  $nagios_physical_html_path   = "/usr/share/${nagios::params::basename}"
+  $nagios_url_html_path        = "/${nagios::params::basename}"
+  $nagios_nagios_check_command = "${nagios::params::user1}/check_nagios /var/cache/${nagios::params::basename}/status.dat 5 '/usr/sbin/${nagios::params::basename}'"
+
+  file {"${nagios::params::rootdir}/cgi.cfg":
+    ensure  => present,
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    content => template("nagios/cgi.cfg.erb"),
+    require => Class["nagios"],
+    notify  => Exec["apache-graceful"],
+  }
+
   case $operatingsystem {
 
     RedHat: {
-      $nagios_main_config_file = "/etc/nagios/nagios.cfg"
-      $nagios_physical_html_path = "/usr/share/nagios"
-      $nagios_url_html_path = "/nagios"
-      $nagios_nagios_check_command = "/usr/lib64/nagios/plugins/check_nagios /var/run/nagios/status.dat 5 '/usr/sbin/nagios'"
-
       package {["nagios-www", "php", "nagios-plugins-nagios"]:
         ensure => present,
       }
@@ -22,16 +35,6 @@ class nagios::webinterface {
       file {"/etc/httpd/conf.d/nagios3.conf":
         ensure  => absent,
         require => Package["nagios-www"],
-        notify  => Exec["apache-graceful"],
-      }
-
-      file {"${nagios_root_dir}/cgi.cfg":
-        ensure  => present,
-        owner   => root,
-        group   => root,
-        mode    => 644,
-        content => template("nagios/cgi.cfg.erb"),
-        require => Class["nagios::os"],
         notify  => Exec["apache-graceful"],
       }
 
@@ -64,16 +67,6 @@ allow httpd_t nagios_log_t:file read;
     }
 
     Debian: {
-      file {"${nagios_root_dir}/cgi.cfg":
-        ensure  => present,
-        owner   => root,
-        group   => root,
-        mode    => 644,
-        content => template("nagios/cgi.cfg.erb"),
-        require => Class["nagios::os"],
-        notify  => Exec["apache-graceful"],
-      }
-
       file {"/etc/apache2/conf.d/nagios3.conf":
         ensure  => absent,
         notify  => Exec["apache-graceful"],
