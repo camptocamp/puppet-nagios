@@ -1,4 +1,5 @@
-class nagios::debian::packages {
+class nagios::debian inherits nagios::base {
+
   case $lsbdistcodename {
     etch: {
       
@@ -32,11 +33,6 @@ class nagios::debian::packages {
     }
     default: {err ("lsbdistcodename $lsbdistcodename not yet implemented !")}
   }
-}
-
-class nagios::debian inherits nagios::base {
-
-  include nagios::debian::packages
 
   file {"/etc/default/nagios3":
     ensure => present,
