@@ -40,7 +40,6 @@ define nagios::service::local (
     target                => "${nagios::params::resourcedir}/service-${fname}.cfg",
     require               => [
       Class["nagios::base"],
-      File["nagios_services.cfg"],
       Nagios::Command[$codename],
     ],
     notify                => Exec["nagios-reload"],

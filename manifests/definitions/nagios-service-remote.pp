@@ -35,7 +35,6 @@ define nagios::service::remote (
     target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg",
     require               => [
       Class["nagios::base"],
-      File["nagios_services.cfg"],
       Nagios_command["${name}_on_${hostname}"],
     ],
     notify                => Exec["nagios-reload"],
@@ -51,10 +50,7 @@ define nagios::service::remote (
     command_line => $command_line,
     target       => "${nagios::params::resourcedir}/collected-command-${fname}_on_${hostname}.cfg",
     tag          => $export_for,
-    require      => [
-      Class["nagios::base"],
-      File["nagios_commands.cfg"],
-    ],
+    require      => Class["nagios::base"],
     notify       => Exec["nagios-reload"],
   }
 

@@ -27,10 +27,7 @@ define nagios::host::remote (
     alias   => $nagios_alias,
     target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify  => Exec["nagios-reload"],
-    require => [
-      Class["nagios::base"],
-      File["nagios_hosts.cfg"],
-    ],
+    require => Class["nagios::base"],
   }
 
   file { "${nagios::params::resourcedir}/host-${fname}.cfg":
@@ -52,10 +49,7 @@ define nagios::host::remote (
     contact_groups => $contact_groups,
     target     => "${nagios::params::resourcedir}/collected-host-${fname}.cfg",
     notify     => Exec["nagios-reload"],
-    require    => [
-      Class["nagios::base"],
-      File["nagios_hosts.cfg"],
-    ],
+    require    => Class["nagios::base"],
   }
 
   @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":

@@ -85,51 +85,11 @@ class nagios::base {
     ensure  => present,
   }
 
-  # default objects files
-  file {"${nagios_cfg_dir}/hosts.cfg":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
-    alias   => "nagios_hosts.cfg",
-  }
-  file {"${nagios_cfg_dir}/services.cfg":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
-    alias   => "nagios_services.cfg",
-  }
-  file {"${nagios_cfg_dir}/contacts.cfg":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
-    alias   => "nagios_contacts.cfg",
-  }
-  file {"${nagios_cfg_dir}/commands.cfg":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
-    alias   => "nagios_commands.cfg",
-  }
-  file {"${nagios_cfg_dir}/contactgroups.cfg":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
-    alias   => "nagios_contactgroups.cfg",
-  }
-  file {"${nagios_cfg_dir}/hostgroups.cfg":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => 644,
-    alias   => "nagios_hostgroups.cfg",
+  file {"${nagios::params::resourcedir}/base-contacts.cfg":
+    ensure => present,
   }
 
-  nagios_contact {"root":
+  nagios_contact { "root":
     contact_name                  => "root",
     alias                         => "Root",
     service_notification_period   => "24x7",
@@ -139,16 +99,15 @@ class nagios::base {
     service_notification_commands => "notify-service-by-email",
     host_notification_commands    => "notify-host-by-email",
     email                         => "root",
-    target                        => "${nagios_cfg_dir}/contacts.cfg",
+    target                        => "${nagios::params::resourcedir}/base-contacts.cfg",
     notify                        => Exec["nagios-reload"],
-    require                       => File["${nagios_cfg_dir}/contacts.cfg"],
   }
 
-  nagios_contactgroup {"admins":
+  nagios_contactgroup { "admins":
     contactgroup_name => "admins",
     alias             => "Nagios Administrators",
     members           => "root",
-    target            => "${nagios_cfg_dir}/contactgroups.cfg",
+    target            => "${nagios::params::resourcedir}/base-contacts.cfg",
     notify            => Exec["nagios-reload"],
     require           => Nagios_Contact["root"],
   }

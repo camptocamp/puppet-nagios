@@ -7,6 +7,8 @@
 
 class nagios::nsca::client {
 
+  include nagios::params
+
   if defined (Package["nsca"]) {
     notice "Package nsca is already defined"
   } else {
@@ -55,10 +57,14 @@ class nagios::nsca::client {
     require => File["${nagios_root_dir}/send_nsca.cfg"],
   }
 
+  file { "${nagios::params::resourcedir}/command-nsca_client.cfg":
+    ensure => present,
+  }
+
   nagios_command {"submit_ocsp":
     ensure        => present,
     command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
-    target        => "${nagios_cfg_dir}/commands.cfg",
+    target        => "${nagios::params::resourcedir}/command-nsca_client.cfg",
     notify        => Exec["nagios-reload"],
     require       => [
       File["${nagios_root_dir}/send_nsca.cfg"],
@@ -68,7 +74,7 @@ class nagios::nsca::client {
   nagios_command {"submit_ochp":
     ensure        => present,
     command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
-    target        => "${nagios_cfg_dir}/commands.cfg",
+    target        => "${nagios::params::resourcedir}/command-nsca_client.cfg",
     notify        => Exec["nagios-reload"],
     require       => [
       File["${nagios_root_dir}/send_nsca.cfg"],

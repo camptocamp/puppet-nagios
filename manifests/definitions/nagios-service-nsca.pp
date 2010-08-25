@@ -51,10 +51,7 @@ define nagios::service::nsca (
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
     service_description   => $service_description,
-    require   => [
-      Class["nagios::base"],
-      File["nagios_services.cfg"],
-    ],
+    require   => Class["nagios::base"],
   }
 
   @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":

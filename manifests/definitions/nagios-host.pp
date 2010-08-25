@@ -29,10 +29,7 @@ define nagios::host (
     contact_groups => $contact_groups,
     target     => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify     => Exec["nagios-reload"],
-    require    => [
-      Class["nagios::base"],
-      File["nagios_hosts.cfg"],
-    ],
+    require    => Class["nagios::base"],
   }
 
   file { "${nagios::params::resourcedir}/host-${fname}.cfg":

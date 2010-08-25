@@ -15,10 +15,7 @@ define nagios::local::hostgroup ($ensure=present) {
     ensure  => $ensure,
     target  => "${nagios::params::resourcedir}/hostgroup-${fname}.cfg",
     notify  => Exec["nagios-reload"],
-    require => [
-      Class["nagios::base"],
-      File["nagios_hostgroups.cfg"],
-    ],
+    require => Class["nagios::base"],
   }
 
   file { "${nagios::params::resourcedir}/hostgroup-${fname}.cfg":
