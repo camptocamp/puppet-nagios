@@ -9,24 +9,16 @@ class nagios::nsca::client {
 
   include nagios::params
 
-  if defined (Package["nsca"]) {
-    notice "Package nsca is already defined"
-  } else {
+  if !defined (Package["nsca"]) {
     package {"nsca":
       ensure => installed;
     }
   }
 
-  case $operatingsystem {
-
-    RedHat,Fedora,CentOS: {
-      if defined (Package["nsca-client"]) {
-        notice "Package nsca-client is already defined"
-      } else {
-        package { "nsca-client": ensure => installed }
-      }
+  if $operatingsystem =~ /RedHat|Fedora|CentOS/ {
+    if !defined (Package["nsca-client"]) {
+      package { "nsca-client": ensure => installed }
     }
-    default: {}
   }
 
   # variables used in ERB template

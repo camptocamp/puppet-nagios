@@ -9,9 +9,7 @@ class nagios::nsca::server {
 
   include nagios::params
 
-  if defined (Package["nsca"]) {
-    notice "Package nsca is already defined"
-  } else {
+  if !defined (Package["nsca"]) {
     package {"nsca":
       ensure => installed;
     }

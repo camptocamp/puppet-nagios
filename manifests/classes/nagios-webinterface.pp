@@ -72,7 +72,6 @@ allow httpd_t nagios_log_t:file read;
         notify  => Exec["apache-graceful"],
       }
     }
-    default: { notice "nothing more to do" }
   }
 
 }
