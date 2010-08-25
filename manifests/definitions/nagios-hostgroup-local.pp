@@ -21,4 +21,8 @@ define nagios::local::hostgroup ($ensure=present) {
     ],
   }
 
+  file { "${nagios::params::resourcedir}/hostgroup-${fname}.cfg":
+    ensure => $ensure,
+  }
+
 }

@@ -51,6 +51,10 @@ define nagios::service::nrpe (
     notify                => Exec["nagios-reload"],
   }
 
+  @@file { "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg":
+    ensure => $ensure,
+  }
+
   @@nagios_command { "nrpe_${name}_on_${hostname}":
     ensure       => $ensure,
     command_line => "\$USER1\$/check_nrpe -H ${fqdn} -u -t 120 -c ${name}",
@@ -61,6 +65,11 @@ define nagios::service::nrpe (
       File["nagios_commands.cfg"],
     ],
     notify       => Exec["nagios-reload"],
+  }
+
+  @@file { "${nagios::params::resourcedir}/command-nrpe_${fname}_on_${hostname}.cfg":
+    ensure => $ensure,
+    tag    => $export_for,
   }
 
   if $package {

@@ -41,6 +41,11 @@ define nagios::service::remote (
     notify                => Exec["nagios-reload"],
   }
 
+  @@file { "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg":
+    ensure => $ensure,
+    tag    => $export_for,
+  }
+
   @@nagios_command { "${name}_on_${hostname}":
     ensure       => $ensure,
     command_line => $command_line,
@@ -51,6 +56,11 @@ define nagios::service::remote (
       File["nagios_commands.cfg"],
     ],
     notify       => Exec["nagios-reload"],
+  }
+
+  @@file { "${nagios::params::resourcedir}/command-${fname}_on_${hostname}.cfg":
+    ensure => $ensure,
+    tag    => $export_for,
   }
 
 }

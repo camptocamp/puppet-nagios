@@ -46,6 +46,10 @@ define nagios::service::local (
     notify                => Exec["nagios-reload"],
   }
 
+  file { "${nagios::params::resourcedir}/service-${fname}.cfg":
+    ensure => $ensure,
+  }
+
   nagios::command { $codename:
     ensure       => $ensure,
     command_line => $command_line,

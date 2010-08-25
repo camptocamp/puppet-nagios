@@ -9,6 +9,8 @@ class nagios::base {
 
   include nagios::os
 
+  include nagios::params
+
   case $operatingsystem {
     /Debian|Ubuntu/ : { $nagios_mail_path = '/usr/bin/mail' }
 
@@ -29,6 +31,19 @@ class nagios::base {
     ensure  => absent,
     force   => true,
     require => Package["nagios"],
+  }
+
+  # purge undefined nagios resources
+  file { "${nagios::params::resourcedir}":
+    ensure  => directory,
+    source  => "puppet:///nagios/empty",
+    owner   => root,
+    group   => root,
+    mode    => 644,
+    purge   => true,
+    force   => true,
+    recurse => true,
+    notify  => Exec["nagios-reload"],
   }
 
   file {$nagios_main_config_file:

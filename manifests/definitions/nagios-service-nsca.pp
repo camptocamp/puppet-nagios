@@ -57,6 +57,11 @@ define nagios::service::nsca (
     ],
   }
 
+  @@file { "${nagios::params::resourcedir}/service-${fname}_on_${hostname}.cfg":
+    ensure => $ensure,
+    tag    => $export_for,
+  }
+
   if $package {
     if !defined(Package[$package]) {
       package { $package:

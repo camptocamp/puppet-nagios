@@ -34,6 +34,10 @@ define nagios::host::nsca (
     ],
   }
 
+  file { "${nagios::params::resourcedir}/host-${fname}.cfg":
+    ensure => $ensure,
+  }
+
   @@nagios_host { "@@$name":
     ensure     => $ensure,
     use        => "generic-host-passive",
@@ -53,4 +57,10 @@ define nagios::host::nsca (
       File["nagios_hosts.cfg"],
     ],
   }
+
+  @@file { "${nagios::params::resourcedir}/host-${fname}.cfg":
+    ensure => $ensure,
+    tag    => $export_for,
+  }
+
 }

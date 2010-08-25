@@ -33,6 +33,11 @@ define nagios::host::remote (
     ],
   }
 
+  file { "${nagios::params::resourcedir}/host-${fname}.cfg":
+    ensure => $ensure,
+  }
+
+
   @@nagios_host { "@@${name}":
     ensure     => $ensure,
     use        => "generic-host-active",
@@ -51,6 +56,11 @@ define nagios::host::remote (
       Class["nagios::base"],
       File["nagios_hosts.cfg"],
     ],
+  }
+
+  @@file { "${nagios::params::resourcedir}/host-${fname}.cfg":
+    ensure => $ensure,
+    tag    => $export_for,
   }
 
 }
