@@ -161,12 +161,19 @@ class nagios::base {
     require                       => File["${nagios::params::resourcedir}/base-contacts.cfg"],
   }
 
+  file {"${nagios::params::resourcedir}/base-contactgroups.cfg":
+    ensure => present,
+  }
+
   nagios_contactgroup { "admins":
     contactgroup_name => "admins",
     alias             => "Nagios Administrators",
     members           => "root",
-    target            => "${nagios::params::resourcedir}/base-contacts.cfg",
+    target            => "${nagios::params::resourcedir}/base-contactgroups.cfg",
     notify            => Exec["nagios-reload"],
-    require           => Nagios_contact["root"],
+    require           => [
+      Nagios_contact["root"],
+      File["${nagios::params::resourcedir}/base-contactgroups.cfg"]
+    ],
   }
 }
