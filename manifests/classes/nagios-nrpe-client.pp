@@ -15,6 +15,7 @@ class nagios::nrpe::client {
     },
     ensure  => running,
     enable  => true,
+    pattern => "/usr/sbin/nrpe",
     require => Package["nrpe"],
   }
 
