@@ -23,6 +23,7 @@ define nagios::command (
 
   file { "${nagios::params::resourcedir}/command-${fname}.cfg":
     ensure => $ensure,
+    before => Nagios_command[$name],
   }
 
 }

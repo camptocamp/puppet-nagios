@@ -33,6 +33,7 @@ define nagios::host (
 
   file { "${nagios::params::resourcedir}/host-${fname}.cfg":
     ensure => $ensure,
+    before => Nagios_host[$name],
   }
 
 }

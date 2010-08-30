@@ -40,6 +40,7 @@ define nagios::service::remote (
   @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
+    before => Nagios_service["@@${name} on ${hostname}"],
   }
 
   @@nagios_command { "${name}_on_${hostname}":
@@ -53,6 +54,7 @@ define nagios::service::remote (
   @@file { "${nagios::params::resourcedir}/collected-command-${fname}_on_${hostname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
+    before => Nagios_command["${name}_on_${hostname}"],
   }
 
 }

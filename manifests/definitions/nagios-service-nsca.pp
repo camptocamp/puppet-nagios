@@ -56,6 +56,7 @@ define nagios::service::nsca (
   @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
+    before => Nagios_service["@@$name on $hostname"],
   }
 
   if $package {

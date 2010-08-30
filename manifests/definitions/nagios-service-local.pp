@@ -44,6 +44,7 @@ define nagios::service::local (
 
   file { "${nagios::params::resourcedir}/service-${fname}.cfg":
     ensure => $ensure,
+    before => Nagios_service[$name],
   }
 
   nagios::command { $codename:
