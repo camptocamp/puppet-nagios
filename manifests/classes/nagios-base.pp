@@ -158,6 +158,7 @@ class nagios::base {
     email                         => "root",
     target                        => "${nagios::params::resourcedir}/base-contacts.cfg",
     notify                        => Exec["nagios-reload"],
+    require                       => File["${nagios::params::resourcedir}/base-contacts.cfg"],
   }
 
   nagios_contactgroup { "admins":
@@ -166,6 +167,6 @@ class nagios::base {
     members           => "root",
     target            => "${nagios::params::resourcedir}/base-contacts.cfg",
     notify            => Exec["nagios-reload"],
-    require           => Nagios_Contact["root"],
+    require           => Nagios_contact["root"],
   }
 }
