@@ -23,7 +23,6 @@ class nagios::redhat inherits nagios::base {
   File["nagios read-write dir"] {
     group   => $group,
     mode    => 0755,
-    seltype => "nagios_log_t",
   }
 
   /* redhat specific resources below */
@@ -39,6 +38,10 @@ class nagios::redhat inherits nagios::base {
          "/var/lib/nagios/spool",
          "/var/lib/nagios/spool/checkresults",
          "/var/cache/nagios"] {
+      seltype => "nagios_log_t",
+    }
+
+    File["nagios read-write dir"] {
       seltype => "nagios_log_t",
     }
 
