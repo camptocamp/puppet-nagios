@@ -31,39 +31,53 @@ class nagios::redhat inherits nagios::base {
 
   file {"/etc/nagios3": ensure => absent }
 
-  if $lsbmajdistrelease == 5 and $operatingsystem == 'RedHat' {
-    File["/var/run/nagios",
-         "/var/log/nagios",
-         "/var/lib/nagios",
-         "/var/lib/nagios/spool",
-         "/var/lib/nagios/spool/checkresults",
-         "/var/cache/nagios"] {
-      seltype => "nagios_log_t",
+  case $lsbmajdistrelease {
+
+    5: {
+      File["/var/run/nagios",
+           "/var/log/nagios",
+           "/var/lib/nagios",
+           "/var/lib/nagios/spool",
+           "/var/lib/nagios/spool/checkresults",
+           "/var/cache/nagios"] {
+        seltype => "nagios_log_t",
+      }
+
+      File["nagios read-write dir"] {
+        seltype => "nagios_log_t",
+      }
+
+      exec { "chcon /var/lib/nagios/rw/nagios.cmd":
+        require => Exec["create node"],
+        command => "chcon -t nagios_spool_t /var/lib/nagios/rw/nagios.cmd",
+        unless  => "ls -Z /var/lib/nagios/rw/nagios.cmd | grep -q nagios_spool_t",
+      }
+
+      file {["/var/lib/nagios/retention.dat",
+             "/var/cache/nagios/nagios.tmp",
+             "/var/cache/nagios/status.dat",
+             "/var/cache/nagios/objects.precache",
+             "/var/cache/nagios/objects.cache"]:
+        ensure  => present,
+        seltype => "nagios_log_t",
+        owner   => nagios,
+        group   => nagios,
+        require => File["/var/run/nagios"],
+      }
+      File["/var/lib/nagios/retention.dat"] { mode => 0600 }
+      File["/var/cache/nagios/status.dat"]  { mode => 0664 }
     }
 
-    File["nagios read-write dir"] {
-      seltype => "nagios_log_t",
-    }
+    4: {
+      # workaround for broken RHEL4 init-script
+      Exec["nagios-restart"] {
+        command => "nagios -v ${nagios::params::conffile} && pkill -f '^/usr/sbin/nagios' && /etc/init.d/nagios start",
+      }
 
-    exec { "chcon /var/lib/nagios/rw/nagios.cmd":
-      require => Exec["create node"],
-      command => "chcon -t nagios_spool_t /var/lib/nagios/rw/nagios.cmd",
-      unless  => "ls -Z /var/lib/nagios/rw/nagios.cmd | grep -q nagios_spool_t",
+      Exec["nagios-reload"] {
+        command => "nagios -v ${nagios::params::conffile} && pkill -HUP -f '^/usr/sbin/nagios'",
+      }
     }
-
-    file {["/var/lib/nagios/retention.dat",
-           "/var/cache/nagios/nagios.tmp",
-           "/var/cache/nagios/status.dat",
-           "/var/cache/nagios/objects.precache",
-           "/var/cache/nagios/objects.cache"]:
-      ensure  => present,
-      seltype => "nagios_log_t",
-      owner   => nagios,
-      group   => nagios,
-      require => File["/var/run/nagios"],
-    }
-    File["/var/lib/nagios/retention.dat"] { mode => 0600 }
-    File["/var/cache/nagios/status.dat"]  { mode => 0664 }
   }
 
   exec {"create node":
