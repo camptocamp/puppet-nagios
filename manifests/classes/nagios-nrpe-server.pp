@@ -15,8 +15,12 @@ class nagios::nrpe::server {
     default: {err ("operatingsystem $operatingsystem not yet implemented !")}
   }
 
-  Nagios_host <<| tag == "nagios-${fqdn}" |>>
+  Nagios_host    <<| tag == "nagios-${fqdn}" |>>
   Nagios_service <<| tag == "nagios-${fqdn}" |>>
   Nagios_command <<| tag == "nagios-${fqdn}" |>>
+
+  Nagios_host    { require => File["${nagios::params::resourcedir}"] }
+  Nagios_service { require => File["${nagios::params::resourcedir}"] }
+  Nagios_command { require => File["${nagios::params::resourcedir}"] }
 
 }

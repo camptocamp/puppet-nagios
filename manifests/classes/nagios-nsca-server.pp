@@ -24,9 +24,13 @@ class nagios::nsca::server {
     require     => Package["nsca"],
   }
 
-  Nagios_host <<| tag == "nagios-${fqdn}" |>>
+  Nagios_host    <<| tag == "nagios-${fqdn}" |>>
   Nagios_service <<| tag == "nagios-${fqdn}" |>>
   Nagios_command <<| tag == "nagios-${fqdn}" |>>
+
+  Nagios_host    { require => File["${nagios::params::resourcedir}"] }
+  Nagios_service { require => File["${nagios::params::resourcedir}"] }
+  Nagios_command { require => File["${nagios::params::resourcedir}"] }
 
   case $operatingsystem {
     /Debian|Ubuntu/: { $nagios_nsca_cfg = "/etc/nsca.cfg" }

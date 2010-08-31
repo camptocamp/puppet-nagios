@@ -54,7 +54,6 @@ define nagios::host::nsca (
   @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
-    before => Nagios_host["@@$name"],
   }
 
 }

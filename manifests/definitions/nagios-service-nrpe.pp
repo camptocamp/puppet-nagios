@@ -49,7 +49,6 @@ define nagios::service::nrpe (
 
   @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
     ensure => $ensure,
-    before => Nagios_service["@@$name on $hostname"],
   }
 
   @@nagios_command { "nrpe_${name}_on_${hostname}":
@@ -63,7 +62,6 @@ define nagios::service::nrpe (
   @@file { "${nagios::params::resourcedir}/collected-command-nrpe_${fname}_on_${hostname}.cfg":
     ensure => $ensure,
     tag    => $export_for,
-    before => Nagios_command["nrpe_${name}_on_${hostname}"],
   }
 
   if $package {
