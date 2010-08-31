@@ -44,6 +44,8 @@ define nagios::service::local (
 
   file { "${nagios::params::resourcedir}/service-${fname}.cfg":
     ensure => $ensure,
+    owner  => "root",
+    mode   => 0644,
     before => Nagios_service[$name],
   }
 

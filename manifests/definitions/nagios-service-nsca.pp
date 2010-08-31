@@ -55,6 +55,8 @@ define nagios::service::nsca (
 
   @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
     ensure => $ensure,
+    owner  => "root",
+    mode   => 0644,
     tag    => $export_for,
   }
 

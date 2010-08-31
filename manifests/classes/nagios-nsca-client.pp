@@ -55,6 +55,8 @@ class nagios::nsca::client {
 
   file { "${nagios::params::resourcedir}/command-submit_ocsp.cfg":
     ensure => present,
+    owner  => "root",
+    mode   => 0644,
   }
 
   nagios_command {"submit_ocsp":
@@ -67,6 +69,8 @@ class nagios::nsca::client {
 
   file { "${nagios::params::resourcedir}/command-submit_ochp.cfg":
     ensure => present,
+    owner  => "root",
+    mode   => 0644,
   }
 
   nagios_command {"submit_ochp":

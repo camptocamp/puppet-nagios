@@ -32,6 +32,8 @@ define nagios::host::nsca (
 
   file { "${nagios::params::resourcedir}/host-${fname}.cfg":
     ensure => $ensure,
+    owner  => "root",
+    mode   => 0644,
     before => Nagios_host[$name],
   }
 
@@ -53,6 +55,8 @@ define nagios::host::nsca (
 
   @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":
     ensure => $ensure,
+    owner  => "root",
+    mode   => 0644,
     tag    => $export_for,
   }
 

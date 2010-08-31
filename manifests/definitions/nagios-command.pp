@@ -23,6 +23,8 @@ define nagios::command (
 
   file { "${nagios::params::resourcedir}/command-${fname}.cfg":
     ensure => $ensure,
+    owner  => "root",
+    mode   => 0644,
     before => Nagios_command[$name],
   }
 

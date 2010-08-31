@@ -19,6 +19,8 @@ define nagios::local::hostgroup ($ensure=present) {
 
   file { "${nagios::params::resourcedir}/hostgroup-${fname}.cfg":
     ensure => $ensure,
+    owner  => "root",
+    mode   => 0644,
     before => Nagios_hostgroup[$name],
   }
 

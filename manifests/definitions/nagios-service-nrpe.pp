@@ -49,6 +49,8 @@ define nagios::service::nrpe (
 
   @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
     ensure => $ensure,
+    owner  => "root",
+    mode   => 0644,
   }
 
   @@nagios_command { "nrpe_${name}_on_${hostname}":
@@ -61,6 +63,8 @@ define nagios::service::nrpe (
 
   @@file { "${nagios::params::resourcedir}/collected-command-nrpe_${fname}_on_${hostname}.cfg":
     ensure => $ensure,
+    owner  => "root",
+    mode   => 0644,
     tag    => $export_for,
   }
 

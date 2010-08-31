@@ -139,11 +139,15 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/generic-service.cfg":
-    ensure  => present,
+    ensure => present,
+    owner  => "root",
+    mode   => 0644,
   }
 
   file {"${nagios::params::resourcedir}/base-contacts.cfg":
     ensure => present,
+    owner  => "root",
+    mode   => 0644,
   }
 
   nagios_contact { "root":
@@ -163,6 +167,8 @@ class nagios::base {
 
   file {"${nagios::params::resourcedir}/base-contactgroups.cfg":
     ensure => present,
+    owner  => "root",
+    mode   => 0644,
   }
 
   nagios_contactgroup { "admins":
