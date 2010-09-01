@@ -9,6 +9,9 @@ class nagios::nsca::server {
 
   include nagios::params
 
+  # variables used in ERB template
+  $basename = "${nagios::params::basename}"
+
   if !defined (Package["nsca"]) {
     package {"nsca":
       ensure => installed;

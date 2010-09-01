@@ -81,11 +81,7 @@ debug=0
 # COMMAND FILE
 # This is the location of the Nagios command file that the daemon
 # should write all service check results that it receives.
-<% if has_variable?("nagios_command_file") %>
-command_file=<%= nagios_command_file %>
-<% else %>
-command_file=/var/lib/nagios3/rw/nagios.cmd
-<% end %>
+command_file=/var/lib/<%= basename %>/rw/nagios.cmd
 
 # ALTERNATE DUMP FILE
 # This is used to specify an alternate file the daemon should
@@ -96,12 +92,7 @@ command_file=/var/lib/nagios3/rw/nagios.cmd
 # to dump the contents of this file into the command file after
 # it starts Nagios.  Or you may simply choose to ignore any
 # check results received while Nagios was not running...
-
-<% if has_variable?("nagios_nsca_alternate_dump_file") %>
-alternate_dump_file=<%= nagios_nsca_alternate_dump_file %>
-<% else %>
 alternate_dump_file=/var/run/nagios/nsca.dump
-<% end %>
 
 # AGGREGATED WRITES OPTION
 # This option determines whether or not the nsca daemon will
