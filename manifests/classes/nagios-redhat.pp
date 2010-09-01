@@ -68,16 +68,15 @@ class nagios::redhat inherits nagios::base {
       File["/var/cache/nagios/status.dat"]  { mode => 0664 }
     }
 
-    4: {
-      # workaround for broken RHEL4 init-script
-      Exec["nagios-restart"] {
-        command => "nagios -v ${nagios::params::conffile} && pkill -f '^/usr/sbin/nagios' && /etc/init.d/nagios start",
-      }
+  }
 
-      Exec["nagios-reload"] {
-        command => "nagios -v ${nagios::params::conffile} && pkill -HUP -f '^/usr/sbin/nagios'",
-      }
-    }
+  # workaround broken init-script
+  Exec["nagios-restart"] {
+    command => "nagios -v ${nagios::params::conffile} && pkill -f '^/usr/sbin/nagios' && /etc/init.d/nagios start",
+  }
+
+  Exec["nagios-reload"] {
+    command => "nagios -v ${nagios::params::conffile} && pkill -HUP -f '^/usr/sbin/nagios'",
   }
 
   exec {"create node":
