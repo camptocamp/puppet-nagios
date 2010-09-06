@@ -51,6 +51,7 @@ define nagios::service::nrpe (
     ensure => $ensure,
     owner  => "root",
     mode   => 0644,
+    tag    => $export_for,
   }
 
   @@nagios_command { "nrpe_${name}_on_${hostname}":
