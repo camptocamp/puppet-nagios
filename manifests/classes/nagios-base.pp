@@ -100,7 +100,7 @@ class nagios::base {
     purge   => true,
     force   => true,
     recurse => true,
-    notify  => Exec["nagios-reload"],
+    notify  => Exec["nagios-restart"],
   }
 
   file { "${nagios::params::conffile}":
@@ -117,7 +117,7 @@ class nagios::base {
     group   => root,
     mode    => 644,
     source  => "puppet:///nagios/generic-host.cfg",
-    notify  => Exec["nagios-reload"],
+    notify  => Exec["nagios-restart"],
   }
 
   file {"${nagios::params::resourcedir}/generic-command.cfg":
@@ -126,7 +126,7 @@ class nagios::base {
     group   => root,
     mode    => 644,
     content => template("nagios/generic-command.cfg.erb"),
-    notify  => Exec["nagios-reload"],
+    notify  => Exec["nagios-restart"],
   }
 
   file {"${nagios::params::resourcedir}/generic-timeperiod.cfg":
@@ -135,7 +135,7 @@ class nagios::base {
     group   => root,
     mode    => 644,
     source  => "puppet:///nagios/generic-timeperiod.cfg",
-    notify  => Exec["nagios-reload"],
+    notify  => Exec["nagios-restart"],
   }
 
   file {"${nagios::params::resourcedir}/generic-service.cfg":
@@ -161,7 +161,7 @@ class nagios::base {
     host_notification_commands    => "notify-host-by-email",
     email                         => "root",
     target                        => "${nagios::params::resourcedir}/base-contacts.cfg",
-    notify                        => Exec["nagios-reload"],
+    notify                        => Exec["nagios-restart"],
     require                       => File["${nagios::params::resourcedir}/base-contacts.cfg"],
   }
 
@@ -176,7 +176,7 @@ class nagios::base {
     alias             => "Nagios Administrators",
     members           => "root",
     target            => "${nagios::params::resourcedir}/base-contactgroups.cfg",
-    notify            => Exec["nagios-reload"],
+    notify            => Exec["nagios-restart"],
     require           => [
       Nagios_contact["root"],
       File["${nagios::params::resourcedir}/base-contactgroups.cfg"]

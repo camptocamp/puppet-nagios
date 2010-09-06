@@ -39,7 +39,7 @@ define nagios::service::local (
     retry_check_interval  => $retry_check_interval,
     target                => "${nagios::params::resourcedir}/service-${fname}.cfg",
     require               => Nagios::Command[$codename],
-    notify                => Exec["nagios-reload"],
+    notify                => Exec["nagios-restart"],
   }
 
   file { "${nagios::params::resourcedir}/service-${fname}.cfg":

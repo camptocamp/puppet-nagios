@@ -44,7 +44,7 @@ define nagios::service::nrpe (
     retry_check_interval  => $retry_check_interval,
     target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg",
     require               => Nagios_command["nrpe_${name}_on_${hostname}"],
-    notify                => Exec["nagios-reload"],
+    notify                => Exec["nagios-restart"],
   }
 
   @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
@@ -58,7 +58,7 @@ define nagios::service::nrpe (
     command_line => "\$USER1\$/check_nrpe -H ${fqdn} -u -t 120 -c ${name}",
     target       => "${nagios::params::resourcedir}/collected-command-nrpe_${fname}_on_${hostname}.cfg",
     tag          => $export_for,
-    notify       => Exec["nagios-reload"],
+    notify       => Exec["nagios-restart"],
   }
 
   @@file { "${nagios::params::resourcedir}/collected-command-nrpe_${fname}_on_${hostname}.cfg":

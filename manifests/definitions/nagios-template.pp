@@ -9,6 +9,6 @@ define nagios::template($ensure=present, $content, $conf_type) {
     group  => root,
     mode   => 0644,
     content => template("nagios/template-all.erb"),
-    notify  => Exec["nagios-reload"],
+    notify  => Exec["nagios-restart"],
   }
 }

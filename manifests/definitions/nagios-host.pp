@@ -28,7 +28,7 @@ define nagios::host (
     hostgroups => $hostgroups,
     contact_groups => $contact_groups,
     target     => "${nagios::params::resourcedir}/host-${fname}.cfg",
-    notify     => Exec["nagios-reload"],
+    notify     => Exec["nagios-restart"],
   }
 
   file { "${nagios::params::resourcedir}/host-${fname}.cfg":
