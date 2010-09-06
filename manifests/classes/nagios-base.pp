@@ -42,7 +42,7 @@ class nagios::base {
 
   file { "nagios read-write dir":
     ensure  => directory,
-    path    => "/var/lib/${nagios::params::basename}/rw",
+    path    => "/var/run/${nagios::params::basename}/rw",
     owner   => "nagios",
     require => Package["nagios"],
   }

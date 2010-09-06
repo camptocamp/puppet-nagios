@@ -47,10 +47,10 @@ class nagios::redhat inherits nagios::base {
         seltype => "nagios_log_t",
       }
 
-      exec { "chcon /var/lib/nagios/rw/nagios.cmd":
-        require => Exec["create node"],
-        command => "chcon -t nagios_spool_t /var/lib/nagios/rw/nagios.cmd",
-        unless  => "ls -Z /var/lib/nagios/rw/nagios.cmd | grep -q nagios_spool_t",
+      exec { "chcon /var/run/nagios/rw/nagios.cmd":
+        require => [Exec["create node"], File["nagios read-write dir"]],
+        command => "chcon -t nagios_spool_t /var/run/nagios/rw/nagios.cmd",
+        unless  => "ls -Z /var/run/nagios/rw/nagios.cmd | grep -q nagios_spool_t",
       }
 
       file {["/var/lib/nagios/retention.dat",
@@ -80,8 +80,8 @@ class nagios::redhat inherits nagios::base {
   }
 
   exec {"create node":
-    command => "mknod -m 0664 /var/lib/nagios/rw/nagios.cmd p && chown nagios:${group} /var/lib/nagios/rw/nagios.cmd",
-    unless  => "test -p /var/lib/nagios/rw/nagios.cmd",
+    command => "mknod -m 0664 /var/run/nagios/rw/nagios.cmd p && chown nagios:${group} /var/run/nagios/rw/nagios.cmd",
+    unless  => "test -p /var/run/nagios/rw/nagios.cmd",
     require => File["nagios read-write dir"],
   }
 }
