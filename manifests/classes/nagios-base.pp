@@ -140,12 +140,6 @@ class nagios::base {
     notify  => Exec["nagios-restart"],
   }
 
-  file {"${nagios::params::resourcedir}/generic-service.cfg":
-    ensure => present,
-    owner  => "root",
-    mode   => 0644,
-  }
-
   file {"${nagios::params::resourcedir}/base-contacts.cfg":
     ensure => present,
     owner  => "root",

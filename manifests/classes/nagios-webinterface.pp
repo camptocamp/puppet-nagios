@@ -32,7 +32,7 @@ class nagios::webinterface {
   case $operatingsystem {
 
     /RedHat|CentOS|Fedora/: {
-      package {["nagios-www", "php", "nagios-plugins-nagios"]:
+      package {["nagios-www", "nagios-plugins-nagios"]:
         ensure => present,
       }
 
