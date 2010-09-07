@@ -11,6 +11,7 @@ define nagios::service::remote (
   $service_description=undef,
   $host_name=false,
   $contact_groups=undef,
+  $service_groups=undef,
   $normal_check_interval=undef,
   $retry_check_interval=undef
   ) {
@@ -30,6 +31,7 @@ define nagios::service::remote (
     tag                   => $export_for,
     service_description   => $service_description,
     contact_groups        => $contact_groups,
+    servicegroups         => $service_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
     target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg",

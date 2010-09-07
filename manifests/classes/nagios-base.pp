@@ -182,4 +182,18 @@ class nagios::base {
       File["${nagios::params::resourcedir}/base-contactgroups.cfg"]
     ],
   }
+
+  file {"${nagios::params::resourcedir}/base-servicegroup.cfg":
+    ensure => present,
+    owner  => "root",
+    mode   => 0644,
+  }
+
+  nagios_servicegroup { "default":
+    alias             => "Default Service Group",
+    target            => "${nagios::params::resourcedir}/base-servicegroup.cfg",
+    notify            => Exec["nagios-restart"],
+    require           => File["${nagios::params::resourcedir}/base-servicegroup.cfg"],
+  }
+
 }
