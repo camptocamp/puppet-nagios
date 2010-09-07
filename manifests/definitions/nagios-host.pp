@@ -1,10 +1,15 @@
-#
-# modules/nagios/manifests/definitions/nagios-host.pp 
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Definition: nagios::host
 
+Define a host resource on the local nagios instance.
+
+Example:
+
+  nagios::host { $fqdn:
+    ensure => "present",
+  }
+
+*/
 define nagios::host (
   $ensure=present,
   $address=false,

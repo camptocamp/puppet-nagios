@@ -1,10 +1,16 @@
-#
-# modules/nagios/manifests/classes/nsca-server.pp
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Class: nagios::nsca::server
 
+Installs and configures the nsca server and ensure it's up and running. This
+class also collects the resources tagged with "nagios-${fqdn}". They typically
+got exported using nagios::service::nsca.
+
+Example usage:
+
+  include nagios
+  include nagios::nsca::server
+
+*/
 class nagios::nsca::server {
 
   include nagios::params

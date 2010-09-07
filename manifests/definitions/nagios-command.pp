@@ -1,10 +1,15 @@
-#
-# modules/nagios/manifests/definitions/nagios-config-command.pp 
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Definition: nagios::command
 
+Simple wrapper to create a nagios_command resource and associated file.
+
+Example:
+
+  nagios::command { "check_service":
+    command_line => "/usr/lib/nagios/plugins/check_dummy 0 ok"
+  }
+
+*/
 define nagios::command (
   $ensure=present,
   $command_line

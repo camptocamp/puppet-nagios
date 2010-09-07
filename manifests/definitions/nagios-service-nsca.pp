@@ -1,10 +1,20 @@
-#
-# modules/nagios/manifests/definitions/nagios-nsca-service.pp 
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Definition: nagios::service::nsca
 
+Define a service resource on the local nagios instance and export the same
+resource to a remote nagios nsca server.
+
+Example:
+
+  nagios::service::nsca { "check process":
+    ensure => present,
+    command_line => '/usr/lib/nagios/plugins/check_procs',
+    normal_check_interval => 5,
+    package => 'nagios-plugins-procs',
+    export_for => "nagios-nsca.example.com",
+  }
+
+*/
 define nagios::service::nsca (
   $ensure=present,
   $service_description=false,

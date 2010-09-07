@@ -1,10 +1,14 @@
-#
-# modules/nagios/manifests/classes/webinterface.pp
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Class: nagios::webinterface
 
+This class takes care of all the bits needed to run the CGIs used to display
+nagios's status in a web browser.
+
+Example usage:
+  include nagios
+  include nagios::webinterface
+
+*/
 class nagios::webinterface {
 
   include nagios::params

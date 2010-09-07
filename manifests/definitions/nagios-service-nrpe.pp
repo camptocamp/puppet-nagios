@@ -1,10 +1,20 @@
-#
-# modules/nagios/manifests/definitions/nagios-local-service.pp 
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Definition: nagios::service::nrpe
 
+Define a command in the local nrpe server configuration, and export the
+associated nagios service and command resources to a remote nagios instance.
+
+Example:
+
+  nagios::service::nrpe { "check process":
+    ensure => present,
+    command_line => '/usr/lib/nagios/plugins/check_procs',
+    normal_check_interval => 5,
+    package => 'nagios-plugins-procs',
+    export_for => "nagios-nrpe.example.com",
+  }
+
+*/
 define nagios::service::nrpe (
   $ensure=present,
   $service_description=undef,

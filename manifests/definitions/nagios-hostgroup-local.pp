@@ -1,10 +1,15 @@
-#
-# modules/nagios/manifests/definitions/host-local.pp 
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Definition: nagios::local::hostgroup
 
+Define a hostgroup resource on the local nagios instance.
+
+Example:
+
+  nagios::local::hostgroup { "my-hostgroup":
+    ensure => present,
+  }
+
+*/
 define nagios::local::hostgroup ($ensure=present) {
 
   include nagios::params

@@ -1,3 +1,9 @@
+/*
+== Definition: nagios::webadmin
+
+Simple wrapper to ease apache configuration for nagios.
+
+*/
 define nagios::webadmin ($ensure=present, $vhost, $htpasswd_file) {
 
   file {"/var/www/$vhost/conf/nagios.conf":

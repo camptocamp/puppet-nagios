@@ -1,3 +1,10 @@
+/*
+== Class: nagios::params
+
+This class defines a few of attributes which are used in many classes and
+definitions of this module.
+
+*/
 class nagios::params {
 
   $basename = $operatingsystem ? {

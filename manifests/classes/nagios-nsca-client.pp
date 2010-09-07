@@ -1,10 +1,15 @@
-#
-# modules/nagios/manifests/nsca-client.pp
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Class: nagios::nsca::client
 
+Installs the nsca client and configures nagios to send status information to
+the central nsca server.
+
+Example usage:
+
+  include nagios
+  include nagios::nsca::client
+
+*/
 class nagios::nsca::client {
 
   include nagios::params

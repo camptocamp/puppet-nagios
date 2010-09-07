@@ -1,3 +1,12 @@
+/*
+== Class: nagios::debian
+
+Define common resources specific to debian based systems. It shouldn't be
+necessary to include this class directly. Instead, you should use:
+
+  include nagios
+
+*/
 class nagios::debian inherits nagios::base {
 
   include nagios::params

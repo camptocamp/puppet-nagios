@@ -1,10 +1,18 @@
-#
-# modules/nagios/manifests/definitions/nagios-local-service.pp 
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Definition: nagios::service::local
 
+Define a service resource on the local nagios instance.
+
+Example:
+
+  nagios::service::local { "check process":
+    ensure => present,
+    command_line => '$USER1$/check_procs',
+    normal_check_interval => 5,
+    package => 'nagios-plugins-procs',
+  }
+
+*/
 define nagios::service::local (
   $ensure=present,
   $command_line,

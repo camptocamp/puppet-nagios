@@ -1,9 +1,18 @@
-#
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Definition: nagios::service::remote
 
+Define a service resource on a remote nagios instance using exported resources.
+
+Example:
+
+  nagios::service::remote { "check ssh":
+    ensure => present,
+    command_line => '/usr/lib/nagios/plugins/check_ssh',
+    normal_check_interval => 5,
+    export_for => "nagios-nsca.example.com",
+  }
+
+*/
 define nagios::service::remote (
   $ensure=present,
   $export_for,

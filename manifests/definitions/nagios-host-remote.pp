@@ -1,9 +1,17 @@
-#
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Definition: nagios::host::remote
 
+Define a host resource on the local nagios instance and export the same
+resource to a remote nagios server.
+
+Example:
+
+  nagios::host::remote { $fqdn:
+    ensure     => "present",
+    export_for => "nagios-nsca.example.com",
+  }
+
+*/
 define nagios::host::remote (
   $ensure=present,
   $export_for,

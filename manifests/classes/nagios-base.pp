@@ -1,10 +1,12 @@
-#
-# modules/nagios/manifests/classes/base.pp
-# manage distributed monitoring with nagios
-# Copyright (C) 2008 Mathieu Bornoz <mathieu.bornoz@camptocamp.com>
-# See LICENSE for the full license granted to you.
-#
+/*
+== Class: nagios::base
 
+Define common resources between debian and redhat based systems. It shouldn't
+be necessary to include this class directly. Instead, you should use:
+
+  include nagios
+
+*/
 class nagios::base {
 
   include nagios::params
