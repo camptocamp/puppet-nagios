@@ -60,6 +60,7 @@ class nagios::redhat inherits nagios::base {
         require => [Exec["create node"], File["nagios read-write dir"]],
         command => "chcon -t nagios_spool_t /var/run/nagios/rw/nagios.cmd",
         unless  => "ls -Z /var/run/nagios/rw/nagios.cmd | grep -q nagios_spool_t",
+        onlyif  => $selinux,
       }
 
       file {["/var/lib/nagios/retention.dat",
