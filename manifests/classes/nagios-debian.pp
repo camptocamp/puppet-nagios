@@ -30,7 +30,7 @@ class nagios::debian inherits nagios::base {
       }
     }
 
-    lenny: {
+    lenny,squeeze: {
       package {[
         "nagios3-common",
         "nagios-plugins",
