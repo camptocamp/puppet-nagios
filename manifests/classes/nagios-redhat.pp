@@ -82,7 +82,7 @@ class nagios::redhat inherits nagios::base {
 
   # workaround broken init-script
   Exec["nagios-restart"] {
-    command => "nagios -v ${nagios::params::conffile} && pkill -f '^/usr/sbin/nagios' && /etc/init.d/nagios start",
+    command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -f '^/usr/sbin/nagios' && /etc/init.d/nagios start",
   }
 
   Exec["nagios-reload"] {
