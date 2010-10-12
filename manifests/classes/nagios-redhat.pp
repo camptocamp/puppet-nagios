@@ -22,18 +22,6 @@ class nagios::redhat inherits nagios::base {
     pattern     => "/usr/sbin/nagios -d /etc/nagios/nagios.cfg",
   }
 
-  #TODO: make this reliable:
-  if defined( Class["apache"] ) {
-    $group = "apache"
-  } else {
-    $group = "nagios"
-  }
-
-  File["nagios read-write dir"] {
-    group   => $group,
-    mode    => 0755,
-  }
-
   /* redhat specific resources below */
 
   file {"/etc/default/nagios": ensure => absent }
@@ -57,7 +45,7 @@ class nagios::redhat inherits nagios::base {
       }
 
       exec { "chcon /var/run/nagios/rw/nagios.cmd":
-        require => [Exec["create node"], File["nagios read-write dir"]],
+        require => [Exec["create fifo"], File["nagios read-write dir"]],
         command => "chcon -t nagios_spool_t /var/run/nagios/rw/nagios.cmd",
         unless  => "ls -Z /var/run/nagios/rw/nagios.cmd | grep -q nagios_spool_t",
         onlyif  => $selinux,
@@ -89,8 +77,8 @@ class nagios::redhat inherits nagios::base {
     command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -HUP -f '^/usr/sbin/nagios'",
   }
 
-  exec {"create node":
-    command => "mknod -m 0664 /var/run/nagios/rw/nagios.cmd p && chown nagios:${group} /var/run/nagios/rw/nagios.cmd",
+  exec {"create fifo":
+    command => "mknod -m 0664 /var/run/nagios/rw/nagios.cmd p && chown nagios /var/run/nagios/rw/nagios.cmd",
     unless  => "test -p /var/run/nagios/rw/nagios.cmd",
     require => File["nagios read-write dir"],
   }

@@ -78,4 +78,12 @@ allow httpd_t nagios_log_t:file read;
     }
   }
 
+  include nagios::base::withwebinterface
+  include apache::params
+  class nagios::base::withwebinterface inherits nagios::base {
+    File["nagios read-write dir"] {
+      group   => "${apache::params::user}",
+    }
+  }
+
 }

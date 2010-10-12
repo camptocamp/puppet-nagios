@@ -51,11 +51,6 @@ class nagios::debian inherits nagios::base {
     name => "nagios3",
   }
 
-  File["nagios read-write dir"] {
-    group => "www-data",
-    mode  => 2710,
-  }
-
   File["/var/lib/nagios3"] {
     mode => 751,
   }

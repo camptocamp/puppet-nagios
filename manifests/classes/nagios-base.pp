@@ -46,6 +46,8 @@ class nagios::base {
     ensure  => directory,
     path    => "/var/run/${nagios::params::basename}/rw",
     owner   => "nagios",
+    group   => "nagios",
+    mode    => 2710,
     require => Package["nagios"],
   }
 
