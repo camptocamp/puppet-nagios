@@ -86,7 +86,7 @@ class nagios::redhat inherits nagios::base {
   }
 
   Exec["nagios-reload"] {
-    command => "nagios -v ${nagios::params::conffile} && pkill -P 1-HUP -f '^/usr/sbin/nagios'",
+    command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -HUP -f '^/usr/sbin/nagios'",
   }
 
   exec {"create node":
