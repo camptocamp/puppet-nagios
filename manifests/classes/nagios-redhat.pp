@@ -30,7 +30,7 @@ class nagios::redhat inherits nagios::base {
 
   case $lsbmajdistrelease {
 
-    5: {
+    5,6: {
       File["/var/run/nagios",
            "/var/log/nagios",
            "/var/lib/nagios",
