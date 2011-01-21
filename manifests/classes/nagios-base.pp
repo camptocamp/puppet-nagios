@@ -25,6 +25,12 @@ class nagios::base {
 
   /* Common resources between base, redhat, and debian */
 
+  user { "nagios":
+    ensure  => present,
+    shell   => "/bin/sh",
+    require => Package["nagios"],
+  }
+
   service { "nagios":
     ensure     => running,
     enable     => true,
