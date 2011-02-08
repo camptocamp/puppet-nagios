@@ -1,0 +1,14 @@
+
+module nagiosreadpuppetstate 1.1;
+
+require {
+	type nagios_t;
+	type puppet_var_lib_t;
+	class file  { getattr };
+	class dir   { read getattr link lock search };
+}
+
+#============= nagios_t ==============
+allow nagios_t puppet_var_lib_t:dir  { read getattr link lock search };
+allow nagios_t puppet_var_lib_t:file getattr;
+
