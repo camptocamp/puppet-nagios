@@ -22,7 +22,7 @@ class nagios::base {
           }
         }
 
-        lenny: {
+        lenny,squeeze: {
           apt::preferences {[
             "nagios3",
             "nagios3-doc",
