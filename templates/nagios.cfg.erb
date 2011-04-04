@@ -10,11 +10,7 @@
 # This is the main log file where service and host events are logged
 # for historical purposes.  This should be the first option specified 
 # in the config file!!!
-<% if has_variable?("nagios_log_file") %>
-log_file=<%= nagios_log_file %>
-<% else %>
-log_file=/var/log/nagios3/nagios.log
-<% end %>
+log_file=/var/log/<%= basename %>/nagios.log
 
 # OBJECT CONFIGURATION FILE(S)
 # These are the object configuration files in which you define hosts,
@@ -22,17 +18,10 @@ log_file=/var/log/nagios3/nagios.log
 # You can split your object definitions across several config files
 # if you wish (as shown below), or keep them all in a single config file.
 
-# Folder to add custom definitions (without puppet)
-cfg_dir=/etc/nagios3/nagios.d
-
 # You can also tell Nagios to process all config files (with a .cfg
 # extension) in a particular directory by using the cfg_dir
 # directive as shown below:
-<% if has_variable?("nagios_cfg_dir") %>
-cfg_dir=<%= nagios_cfg_dir %>
-<% else %>
-cfg_dir=/etc/nagios3/auto-puppet
-<% end %>
+cfg_dir=/etc/nagios.d
 
 # OBJECT CACHE FILE
 # This option determines where object definitions are cached when
@@ -40,11 +29,7 @@ cfg_dir=/etc/nagios3/auto-puppet
 # this cache file (rather than looking at the object config files
 # directly) in order to prevent inconsistencies that can occur
 # when the config files are modified after Nagios starts.
-<% if has_variable?("nagios_object_cache_file") %>
-object_cache_file=<%= nagios_object_cache_file %>
-<% else %>
-object_cache_file=/var/cache/nagios3/objects.cache
-<% end %>
+object_cache_file=/var/cache/<%= basename %>/objects.cache
 
 # PRE-CACHED OBJECT FILE
 # This options determines the location of the precached object file.
@@ -57,11 +42,7 @@ object_cache_file=/var/cache/nagios3/objects.cache
 # the Nagios process if you've got a large and/or complex configuration.
 # Read the documentation section on optimizing Nagios to find our more
 # about how this feature works.
-<% if has_variable?("nagios_precached_object_file") %>
-precached_object_file=<%= nagios_precached_object_file %>
-<% else %>
-precached_object_file=/var/cache/nagios3/objects.precache
-<% end %>
+precached_object_file=/var/cache/<%= basename %>/objects.precache
 
 # RESOURCE FILE
 # This is an optional resource file that contains $USERx$ macro
@@ -71,22 +52,14 @@ precached_object_file=/var/cache/nagios3/objects.precache
 # considered to be sensitive (usernames, passwords, etc) can be
 # defined as macros in this file and restrictive permissions (600)
 # can be placed on this file.
-<% if has_variable?("nagios_resource_file") %>
-resource_file=<%= nagios_resource_file %>
-<% else %>
-resource_file=/etc/nagios3/resource.cfg
-<% end %>
+resource_file=/etc/<%= basename %>/resource.cfg
 
 # STATUS FILE
 # This is where the current status of all monitored services and
 # hosts is stored.  Its contents are read and processed by the CGIs.
 # The contents of the status file are deleted every time Nagios
 #  restarts.
-<% if has_variable?("nagios_status_file") %>
-status_file=<%= nagios_status_file %>
-<% else %>
-status_file=/var/cache/nagios3/status.dat
-<% end %>
+status_file=/var/cache/<%= basename %>/status.dat
 
 # STATUS FILE UPDATE INTERVAL
 # This option determines the frequency (in seconds) that
@@ -157,11 +130,7 @@ command_check_interval=-1
 # time its contents are processed.
 # Debian Users: In case you didn't read README.Debian yet, _NOW_ is the
 # time to do it.
-<% if has_variable?("nagios_command_file") %>
-command_file=<%= nagios_command_file %>
-<% else %>
-command_file=/var/lib/nagios3/rw/nagios.cmd
-<% end %>
+command_file=/var/run/<%= basename %>/rw/nagios.cmd
 
 # EXTERNAL COMMAND BUFFER SLOTS
 # This settings is used to tweak the number of items or "slots" that
@@ -177,22 +146,18 @@ external_command_buffer_slots=4096
 # LOCK FILE
 # This is the lockfile that Nagios will use to store its PID number
 # in when it is running in daemon mode.
-<% if has_variable?("nagios_lock_file") %>
-lock_file=<%= nagios_lock_file %>
-<% else %>
-lock_file=/var/run/nagios3/nagios3.pid
-<% end %>
+<% if operatingsystem =~ /RedHat|CentOS/ -%>
+lock_file=/var/run/<%= basename %>.pid
+<% else -%>
+lock_file=/var/run/<%= basename %>/<%= basename %>.pid
+<% end -%>
 
 # TEMP FILE
 # This is a temporary file that is used as scratch space when Nagios
 # updates the status log, cleans the comment file, etc.  This file
 # is created, used, and deleted throughout the time that Nagios is
 # running.
-<% if has_variable?("nagios_temp_file") %>
-temp_file=<%= nagios_temp_file %>
-<% else %>
-temp_file=/var/cache/nagios3/nagios.tmp
-<% end %>
+temp_file=/var/cache/<%= basename %>/nagios.tmp
 
 # TEMP PATH
 # This is path where Nagios can create temp files for service and
@@ -256,11 +221,7 @@ log_rotation_method=d
 # LOG ARCHIVE PATH
 # This is the directory where archived (rotated) log files should be 
 # placed (assuming you've chosen to do log rotation).
-<% if has_variable?("nagios_log_archive_path") %>
-log_archive_path=<%= nagios_log_archive_path %>
-<% else %>
-log_archive_path=/var/log/nagios3/archives
-<% end %>
+log_archive_path=/var/log/<%= basename %>/archives
 
 # LOGGING OPTIONS
 # If you want messages logged to the syslog facility, as well as the
@@ -467,11 +428,7 @@ max_check_result_reaper_time=30
 #
 # Note: Make sure that only one instance of Nagios has access
 # to this directory!  
-<% if has_variable?("nagios_check_result_path") %>
-check_result_path=<%= nagios_check_result_path %>
-<% else %>
-check_result_path=/var/lib/nagios3/spool/checkresults
-<% end %>
+check_result_path=/var/lib/<%= basename %>/spool/checkresults
 
 # MAX CHECK RESULT FILE AGE
 # This option determines the maximum age (in seconds) which check
@@ -670,11 +627,7 @@ retain_state_information=1
 # starting to monitor the network when Nagios is restarted.
 # This file is used only if the preserve_state_information
 # variable is set to 1.
-<% if has_variable?("nagios_state_retention_file") %>
-state_retention_file=<%= nagios_state_retention_file %>
-<% else %>
-state_retention_file=/var/lib/nagios3/retention.dat
-<% end %>
+state_retention_file=/var/lib/<%= basename %>/retention.dat
 
 # RETENTION DATA UPDATE INTERVAL
 # This setting determines how often (in minutes) that Nagios
@@ -1175,11 +1128,7 @@ date_format=iso8601
 # This value determines where the p1.pl perl script (used by the
 # embedded Perl interpreter) is located.  If you didn't compile
 # Nagios with embedded Perl support, this option has no effect.
-<% if has_variable?("nagios_p1_file") %>
 p1_file=<%= nagios_p1_file %>
-<% else %>
-p1_file=/usr/lib/nagios3/p1.pl
-<% end %>
 
 # EMBEDDED PERL INTERPRETER OPTION
 # This option determines whether or not the embedded Perl interpreter
@@ -1382,11 +1331,7 @@ debug_verbosity=0
 
 # DEBUG FILE
 # This option determines where Nagios should write debugging information.
-<% if has_variable?("nagios_debug_file") %>
-debug_file=<%= nagios_debug_file %>
-<% else %>
-debug_file=/var/lib/nagios3/nagios.debug
-<% end %>
+debug_file=/var/lib/<%= basename %>/nagios.debug
 
 # MAX DEBUG FILE SIZE
 # This option determines the maximum size (in bytes) of the debug file.  If
