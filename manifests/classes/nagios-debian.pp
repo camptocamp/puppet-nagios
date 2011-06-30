@@ -24,7 +24,7 @@ class nagios::debian inherits nagios::base {
         ]:
         ensure => installed,
       }
-      os::backported_package {"nagios3":
+      os::backported_package {"nagios3-core":
         ensure => installed,
         alias  => "nagios",
       }
@@ -39,7 +39,7 @@ class nagios::debian inherits nagios::base {
         ]:
         ensure => installed,
       }
-      package {"nagios3":
+      package {"nagios3-core":
         ensure => installed,
         alias  => "nagios",
       }
@@ -64,7 +64,7 @@ class nagios::debian inherits nagios::base {
     group => root,
     mode => 644,
     content => template("nagios/etc/default/nagios3.erb"),
-    require => Package["nagios3"],
+    require => Package["nagios"],
   }
 
 }
