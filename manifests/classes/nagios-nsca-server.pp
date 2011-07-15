@@ -33,10 +33,16 @@ class nagios::nsca::server {
     require     => Package["nsca"],
   }
 
-  Nagios_host    <<| tag == "nagios-${fqdn}" |>>
-  Nagios_service <<| tag == "nagios-${fqdn}" |>>
-  Nagios_command <<| tag == "nagios-${fqdn}" |>>
-  File           <<| tag == "nagios-${fqdn}" |>>
+  if $nagios_nsca_server_tag {
+    $get_tag = "nagios-${nagios_nsca_server_tag}"
+  } else {
+    $get_tag = "nagios-${fqdn}"
+  }
+
+  Nagios_host    <<| tag == "${get_tag}" |>>
+  Nagios_service <<| tag == "${get_tag}" |>>
+  Nagios_command <<| tag == "${get_tag}" |>>
+  File           <<| tag == "${get_tag}" |>>
 
   Nagios_host    { require => File["${nagios::params::resourcedir}"] }
   Nagios_service { require => File["${nagios::params::resourcedir}"] }
