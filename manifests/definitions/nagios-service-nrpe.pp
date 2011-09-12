@@ -25,7 +25,8 @@ define nagios::service::nrpe (
   $service_groups=undef,
   $normal_check_interval=undef,
   $retry_check_interval=undef,
-  $package=false
+  $package=false,
+  $use="generic-service-active"
   ) {
 
   include nagios::params
@@ -42,7 +43,7 @@ define nagios::service::nrpe (
 
   @@nagios_service { "@@$name on $hostname":
     ensure                => $ensure,
-    use                   => "generic-service-active",
+    use                   => $use,
     host_name             => $host_name ? {
       false   => $hostname,
       default => $host_name,
