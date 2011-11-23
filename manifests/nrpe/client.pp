@@ -35,7 +35,7 @@ class nagios::nrpe::client {
 
   file { "/usr/share/augeas/lenses/contrib/nrpe.aug":
     ensure => present,
-    source => "puppet:///nagios/nrpe.aug",
+    source => "puppet:///modules/nagios/nrpe.aug",
   }
 
 }

@@ -103,7 +103,7 @@ class nagios::base {
   # purge undefined nagios resources
   file { "${nagios::params::resourcedir}":
     ensure  => directory,
-    source  => "puppet:///nagios/empty",
+    source  => "puppet:///modules/nagios/empty",
     owner   => root,
     group   => root,
     mode    => 644,
@@ -126,7 +126,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    source  => "puppet:///nagios/generic-host.cfg",
+    source  => "puppet:///modules/nagios/generic-host.cfg",
     notify  => Exec["nagios-restart"],
   }
 
@@ -144,7 +144,7 @@ class nagios::base {
     owner   => root,
     group   => root,
     mode    => 644,
-    source  => "puppet:///nagios/generic-timeperiod.cfg",
+    source  => "puppet:///modules/nagios/generic-timeperiod.cfg",
     notify  => Exec["nagios-restart"],
   }
 
