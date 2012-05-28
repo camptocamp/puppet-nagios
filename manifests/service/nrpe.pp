@@ -35,7 +35,6 @@ define nagios::service::nrpe (
   augeas { "set nrpe command ${name}":
     context   => "/files/etc/nagios/nrpe.cfg",
     changes   => "set command[.][./${name} =~ regexp('.*')]/${name} '${command_line}'",
-    load_path => "/usr/share/augeas/lenses/contrib/",
     notify    => Service["nrpe"],
     require   => Package["nrpe"],
   }
