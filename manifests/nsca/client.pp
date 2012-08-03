@@ -86,16 +86,14 @@ class nagios::nsca::client {
     require       => File["${nagios::params::resourcedir}/command-submit_ochp.cfg"],
   }
 
-  common::concatfilepart {"submit_ocsp":
-    file    => "${nagios::params::conffile}",
-    content => "ocsp_command=submit_ocsp\n",
-    notify  => Exec["nagios-restart"],
+  concat::fragment {'submit_ocsp':
+    target    => $nagios::params::conffile,
+    content   => "ocsp_command=submit_ocsp\n",
   }
 
-  common::concatfilepart {"submit_ochp":
-    file    => "${nagios::params::conffile}",
+  concat::fragment {'submit_ochp':
+    target  => $nagios::params::conffile,
     content => "ochp_command=submit_ochp\n",
-    notify  => Exec["nagios-restart"],
   }
 
   #TODO: remove this resource in a while
