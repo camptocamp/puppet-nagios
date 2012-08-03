@@ -10,6 +10,7 @@ be necessary to include this class directly. Instead, you should use:
 class nagios::base {
 
   include nagios::params
+  include concat::setup
 
   # variables used in ERB template
   $basename = "${nagios::params::basename}"
@@ -80,14 +81,19 @@ class nagios::base {
   }
 
   nagios::resource { "USER1": value => "${nagios::params::user1}" }
-
-  common::concatfilepart {"main":
-    file    => "${nagios::params::conffile}",
-    content => template("nagios/nagios.cfg.erb"),
-    notify  => Exec["nagios-restart"],
-    require => Package["nagios"],
+  
+  concat {[
+      $nagios::params::conffile,
+      "${nagios::params::rootdir}/resource.cfg",
+    ]:
+    notify  => Exec['nagios-restart'],
+    require => Package['nagios'],
   }
 
+  concat::fragment {'main':
+    target  => $nagios::params::conffile,
+    content => template('nagios/nagios.cfg.erb'),
+  }
 
   /* other common resources below */
 
