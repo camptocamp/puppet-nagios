@@ -17,11 +17,10 @@ define nagios::resource ($ensure="present", $value) {
 
   include nagios::params
 
-  common::concatfilepart { $name:
+  concat::fragment {$name:
     ensure  => $ensure,
-    file    => "${nagios::params::rootdir}/resource.cfg",
+    target  => "${nagios::params::rootdir}/resource.cfg",
     content => "\$${name}\$=\"${value}\"\n",
-    notify  => Exec["nagios-restart"],
-    require => Package["nagios"],
   }
+
 }
