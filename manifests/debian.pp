@@ -13,38 +13,17 @@ class nagios::debian inherits nagios::base {
 
   /* Common resources between base, redhat, and debian */
 
-  case $lsbdistcodename {
-    etch: {
-
-      os::backported_package {[
-          "nagios3-common",
-          "nagios-plugins",
-          "nagios-plugins-standard",
-          "nagios-plugins-basic",
-        ]:
-        ensure => installed,
-      }
-      os::backported_package {"nagios3-core":
-        ensure => installed,
-        alias  => "nagios",
-      }
-    }
-
-    lenny,squeeze: {
-      package {[
-        "nagios3-common",
-        "nagios-plugins",
-        "nagios-plugins-standard",
-        "nagios-plugins-basic",
-        ]:
-        ensure => installed,
-      }
-      package {"nagios3-core":
-        ensure => installed,
-        alias  => "nagios",
-      }
-    }
-    default: {err ("lsbdistcodename $lsbdistcodename not yet implemented !")}
+  package {[
+    "nagios3-common",
+    "nagios-plugins",
+    "nagios-plugins-standard",
+    "nagios-plugins-basic",
+    ]:
+    ensure => installed,
+  }
+  package {"nagios3-core":
+    ensure => installed,
+    alias  => "nagios",
   }
 
   Service["nagios"] {
