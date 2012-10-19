@@ -32,9 +32,9 @@ define nagios::service::nrpe (
 
   $fname = regsubst($name, "\W", "_", "G")
 
-  augeas { "set nrpe command ${name}":
-    context   => "/files/etc/nagios/nrpe.cfg",
-    changes   => "set command[.][./${name} =~ regexp('.*')]/${name} '${command_line}'",
+  nrpe_command {$name:
+    ensure  => present,
+    command => $command_line,
     notify    => Service["nrpe"],
     require   => Package["nrpe"],
   }
