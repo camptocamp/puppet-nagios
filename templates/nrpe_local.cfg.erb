@@ -8,6 +8,6 @@ server_address=<%= ipaddress %>
 # command list
 command[check_backuppc]=/usr/lib/nagios/plugins/check_procs -w 1:5 -c 1:5 -C BackupPC 
 command[check_postfix]=/usr/lib/nagios/plugins/check_procs -w 1:5 -c 1:5 -C master 
-command[my_check_load]=/usr/lib/nagios/plugins/check_load -w 10,15,25 -c 30,35,40
+command[my_check_load]=/usr/lib/nagios/plugins/check_load -r -w 10,15,25 -c 30,35,40
 command[my_check_raid]=/usr/lib/nagios/plugins/contrib/check_raid/check_raid
 command[check_sympa]=/usr/lib/nagios/plugins/check_procs -w 4:10 -a "/usr/lib/sympa/bin"
