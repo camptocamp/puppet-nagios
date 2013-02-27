@@ -70,6 +70,11 @@ allow httpd_t nagios_log_t:file read;
     }
 
     'Debian': {
+
+      package {'nagios3-cgi':
+        ensure => present,
+      }
+
       file {'/etc/apache2/conf.d/nagios3.conf':
         ensure  => absent,
         notify  => Exec['apache-graceful'],
