@@ -28,9 +28,9 @@ class nagios::webinterface {
     notify  => Exec['apache-graceful'],
   }
 
-  case $::operatingsystem {
+  case $::osfamily {
 
-    /RedHat|CentOS|Fedora/: {
+    'RedHat': {
       package {['nagios-www', 'nagios-plugins-nagios']:
         ensure => present,
       }
@@ -69,7 +69,7 @@ allow httpd_t nagios_log_t:file read;
       }
     }
 
-    /Debian|Ubuntu/: {
+    'Debian': {
       file {'/etc/apache2/conf.d/nagios3.conf':
         ensure  => absent,
         notify  => Exec['apache-graceful'],
