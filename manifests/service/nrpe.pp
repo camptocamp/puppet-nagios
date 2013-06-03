@@ -25,6 +25,7 @@ define nagios::service::nrpe (
   $service_groups=undef,
   $normal_check_interval=undef,
   $retry_check_interval=undef,
+  $max_check_attempts=undef,
   $package=false
   ) {
 
@@ -53,6 +54,7 @@ define nagios::service::nrpe (
     servicegroups         => $service_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
+    max_check_attempts    => $max_check_attempts,
     target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg",
     require               => Nagios_command["nrpe_${name}_on_${hostname}"],
     notify                => Exec["nagios-restart"],

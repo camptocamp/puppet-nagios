@@ -25,6 +25,7 @@ define nagios::service::nsca (
   $service_groups=undef,
   $normal_check_interval=undef,
   $retry_check_interval=undef,
+  $max_check_attempts=undef,
   $use_active="generic-service-active",
   $use_passive="generic-service-passive",
   $package=false
@@ -46,6 +47,7 @@ define nagios::service::nsca (
     service_groups        => $service_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
+    max_check_attempts    => $max_check_attempts,
     service_description   => $service_description,
   }
 
@@ -63,6 +65,7 @@ define nagios::service::nsca (
     servicegroups         => $service_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
+    max_check_attempts    => $max_check_attempts,
     service_description   => $service_description,
   }
 

@@ -23,6 +23,7 @@ define nagios::service::local (
   $service_groups=undef,
   $normal_check_interval=undef,
   $retry_check_interval=undef,
+  $max_check_attempts=undef,
   $package=false,
   $use="generic-service-active"
   ) {
@@ -47,6 +48,7 @@ define nagios::service::local (
     servicegroups         => $service_groups,
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
+    max_check_attempts    => $max_check_attempts,
     target                => "${nagios::params::resourcedir}/service-${fname}.cfg",
     require               => Nagios::Command[$codename],
     notify                => Exec["nagios-restart"],
