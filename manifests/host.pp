@@ -23,23 +23,23 @@ define nagios::host (
   $fname = regsubst($name, "\W", "_", "G")
 
   nagios_host { $name:
-    ensure     => $ensure,
-    use        => "generic-host-active",
-    address    => $address ? {
-      false   => $ipaddress,
+    ensure         => $ensure,
+    use            => 'generic-host-active',
+    address        => $address ? {
+      false   => $::ipaddress,
       default => $address,
     },
-    alias      => $nagios_alias,
-    hostgroups => $hostgroups,
+    alias          => $nagios_alias,
+    hostgroups     => $hostgroups,
     contact_groups => $contact_groups,
-    target     => "${nagios::params::resourcedir}/host-${fname}.cfg",
-    notify     => Exec["nagios-restart"],
+    target         => "${nagios::params::resourcedir}/host-${fname}.cfg",
+    notify         => Exec['nagios-restart'],
   }
 
   file { "${nagios::params::resourcedir}/host-${fname}.cfg":
     ensure => $ensure,
-    owner  => "root",
-    mode   => 0644,
+    owner  => 'root',
+    mode   => '0644',
     before => Nagios_host[$name],
   }
 

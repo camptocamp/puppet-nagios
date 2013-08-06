@@ -7,25 +7,29 @@ definitions of this module.
 */
 class nagios::params {
 
-  $basename = $operatingsystem ? {
-    /Debian|Ubuntu/ => "nagios3",
-    /RedHat|CentOS|Fedora/ => "nagios",
+  $basename = $::osfamily ? {
+    'Debian' => 'nagios3',
+    'RedHat' => 'nagios',
   }
 
-  $user1 = $operatingsystem ? {
-    /Debian|Ubuntu/ => "/usr/lib/nagios/plugins",
-    /RedHat|CentOS|Fedora/ => $architecture ? {
-      'x86_64' => "/usr/lib64/nagios/plugins",
-      default  => "/usr/lib/nagios/plugins",
+  $user1 = $::osfamily ? {
+    'Debian' => '/usr/lib/nagios/plugins',
+    'RedHat' => $::architecture ? {
+      'x86_64' => '/usr/lib64/nagios/plugins',
+      default  => '/usr/lib/nagios/plugins',
     },
   }
 
-  $p1file = $operatingsystem ? {
-    /Debian|Ubuntu/ => "/usr/lib/nagios3/p1.pl",
-    /RedHat|CentOS|Fedora/ => "/usr/sbin/p1.pl",
+  $p1file = $::osfamily ? {
+    'Debian' => '/usr/lib/nagios3/p1.pl',
+    'RedHat' => '/usr/sbin/p1.pl',
   }
 
-  $resourcedir = "/etc/nagios.d"
+  $resourcedir = '/etc/nagios.d'
   $rootdir     = "/etc/${basename}"
   $conffile    = "${rootdir}/nagios.cfg"
+
+  $nrpe_server_tag = $nagios_nrpe_server_tag
+  $nsca_server = $nagios_nsca_server
+  $nsca_server_tag = $nagios_nsca_server_tag
 }

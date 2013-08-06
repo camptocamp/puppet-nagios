@@ -5,7 +5,7 @@ Define a service resource on the local nagios instance.
 
 Example:
 
-  nagios::service::local { "check process":
+  nagios::service::local { 'check process':
     ensure => present,
     command_line => '$USER1$/check_procs',
     normal_check_interval => 5,
@@ -14,8 +14,8 @@ Example:
 
 */
 define nagios::service::local (
-  $ensure=present,
   $command_line,
+  $ensure=present,
   $service_description=undef,
   $host_name=false,
   $check_command=false,
@@ -25,7 +25,7 @@ define nagios::service::local (
   $retry_check_interval=undef,
   $max_check_attempts=undef,
   $package=false,
-  $use="generic-service-active"
+  $use='generic-service-active',
   ) {
 
   include nagios::params
@@ -36,7 +36,7 @@ define nagios::service::local (
     ensure                => $ensure,
     use                   => $use,
     host_name             => $host_name ? {
-      false   => $hostname,
+      false   => $::hostname,
       default => $host_name,
     },
     check_command         => $check_command ? {
@@ -51,13 +51,13 @@ define nagios::service::local (
     max_check_attempts    => $max_check_attempts,
     target                => "${nagios::params::resourcedir}/service-${fname}.cfg",
     require               => Nagios::Command[$codename],
-    notify                => Exec["nagios-restart"],
+    notify                => Exec['nagios-restart'],
   }
 
   file { "${nagios::params::resourcedir}/service-${fname}.cfg":
     ensure => $ensure,
-    owner  => "root",
-    mode   => 0644,
+    owner  => 'root',
+    mode   => '0644',
     before => Nagios_service[$name],
   }
 

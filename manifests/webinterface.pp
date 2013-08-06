@@ -1,4 +1,4 @@
-# 
+#
 # == Class: nagios::webinterface
 #
 # This class takes care of all the bits needed to run the CGIs used to display
@@ -10,7 +10,7 @@
 #
 class nagios::webinterface {
 
-  include nagios::params
+  include ::nagios::params
 
   # variables used in erb template.
   $nagios_main_config_file     = $nagios::params::conffile
