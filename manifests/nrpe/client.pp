@@ -14,23 +14,23 @@ Example usage:
 */
 class nagios::nrpe::client {
 
-  package { "nrpe":
-    name    => $operatingsystem ? {
-      /Debian|Ubuntu/ => "nagios-nrpe-server",
-      /RedHat|CentOS|Fedora/ => "nrpe",
-    },
+  package { 'nrpe':
     ensure  => present,
+    name    => $::osfamily ? {
+      'Debian' => 'nagios-nrpe-server',
+      'RedHat' => 'nrpe',
+    },
   }
 
-  service { "nrpe":
-    name    => $operatingsystem ? {
-      /Debian|Ubuntu/ => "nagios-nrpe-server",
-      /RedHat|CentOS|Fedora/ => "nrpe",
-    },
+  service { 'nrpe':
     ensure  => running,
+    name    => $::osfamily ? {
+      'Debian' => 'nagios-nrpe-server',
+      'RedHat' => 'nrpe',
+    },
     enable  => true,
-    pattern => "/usr/sbin/nrpe",
-    require => Package["nrpe"],
+    pattern => '/usr/sbin/nrpe',
+    require => Package['nrpe'],
   }
 
   augeas::lens { 'nrpe':

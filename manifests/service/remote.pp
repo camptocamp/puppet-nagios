@@ -14,9 +14,9 @@ Example:
 
 */
 define nagios::service::remote (
-  $ensure=present,
   $export_for,
   $command_line,
+  $ensure=present,
   $service_description=undef,
   $host_name=false,
   $contact_groups=undef,
@@ -30,14 +30,14 @@ define nagios::service::remote (
 
   $fname = regsubst($name, "\W", "_", "G")
 
-  @@nagios_service { "@@${name} on ${hostname}":
+  @@nagios_service { "@@${name} on ${::hostname}":
     ensure                => $ensure,
-    use                   => "generic-service-active",
+    use                   => 'generic-service-active',
     host_name             => $host_name ? {
-      false   => $hostname,
+      false   => $::hostname,
       default => $host_name,
     },
-    check_command         => "${name}_on_${hostname}",
+    check_command         => "${name}_on_${::hostname}",
     tag                   => $export_for,
     service_description   => $service_description,
     contact_groups        => $contact_groups,
@@ -45,30 +45,30 @@ define nagios::service::remote (
     normal_check_interval => $normal_check_interval,
     retry_check_interval  => $retry_check_interval,
     max_check_attempts    => $max_check_attempts,
-    target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg",
-    require               => Nagios_command["${name}_on_${hostname}"],
-    notify                => Exec["nagios-restart"],
+    target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${::hostname}.cfg",
+    require               => Nagios_command["${name}_on_${::hostname}"],
+    notify                => Exec['nagios-restart'],
   }
 
-  @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${hostname}.cfg":
+  @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${::hostname}.cfg":
     ensure => $ensure,
-    owner  => "root",
-    mode   => 0644,
+    owner  => 'root',
+    mode   => '0644',
     tag    => $export_for,
   }
 
-  @@nagios_command { "${name}_on_${hostname}":
+  @@nagios_command { "${name}_on_${::hostname}":
     ensure       => $ensure,
     command_line => $command_line,
-    target       => "${nagios::params::resourcedir}/collected-command-${fname}_on_${hostname}.cfg",
+    target       => "${nagios::params::resourcedir}/collected-command-${fname}_on_${::hostname}.cfg",
     tag          => $export_for,
-    notify       => Exec["nagios-restart"],
+    notify       => Exec['nagios-restart'],
   }
 
-  @@file { "${nagios::params::resourcedir}/collected-command-${fname}_on_${hostname}.cfg":
+  @@file { "${nagios::params::resourcedir}/collected-command-${fname}_on_${::hostname}.cfg":
     ensure => $ensure,
-    owner  => "root",
-    mode   => 0644,
+    owner  => 'root',
+    mode   => '0644',
     tag    => $export_for,
   }
 

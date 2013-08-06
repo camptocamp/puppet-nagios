@@ -1,7 +1,7 @@
 class nagios {
-  case $operatingsystem {
-    /Debian|Ubuntu/: { include nagios::debian }
-    /RedHat|CentOS|Fedora/: { include nagios::redhat }
-    default:         {err ("operatingsystem $operatingsystem not yet implemented !")}
+  case $::osfamily {
+    'Debian': { include nagios::debian }
+    'RedHat': { include nagios::redhat }
+    default:  { fail ("OS family ${::osfamily} not yet implemented !")}
   }
 }
