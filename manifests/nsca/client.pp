@@ -12,77 +12,77 @@ Example usage:
 */
 class nagios::nsca::client {
 
-  include nagios::params
+  include ::nagios::params
 
-  if !defined (Package["nsca"]) {
-    package {"nsca":
+  if !defined (Package['nsca']) {
+    package {'nsca':
       ensure => installed;
     }
   }
 
-  if $operatingsystem =~ /RedHat|Fedora|CentOS/ {
-    if !defined (Package["nsca-client"]) {
-      package { "nsca-client": ensure => installed }
+  if $::osfamily == 'RedHat' {
+    if !defined (Package['nsca-client']) {
+      package { 'nsca-client': ensure => installed }
     }
   }
 
   # variables used in ERB template
-  $nsca_server = $nagios_nsca_server
+  $nsca_server = $nagios::params::nsca_server
   $nsca_cfg = "${nagios::params::rootdir}/send_nsca.cfg"
 
   file { "${nagios::params::rootdir}/send_nsca.cfg":
     ensure  => present,
     owner   => root,
     group   => nagios,
-    mode    => 640,
-    content => template("nagios/send_nsca.cfg.erb"),
-    require => [Package["nsca"], Package["nagios"]],
-    notify  => Service["nagios"],
+    mode    => '0640',
+    content => template('nagios/send_nsca.cfg.erb'),
+    require => [Package['nsca'], Package['nagios']],
+    notify  => Service['nagios'],
   }
 
-  file {"/usr/local/bin/submit_ocsp":
+  file {'/usr/local/bin/submit_ocsp':
     ensure  => present,
     owner   => root,
     group   => root,
-    mode    => 755,
-    content => template("nagios/submit_ocsp.erb"),
+    mode    => '0755',
+    content => template('nagios/submit_ocsp.erb'),
     require => File["${nagios::params::rootdir}/send_nsca.cfg"],
   }
 
-  file {"/usr/local/bin/submit_ochp":
+  file {'/usr/local/bin/submit_ochp':
     ensure  => present,
     owner   => root,
     group   => root,
-    mode    => 755,
-    content => template("nagios/submit_ochp.erb"),
+    mode    => '0755',
+    content => template('nagios/submit_ochp.erb'),
     require => File["${nagios::params::rootdir}/send_nsca.cfg"],
   }
 
   file { "${nagios::params::resourcedir}/command-submit_ocsp.cfg":
     ensure => present,
-    owner  => "root",
-    mode   => 0644,
+    owner  => 'root',
+    mode   => '0644',
   }
 
-  nagios_command {"submit_ocsp":
+  nagios_command {'submit_ocsp':
     ensure        => present,
     command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
     target        => "${nagios::params::resourcedir}/command-submit_ocsp.cfg",
-    notify        => Exec["nagios-restart"],
+    notify        => Exec['nagios-restart'],
     require       => File["${nagios::params::resourcedir}/command-submit_ocsp.cfg"],
   }
 
   file { "${nagios::params::resourcedir}/command-submit_ochp.cfg":
     ensure => present,
-    owner  => "root",
-    mode   => 0644,
+    owner  => 'root',
+    mode   => '0644',
   }
 
-  nagios_command {"submit_ochp":
+  nagios_command {'submit_ochp':
     ensure        => present,
     command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
     target        => "${nagios::params::resourcedir}/command-submit_ochp.cfg",
-    notify        => Exec["nagios-restart"],
+    notify        => Exec['nagios-restart'],
     require       => File["${nagios::params::resourcedir}/command-submit_ochp.cfg"],
   }
 
@@ -97,6 +97,6 @@ class nagios::nsca::client {
   }
 
   #TODO: remove this resource in a while
-  file { "/etc/send_nsca.cfg": ensure => absent }
+  file { '/etc/send_nsca.cfg': ensure => absent }
 
 }

@@ -13,54 +13,54 @@ Example usage:
 */
 class nagios::nsca::server {
 
-  include nagios::params
+  include ::nagios::params
 
   # variables used in ERB template
-  $basename = "${nagios::params::basename}"
+  $basename = $nagios::params::basename
 
-  if !defined (Package["nsca"]) {
-    package {"nsca":
+  if !defined (Package['nsca']) {
+    package {'nsca':
       ensure => installed;
     }
   }
 
-  service {"nsca":
+  service {'nsca':
     ensure      => running,
     enable      => true,
     hasrestart  => true,
     hasstatus   => false,
-    pattern     => "/usr/sbin/nsca",
-    require     => Package["nsca"],
+    pattern     => '/usr/sbin/nsca',
+    require     => Package['nsca'],
   }
 
-  if $nagios_nsca_server_tag {
-    $get_tag = "nagios-${nagios_nsca_server_tag}"
+  if $nagios::params::nsca_server_tag {
+    $get_tag = "nagios-${nagios::params::nsca_server_tag}"
   } else {
-    $get_tag = "nagios-${fqdn}"
+    $get_tag = "nagios-${::fqdn}"
   }
 
-  Nagios_host    <<| tag == "${get_tag}" |>>
-  Nagios_service <<| tag == "${get_tag}" |>>
-  Nagios_command <<| tag == "${get_tag}" |>>
-  File           <<| tag == "${get_tag}" |>>
+  Nagios_host    <<| tag == $get_tag |>>
+  Nagios_service <<| tag == $get_tag |>>
+  Nagios_command <<| tag == $get_tag |>>
+  File           <<| tag == $get_tag |>>
 
-  Nagios_host    { require => File["${nagios::params::resourcedir}"] }
-  Nagios_service { require => File["${nagios::params::resourcedir}"] }
-  Nagios_command { require => File["${nagios::params::resourcedir}"] }
+  Nagios_host    { require => File[$nagios::params::resourcedir] }
+  Nagios_service { require => File[$nagios::params::resourcedir] }
+  Nagios_command { require => File[$nagios::params::resourcedir] }
 
-  case $operatingsystem {
-    /Debian|Ubuntu/: { $nagios_nsca_cfg = "/etc/nsca.cfg" }
-    /RedHat|CentOS|Fedora/: { $nagios_nsca_cfg = "${nagios::params::rootdir}/nsca.cfg" }
+  case $::osfamily {
+    'Debian': { $nagios_nsca_cfg = '/etc/nsca.cfg' }
+    'RedHat': { $nagios_nsca_cfg = "${nagios::params::rootdir}/nsca.cfg" }
   }
 
-  file {"${nagios_nsca_cfg}":
+  file {$nagios_nsca_cfg:
     ensure  => present,
     owner   => root,
     group   => nagios,
-    mode    => 640,
-    content => template("nagios/nsca.cfg.erb"),
-    require => [Package["nsca"], Package["nagios"]],
-    notify  => Service["nsca"],
+    mode    => '0640',
+    content => template('nagios/nsca.cfg.erb'),
+    require => [Package['nsca'], Package['nagios']],
+    notify  => Service['nsca'],
   }
 
 }
