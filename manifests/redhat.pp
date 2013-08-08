@@ -37,7 +37,7 @@ class nagios::redhat inherits nagios::base {
         '/var/lib/nagios',
         '/var/lib/nagios/spool',
         '/var/lib/nagios/spool/checkresults',
-        '/var/cache/nagios',
+        '/var/cache/nagios'
         ] {
         seltype => 'nagios_log_t',
       }
