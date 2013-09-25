@@ -18,6 +18,7 @@ Example:
 define nagios::service::nsca (
   $export_for,
   $command_line,
+  $codename,
   $ensure=present,
   $service_description=false,
   $host_name=false,
@@ -36,10 +37,11 @@ define nagios::service::nsca (
   $fname = regsubst($name, "\W", "_", "G")
 
   nagios::service::local { $name:
-    ensure                => $ensure,
-    use                   => $use_active,
-    command_line          => $command_line,
-    host_name             => $host_name ? {
+    ensure       => $ensure,
+    use          => $use_active,
+    command_line => $command_line,
+    codename     => $codename,
+    host_name    => $host_name ? {
       false   => $::hostname,
       default => $host_name,
     },
