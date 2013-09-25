@@ -15,6 +15,7 @@ Example:
 */
 define nagios::service::local (
   $command_line,
+  $codename,
   $ensure=present,
   $service_description=undef,
   $host_name=false,
