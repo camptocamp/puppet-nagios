@@ -64,7 +64,7 @@ class nagios::redhat inherits nagios::base {
         seltype  => 'nagios_log_t',
         owner    => 'nagios',
         group    => 'nagios',
-        loglevel => 'debug',
+        loglevel => 'warning',
         require  => File['/var/run/nagios'],
       }
       File['/var/lib/nagios/retention.dat'] { mode => '0600', }
