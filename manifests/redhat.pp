@@ -60,11 +60,12 @@ class nagios::redhat inherits nagios::base {
         '/var/cache/nagios/objects.precache',
         '/var/cache/nagios/objects.cache',
       ]:
-        ensure  => present,
-        seltype => 'nagios_log_t',
-        owner   => nagios,
-        group   => nagios,
-        require => File['/var/run/nagios'],
+        ensure   => present,
+        seltype  => 'nagios_log_t',
+        owner    => 'nagios',
+        group    => 'nagios',
+        loglevel => 'debug',
+        require  => File['/var/run/nagios'],
       }
       File['/var/lib/nagios/retention.dat'] { mode => '0600', }
       File['/var/cache/nagios/status.dat']  { mode => '0664', }
