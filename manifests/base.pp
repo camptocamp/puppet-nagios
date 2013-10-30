@@ -10,7 +10,6 @@ be necessary to include this class directly. Instead, you should use:
 class nagios::base {
 
   include nagios::params
-  include concat::setup
 
   # variables used in ERB template
   $basename = $nagios::params::basename
