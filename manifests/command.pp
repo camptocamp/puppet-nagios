@@ -11,25 +11,25 @@ Example:
 
 */
 define nagios::command (
-  $ensure=present,
-  $command_line
+  $command_line,
+  $ensure        = present,
   ) {
 
   include nagios::params
 
-  $fname = regsubst($name, "\W", "_", "G")
+  $fname = regsubst($name, '\W', '_', 'G')
 
   nagios_command { $name:
     ensure        => $ensure,
     command_line  => $command_line,
     target        => "${nagios::params::resourcedir}/command-${fname}.cfg",
-    notify        => Exec["nagios-restart"],
+    notify        => Exec['nagios-restart'],
   }
 
   file { "${nagios::params::resourcedir}/command-${fname}.cfg":
     ensure => $ensure,
-    owner  => "root",
-    mode   => 0644,
+    owner  => 'root',
+    mode   => '0644',
     before => Nagios_command[$name],
   }
 

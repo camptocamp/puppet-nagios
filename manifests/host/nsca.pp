@@ -23,15 +23,16 @@ define nagios::host::nsca (
 
   include nagios::params
 
-  $fname = regsubst($name, "\W", "_", "G")
+  $fname               = regsubst($name, '\W', '_', 'G')
+  $nagios_host_address = $address ? {
+    false              => $::ipaddress,
+    default            => $address,
+  }
 
   nagios_host { $name:
     ensure  => $ensure,
     use     => 'generic-host-active',
-    address => $address ? {
-      false   => $::ipaddress,
-      default => $address,
-    },
+    address => $nagios_host_address,
     alias   => $nagios_alias,
     target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify  => Exec['nagios-restart'],
@@ -44,18 +45,17 @@ define nagios::host::nsca (
     before => Nagios_host[$name],
   }
 
+  $nagios_host_target  = "${nagios::params::resourcedir}/collected-host-${fname}.cfg"
+
   @@nagios_host { "@@$name":
     ensure         => $ensure,
     use            => 'generic-host-passive',
-    address        => $address ? {
-      false   => $::ipaddress,
-      default => $address,
-    },
+    address        => $nagios_host_address,
     host_name      => $name,
     alias          => $nagios_alias,
     tag            => $export_for,
     hostgroups     => $hostgroups,
-    target         => "${nagios::params::resourcedir}/collected-host-${fname}.cfg",
+    target         => $nagios_host_target,
     contact_groups => $contact_groups,
     notify         => Exec['nagios-restart'],
   }

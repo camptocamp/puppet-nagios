@@ -20,15 +20,16 @@ define nagios::host (
 
   include nagios::params
 
-  $fname = regsubst($name, "\W", "_", "G")
+  $fname   = regsubst($name, '\W', '_', 'G')
+  $address = $address ? {
+    false   => $::ipaddress,
+    default => $address,
+  }
 
   nagios_host { $name:
     ensure         => $ensure,
     use            => 'generic-host-active',
-    address        => $address ? {
-      false   => $::ipaddress,
-      default => $address,
-    },
+    address        => $address,
     alias          => $nagios_alias,
     hostgroups     => $hostgroups,
     contact_groups => $contact_groups,

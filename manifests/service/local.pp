@@ -6,10 +6,10 @@ Define a service resource on the local nagios instance.
 Example:
 
   nagios::service::local { 'check process':
-    ensure => present,
-    command_line => '$USER1$/check_procs',
+    ensure                => present,
+    command_line          => '$USER1$/check_procs',
     normal_check_interval => 5,
-    package => 'nagios-plugins-procs',
+    package               => 'nagios-plugins-procs',
   }
 
 */
@@ -31,19 +31,22 @@ define nagios::service::local (
 
   include nagios::params
 
-  $fname = regsubst($name, "\W", "_", "G")
+  $fname = regsubst($name, '\W', '_', 'G')
+
+  $nagios_service_host_name     = $host_name ? {
+    false                       => $::hostname,
+    default                     => $host_name,
+  }
+  $nagios_service_check_command = $check_command ? {
+    false                       => $name,
+    default                     => $check_command,
+  }
 
   nagios_service { $name:
     ensure                => $ensure,
     use                   => $use,
-    host_name             => $host_name ? {
-      false   => $::hostname,
-      default => $host_name,
-    },
-    check_command         => $check_command ? {
-      false   => $name,
-      default => $check_command,
-    },
+    host_name             => $nagios_service_host_name,
+    check_command         => $nagios_service_check_command,
     service_description   => $service_description,
     contact_groups        => $contact_groups,
     servicegroups         => $service_groups,

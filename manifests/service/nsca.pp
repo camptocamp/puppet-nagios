@@ -7,11 +7,11 @@ resource to a remote nagios nsca server.
 Example:
 
   nagios::service::nsca { 'check process':
-    ensure => present,
-    command_line => '/usr/lib/nagios/plugins/check_procs',
+    ensure                => present,
+    command_line          => '/usr/lib/nagios/plugins/check_procs',
     normal_check_interval => 5,
-    package => 'nagios-plugins-procs',
-    export_for => 'nagios-nsca.example.com',
+    package               => 'nagios-plugins-procs',
+    export_for            => 'nagios-nsca.example.com',
   }
 
 */
@@ -34,17 +34,19 @@ define nagios::service::nsca (
 
   include nagios::params
 
-  $fname = regsubst($name, "\W", "_", "G")
+  $fname = regsubst($name, '\W', '_', 'G')
+
+  $host_name = $host_name ? {
+    false    => $::hostname,
+    default  => $host_name,
+  }
 
   nagios::service::local { $name:
-    ensure       => $ensure,
-    use          => $use_active,
-    command_line => $command_line,
-    codename     => $codename,
-    host_name    => $host_name ? {
-      false   => $::hostname,
-      default => $host_name,
-    },
+    ensure                => $ensure,
+    use                   => $use_active,
+    command_line          => $command_line,
+    codename              => $codename,
+    host_name             => $host_name,
     contact_groups        => $contact_groups,
     service_groups        => $service_groups,
     normal_check_interval => $normal_check_interval,
@@ -56,10 +58,7 @@ define nagios::service::nsca (
   @@nagios_service { "@@$name on $::hostname":
     ensure                => $ensure,
     use                   => $use_passive,
-    host_name             => $host_name ? {
-      false   => $::hostname,
-      default => $host_name,
-    },
+    host_name             => $host_name,
     tag                   => $export_for,
     target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${::hostname}.cfg",
     notify                => Exec['nagios-restart'],
