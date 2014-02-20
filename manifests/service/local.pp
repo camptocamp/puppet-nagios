@@ -1,18 +1,16 @@
-/*
-== Definition: nagios::service::local
+# == Definition: nagios::service::local
+#
+# Define a service resource on the local nagios instance.
+#
+# Example:
+#
+#   nagios::service::local { 'check process':
+#     ensure                => present,
+#     command_line          => '$USER1$/check_procs',
+#     normal_check_interval => 5,
+#     package               => 'nagios-plugins-procs',
+#   }
 
-Define a service resource on the local nagios instance.
-
-Example:
-
-  nagios::service::local { 'check process':
-    ensure                => present,
-    command_line          => '$USER1$/check_procs',
-    normal_check_interval => 5,
-    package               => 'nagios-plugins-procs',
-  }
-
-*/
 define nagios::service::local (
   $command_line,
   $codename,
@@ -34,12 +32,12 @@ define nagios::service::local (
   $fname = regsubst($name, '\W', '_', 'G')
 
   $nagios_service_host_name     = $host_name ? {
-    false                       => $::hostname,
-    default                     => $host_name,
+    false   => $::hostname,
+    default => $host_name,
   }
   $nagios_service_check_command = $check_command ? {
-    false                       => $name,
-    default                     => $check_command,
+    false   => $name,
+    default => $check_command,
   }
 
   nagios_service { $name:

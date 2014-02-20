@@ -1,15 +1,13 @@
-/*
-== Definition: nagios::command
+# == Definition: nagios::command
+#
+# Simple wrapper to create a nagios_command resource and associated file.
+#
+# Example:
+#
+#   nagios::command { "check_service":
+#     command_line => "/usr/lib/nagios/plugins/check_dummy 0 ok"
+#   }
 
-Simple wrapper to create a nagios_command resource and associated file.
-
-Example:
-
-  nagios::command { "check_service":
-    command_line => "/usr/lib/nagios/plugins/check_dummy 0 ok"
-  }
-
-*/
 define nagios::command (
   $command_line,
   $ensure        = present,

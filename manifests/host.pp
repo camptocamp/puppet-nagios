@@ -1,15 +1,13 @@
-/*
-== Definition: nagios::host
+# == Definition: nagios::host
+#
+# Define a host resource on the local nagios instance.
+#
+# Example:
+#
+#   nagios::host { $fqdn:
+#     ensure => "present",
+#   }
 
-Define a host resource on the local nagios instance.
-
-Example:
-
-  nagios::host { $fqdn:
-    ensure => "present",
-  }
-
-*/
 define nagios::host (
   $ensure=present,
   $address=false,
@@ -21,7 +19,7 @@ define nagios::host (
   include nagios::params
 
   $fname   = regsubst($name, '\W', '_', 'G')
-  $address = $address ? {
+  $nagios_address = $address ? {
     false   => $::ipaddress,
     default => $address,
   }
@@ -29,7 +27,7 @@ define nagios::host (
   nagios_host { $name:
     ensure         => $ensure,
     use            => 'generic-host-active',
-    address        => $address,
+    address        => $nagios_address,
     alias          => $nagios_alias,
     hostgroups     => $hostgroups,
     contact_groups => $contact_groups,
