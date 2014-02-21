@@ -1,17 +1,15 @@
-/*
-== Definition: nagios::host::nsca
+# == Definition: nagios::host::nsca
+#
+# Define a host resource on the local nagios instance and export the same
+# resource to a remote nagios nsca server.
+#
+# Example:
+#
+#   nagios::host::nsca { $fqdn:
+#     ensure     => "present",
+#     export_for => "nagios-nsca.example.com",
+#   }
 
-Define a host resource on the local nagios instance and export the same
-resource to a remote nagios nsca server.
-
-Example:
-
-  nagios::host::nsca { $fqdn:
-    ensure     => "present",
-    export_for => "nagios-nsca.example.com",
-  }
-
-*/
 define nagios::host::nsca (
   $export_for,
   $ensure=present,
@@ -23,15 +21,16 @@ define nagios::host::nsca (
 
   include nagios::params
 
-  $fname = regsubst($name, "\W", "_", "G")
+  $fname               = regsubst($name, '\W', '_', 'G')
+  $nagios_host_address = $address ? {
+    false   => $::ipaddress,
+    default => $address,
+  }
 
   nagios_host { $name:
     ensure  => $ensure,
     use     => 'generic-host-active',
-    address => $address ? {
-      false   => $::ipaddress,
-      default => $address,
-    },
+    address => $nagios_host_address,
     alias   => $nagios_alias,
     target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify  => Exec['nagios-restart'],
@@ -47,10 +46,7 @@ define nagios::host::nsca (
   @@nagios_host { "@@$name":
     ensure         => $ensure,
     use            => 'generic-host-passive',
-    address        => $address ? {
-      false   => $::ipaddress,
-      default => $address,
-    },
+    address        => $nagios_host_address,
     host_name      => $name,
     alias          => $nagios_alias,
     tag            => $export_for,
