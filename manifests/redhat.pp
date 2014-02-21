@@ -1,12 +1,10 @@
-/*
-== Class: nagios::redhat
-
-Define common resources specific to redhat based systems. It shouldn't be
-necessary to include this class directly. Instead, you should use:
-
-  include nagios
-
-*/
+# == Class: nagios::redhat
+#
+# Define common resources specific to redhat based systems. It shouldn't be
+# necessary to include this class directly. Instead, you should use:
+#
+#   include nagios
+#
 class nagios::redhat inherits nagios::base {
 
   include nagios::params

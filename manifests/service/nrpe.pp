@@ -1,52 +1,52 @@
-/*
-== Definition: nagios::service::nrpe
-
-Define a command in the local nrpe server configuration, and export the
-associated nagios service and command resources to a remote nagios instance.
-
-Example:
-
-  nagios::service::nrpe { 'check process':
-    ensure => present,
-    command_line => '/usr/lib/nagios/plugins/check_procs',
-    normal_check_interval => 5,
-    package => 'nagios-plugins-procs',
-    export_for => 'nagios-nrpe.example.com',
-  }
-
-*/
+# == Definition: nagios::service::nrpe
+#
+# Define a command in the local nrpe server configuration, and export the
+# associated nagios service and command resources to a remote nagios instance.
+#
+# Example:
+#
+#   nagios::service::nrpe { 'check process':
+#     ensure => present,
+#     command_line => '/usr/lib/nagios/plugins/check_procs',
+#     normal_check_interval => 5,
+#     package => 'nagios-plugins-procs',
+#     export_for => 'nagios-nrpe.example.com',
+#   }
+#
 define nagios::service::nrpe (
-  $ensure=present,
-  $service_description=undef,
   $export_for,
   $command_line,
-  $host_name=false,
-  $contact_groups=undef,
-  $service_groups=undef,
-  $normal_check_interval=undef,
-  $retry_check_interval=undef,
-  $max_check_attempts=undef,
-  $package=false
-  ) {
+  $ensure                = present,
+  $service_description   = undef,
+  $host_name             = false,
+  $contact_groups        = undef,
+  $service_groups        = undef,
+  $normal_check_interval = undef,
+  $retry_check_interval  = undef,
+  $max_check_attempts    = undef,
+  $package               = false,
+) {
 
   include nagios::params
 
-  $fname = regsubst($name, "\W", "_", "G")
+  $fname = regsubst($name, '\W', '_', 'G')
 
   nrpe_command {$name:
     ensure  => present,
     command => $command_line,
-    notify    => Service['nrpe'],
-    require   => Package['nrpe'],
+    notify  => Service['nrpe'],
+    require => Package['nrpe'],
   }
 
-  @@nagios_service { "@@$name on ${::hostname}":
+  $service_host_name = $host_name ? {
+    false   => $::hostname,
+    default => $host_name,
+  }
+
+  @@nagios_service { "@@${name} on ${::hostname}":
     ensure                => $ensure,
     use                   => 'generic-service-active',
-    host_name             => $host_name ? {
-      false   => $::hostname,
-      default => $host_name,
-    },
+    host_name             => $service_host_name,
     check_command         => "nrpe_${name}_on_${::hostname}",
     tag                   => $export_for,
     service_description   => $service_description,

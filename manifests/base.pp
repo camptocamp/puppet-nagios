@@ -1,12 +1,10 @@
-/*
-== Class: nagios::base
-
-Define common resources between debian and redhat based systems. It shouldn't
-be necessary to include this class directly. Instead, you should use:
-
-  include nagios
-
-*/
+# == Class: nagios::base
+#
+# Define common resources between debian and redhat based systems. It shouldn't
+# be necessary to include this class directly. Instead, you should use:
+#
+#   include nagios
+#
 class nagios::base {
 
   include nagios::params
@@ -100,7 +98,7 @@ class nagios::base {
   }
 
   # purge undefined nagios resources
-  file { "${nagios::params::resourcedir}":
+  file { $nagios::params::resourcedir:
     ensure  => directory,
     source  => 'puppet:///modules/nagios/empty',
     owner   => root,
@@ -185,10 +183,10 @@ class nagios::base {
   }
 
   nagios_servicegroup { 'default':
-    alias             => 'Default Service Group',
-    target            => "${nagios::params::resourcedir}/base-servicegroup.cfg",
-    notify            => Exec['nagios-restart'],
-    require           => File["${nagios::params::resourcedir}/base-servicegroup.cfg"],
+    alias   => 'Default Service Group',
+    target  => "${nagios::params::resourcedir}/base-servicegroup.cfg",
+    notify  => Exec['nagios-restart'],
+    require => File["${nagios::params::resourcedir}/base-servicegroup.cfg"],
   }
 
 }

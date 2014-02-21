@@ -1,16 +1,14 @@
-/*
-== Class: nagios::nsca::server
-
-Installs and configures the nsca server and ensure it's up and running. This
-class also collects the resources tagged with "nagios-${fqdn}". They typically
-got exported using nagios::service::nsca.
-
-Example usage:
-
-  include nagios
-  include nagios::nsca::server
-
-*/
+# == Class: nagios::nsca::server
+#
+# Installs and configures the nsca server and ensure it's up and running. This
+# class also collects the resources tagged with "nagios-${fqdn}". They typically
+# got exported using nagios::service::nsca.
+#
+# Example usage:
+#
+#   include nagios
+#   include nagios::nsca::server
+#
 class nagios::nsca::server {
 
   include ::nagios::params
@@ -48,9 +46,9 @@ class nagios::nsca::server {
   Nagios_service { require => File[$nagios::params::resourcedir] }
   Nagios_command { require => File[$nagios::params::resourcedir] }
 
-  case $::osfamily {
-    'Debian': { $nagios_nsca_cfg = '/etc/nsca.cfg' }
-    'RedHat': { $nagios_nsca_cfg = "${nagios::params::rootdir}/nsca.cfg" }
+  $nagios_nsca_cfg = $::osfamily ? {
+    Debian => '/etc/nsca.cfg',
+    RedHat => "${nagios::params::rootdir}/nsca.cfg",
   }
 
   file {$nagios_nsca_cfg:

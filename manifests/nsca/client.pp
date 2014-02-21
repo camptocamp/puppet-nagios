@@ -1,15 +1,13 @@
-/*
-== Class: nagios::nsca::client
-
-Installs the nsca client and configures nagios to send status information to
-the central nsca server.
-
-Example usage:
-
-  include nagios
-  include nagios::nsca::client
-
-*/
+# == Class: nagios::nsca::client
+#
+# Installs the nsca client and configures nagios to send status information to
+# the central nsca server.
+#
+# Example usage:
+#
+#   include nagios
+#   include nagios::nsca::client
+#
 class nagios::nsca::client {
 
   include ::nagios::params
@@ -66,7 +64,7 @@ class nagios::nsca::client {
 
   nagios_command {'submit_ocsp':
     ensure        => present,
-    command_line  => "/usr/local/bin/submit_ocsp \$HOSTNAME\$ '\$SERVICEDESC\$' \$SERVICESTATEID\$ '\$SERVICEOUTPUT\$'",
+    command_line  => '/usr/local/bin/submit_ocsp \$HOSTNAME\$ \'\$SERVICEDESC\$\' \$SERVICESTATEID\$ \'\$SERVICEOUTPUT\$\'',
     target        => "${nagios::params::resourcedir}/command-submit_ocsp.cfg",
     notify        => Exec['nagios-restart'],
     require       => File["${nagios::params::resourcedir}/command-submit_ocsp.cfg"],
@@ -80,7 +78,7 @@ class nagios::nsca::client {
 
   nagios_command {'submit_ochp':
     ensure        => present,
-    command_line  => "/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ '\$HOSTOUTPUT\$'",
+    command_line  => '/usr/local/bin/submit_ochp \$HOSTNAME\$ \$HOSTSTATE\$ \'\$HOSTOUTPUT\$\'',
     target        => "${nagios::params::resourcedir}/command-submit_ochp.cfg",
     notify        => Exec['nagios-restart'],
     require       => File["${nagios::params::resourcedir}/command-submit_ochp.cfg"],

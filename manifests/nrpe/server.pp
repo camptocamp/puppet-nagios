@@ -1,18 +1,16 @@
-/*
-== Class: nagios::nrpe::server
-
-Installs the check_nrpe plugin and collects the resources tagged with
-"nagios-${::fqdn}". They typically got exported using nagios::service::nrpe.
-
-NB: the class name can be confusing. The idea is that central nodes are nagios
-"servers", even if they just execute plugins.
-
-Example usage:
-
-  include nagios
-  include nagios::nrpe::server
-
-*/
+# == Class: nagios::nrpe::server
+#
+# Installs the check_nrpe plugin and collects the resources tagged with
+# "nagios-${::fqdn}". They typically got exported using nagios::service::nrpe.
+#
+# NB: the class name can be confusing. The idea is that central nodes are nagios
+# "servers", even if they just execute plugins.
+#
+# Example usage:
+#
+#   include nagios
+#   include nagios::nrpe::server
+#
 class nagios::nrpe::server {
   include ::nagios::params
 
