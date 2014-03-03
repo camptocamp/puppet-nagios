@@ -9,7 +9,7 @@
 #     ensure     => "present",
 #     export_for => "nagios-nsca.example.com",
 #   }
-
+#
 define nagios::host::nsca (
   $export_for,
   $ensure=present,
@@ -43,7 +43,7 @@ define nagios::host::nsca (
     before => Nagios_host[$name],
   }
 
-  @@nagios_host { "@@$name":
+  @@nagios_host { "@@${name}":
     ensure         => $ensure,
     use            => 'generic-host-passive',
     address        => $nagios_host_address,

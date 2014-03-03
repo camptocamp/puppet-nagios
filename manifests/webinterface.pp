@@ -1,4 +1,3 @@
-#
 # == Class: nagios::webinterface
 #
 # This class takes care of all the bits needed to run the CGIs used to display

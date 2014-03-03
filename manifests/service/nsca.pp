@@ -12,22 +12,22 @@
 #     package               => 'nagios-plugins-procs',
 #     export_for            => 'nagios-nsca.example.com',
 #   }
-
+#
 define nagios::service::nsca (
   $export_for,
   $command_line,
   $codename,
-  $ensure=present,
-  $service_description=false,
-  $host_name=false,
-  $contact_groups=undef,
-  $service_groups=undef,
-  $normal_check_interval=undef,
-  $retry_check_interval=undef,
-  $max_check_attempts=undef,
-  $use_active='generic-service-active',
-  $use_passive='generic-service-passive',
-  $package=false
+  $ensure                = present,
+  $service_description   = false,
+  $host_name             = false,
+  $contact_groups        = undef,
+  $service_groups        = undef,
+  $normal_check_interval = undef,
+  $retry_check_interval  = undef,
+  $max_check_attempts    = undef,
+  $use_active            = 'generic-service-active',
+  $use_passive           = 'generic-service-passive',
+  $package               = false,
   ) {
 
   include nagios::params
@@ -53,7 +53,7 @@ define nagios::service::nsca (
     service_description   => $service_description,
   }
 
-  @@nagios_service { "@@$name on $::hostname":
+  @@nagios_service { "@@${name} on ${::hostname}":
     ensure                => $ensure,
     use                   => $use_passive,
     host_name             => $nagios_host_name,

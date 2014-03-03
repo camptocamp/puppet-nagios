@@ -1,42 +1,43 @@
-/*
-== Definition: nagios::service::remote
-
-Define a service resource on a remote nagios instance using exported resources.
-
-Example:
-
-  nagios::service::remote { "check ssh":
-    ensure => present,
-    command_line => '/usr/lib/nagios/plugins/check_ssh',
-    normal_check_interval => 5,
-    export_for => "nagios-nsca.example.com",
-  }
-
-*/
+# == Definition: nagios::service::remote
+#
+# Define a service resource on a remote nagios instance using exported
+# resources.
+#
+# Example:
+#
+#   nagios::service::remote { "check ssh":
+#     ensure => present,
+#     command_line => '/usr/lib/nagios/plugins/check_ssh',
+#     normal_check_interval => 5,
+#     export_for => "nagios-nsca.example.com",
+#   }
+#
 define nagios::service::remote (
   $export_for,
   $command_line,
-  $ensure=present,
-  $service_description=undef,
-  $host_name=false,
-  $contact_groups=undef,
-  $service_groups=undef,
-  $normal_check_interval=undef,
-  $retry_check_interval=undef,
-  $max_check_attempts=undef,
-  ) {
+  $ensure                = present,
+  $service_description   = undef,
+  $host_name             = false,
+  $contact_groups        = undef,
+  $service_groups        = undef,
+  $normal_check_interval = undef,
+  $retry_check_interval  = undef,
+  $max_check_attempts    = undef,
+) {
 
   include nagios::params
 
-  $fname = regsubst($name, "\W", "_", "G")
+  $fname = regsubst($name, '\W', '_', 'G')
+
+  $nagios_host_name = $host_name ? {
+    false   => $::hostname,
+    default => $host_name,
+  }
 
   @@nagios_service { "@@${name} on ${::hostname}":
     ensure                => $ensure,
     use                   => 'generic-service-active',
-    host_name             => $host_name ? {
-      false   => $::hostname,
-      default => $host_name,
-    },
+    host_name             => $nagios_host_name,
     check_command         => "${name}_on_${::hostname}",
     tag                   => $export_for,
     service_description   => $service_description,
