@@ -84,11 +84,9 @@ nagios_check_command=/usr/lib/nagios/plugins/check_nagios /var/cache/nagios3/sta
 # Setting this value to 0 will cause the CGIs to *not* use
 # authentication (bad idea), while any other value will make them
 # use the authentication functions (the default).
-<% if has_variable?("nagios_use_authentication") %>
-use_authentication=<%= nagios_use_authentication %>
-<% else %>
-use_authentication=1
-<% end %>
+
+use_authentication=<%= @use_authentication %>
+
 
 # DEFAULT USER
 # Setting this variable will define a default user name that can
@@ -113,11 +111,9 @@ use_authentication=1
 # default, *no one* has access to this unless you choose to
 # not use authorization.  You may use an asterisk (*) to
 # authorize any user who has authenticated to the web server.
-<% if has_variable?("nagios_authorized_for_system_information") %>
-authorized_for_system_information=<%= nagios_authorized_for_system_information %>
-<% else %>
-authorized_for_system_information=nagiosadmin
-<% end %>
+
+authorized_for_system_information=<%= @authorized_for_system_information %>
+
 
 # CONFIGURATION INFORMATION ACCESS
 # This option is a comma-delimited list of all usernames that
@@ -126,11 +122,9 @@ authorized_for_system_information=nagiosadmin
 # for the hosts and services they are contacts for. You may use
 # an asterisk (*) to authorize any user who has authenticated
 # to the web server.
-<% if has_variable?("nagios_authorized_for_configuration_information") %>
-authorized_for_configuration_information=<%= nagios_authorized_for_configuration_information %>
-<% else %>
-authorized_for_configuration_information=nagiosadmin
-<% end %>
+
+authorized_for_configuration_information=<%= @authorized_for_configuration_information %>
+
 
 # SYSTEM/PROCESS COMMAND ACCESS
 # This option is a comma-delimited list of all usernames that
@@ -140,11 +134,9 @@ authorized_for_configuration_information=nagiosadmin
 # has access to this unless you choose to not use authorization.
 # You may use an asterisk (*) to authorize any user who has
 # authenticated to the web server.
-<% if has_variable?("nagios_authorized_for_system_commands") %>
-authorized_for_system_commands=<%= nagios_authorized_for_system_commands %>
-<% else %>
-authorized_for_system_commands=nagiosadmin
-<% end %>
+
+authorized_for_system_commands=<%= @authorized_for_system_commands %>
+
 
 # GLOBAL HOST/SERVICE VIEW ACCESS
 # These two options are comma-delimited lists of all usernames that
@@ -153,17 +145,13 @@ authorized_for_system_commands=nagiosadmin
 # for hosts or services that they are contacts for (unless you
 # you choose to not use authorization). You may use an asterisk (*)
 # to authorize any user who has authenticated to the web server.
-<% if has_variable?("nagios_authorized_for_all_services") %>
-authorized_for_all_services=<%= nagios_authorized_for_all_services %>
-<% else %>
-authorized_for_all_services=nagiosadmin
-<% end %>
 
-<% if has_variable?("nagios_authorized_for_all_hosts") %>
-authorized_for_all_hosts=<%= nagios_authorized_for_all_hosts %>
-<% else %>
-authorized_for_all_hosts=nagiosadmin
-<% end %>
+authorized_for_all_services=<%= @authorized_for_all_services %>
+
+
+
+authorized_for_all_hosts=<%= @authorized_for_all_hosts %>
+
 
 # GLOBAL HOST/SERVICE COMMAND ACCESS
 # These two options are comma-delimited lists of all usernames that
@@ -173,17 +161,13 @@ authorized_for_all_hosts=nagiosadmin
 # that they are contacts for (unless you you choose to not use 
 # authorization).  You may use an asterisk (*) to authorize any
 # user who has authenticated to the web server.
-<% if has_variable?("nagios_authorized_for_all_service_commands") %>
-authorized_for_all_service_commands=<%= nagios_authorized_for_all_service_commands %>
-<% else %>
-authorized_for_all_service_commands=nagiosadmin
-<% end %>
 
-<% if has_variable?("nagios_authorized_for_all_host_commands") %>
-authorized_for_all_host_commands=<%= nagios_authorized_for_all_host_commands %>
-<% else %>
-authorized_for_all_host_commands=nagiosadmin
-<% end %>
+authorized_for_all_service_commands=<%= @authorized_for_all_service_commands %>
+
+
+
+authorized_for_all_host_commands=<%= @authorized_for_all_host_commands %>
+
 
 # STATUSMAP BACKGROUND IMAGE
 # This option allows you to specify an image to be used as a 
