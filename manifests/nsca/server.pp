@@ -9,7 +9,9 @@
 #   include nagios
 #   include nagios::nsca::server
 #
-class nagios::nsca::server {
+class nagios::nsca::server(
+  $decryption_method = pick($nagios_nsca_decryption_method, '0'),
+) {
 
   include ::nagios::params
 

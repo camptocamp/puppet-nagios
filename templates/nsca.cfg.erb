@@ -188,8 +188,6 @@ password=<%= nagios_nsca_password %>
 #	26 = SAFER+
 #
 
-<% if has_variable?("nagios_nsca_decryption_method") %>
-decryption_method=<%= nagios_nsca_decryption_method %>
-<% else %>
-decryption_method=0
-<% end %>
+
+decryption_method=<%= @decryption_method %>
+

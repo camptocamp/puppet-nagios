@@ -27,5 +27,5 @@ define command{
 define command{
   name          check-host-alive  
   command_name  check-host-alive
-  command_line  $USER1$/check_ping <%- if ( has_variable?("nagios_check_ping_ipv") and ( nagios_check_ping_ipv=="4" or nagios_check_ping_ipv=="6" ) ) -%>-<%=nagios_check_ping_ipv%> <% end -%>-H $HOSTADDRESS$ -w 5000,100% -c 5000,100% -p 1
+  command_line  $USER1$/check_ping <%- if ( @check_ping_ipv and ( @check_ping_ipv=="4" or @check_ping_ipv=="6" ) ) -%>-<%= @check_ping_ipv %> <% end -%>-H $HOSTADDRESS$ -w 5000,100% -c 5000,100% -p 1
 }

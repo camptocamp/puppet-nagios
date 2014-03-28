@@ -226,11 +226,9 @@ log_archive_path=/var/log/<%= basename %>/archives
 # LOGGING OPTIONS
 # If you want messages logged to the syslog facility, as well as the
 # Nagios log file set this option to 1.  If not, set it to 0.
-<% if has_variable?("nagios_use_syslog") %>
-use_syslog=<%= nagios_use_syslog %>
-<% else %>
-use_syslog=1
-<% end %>
+
+use_syslog=<%= @use_syslog %>
+
 
 # NOTIFICATION LOGGING OPTION
 # If you don't want notifications to be logged, set this value to 0.
