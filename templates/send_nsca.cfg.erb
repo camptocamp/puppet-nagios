@@ -16,7 +16,7 @@
 # to read the password you specify here, so make sure to set
 # restrictive permissions on this config file!
 <% if has_variable?("nagios_nsca_password") %>
-password=<%= nagios_nsca_password %>
+password=<%= @nagios_nsca_password %>
 <% else %>
 #password=
 <% end %>
@@ -63,7 +63,7 @@ password=<%= nagios_nsca_password %>
 #
 
 <% if has_variable?("nagios_nsca_encryption_method") %>
-encryption_method=<%= nagios_nsca_encryption_method %>
+encryption_method=<%= @nagios_nsca_encryption_method %>
 <% else %>
 encryption_method=0
 <% end %>
