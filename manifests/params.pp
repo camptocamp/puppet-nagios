@@ -28,5 +28,4 @@ class nagios::params {
   $conffile    = "${rootdir}/nagios.cfg"
 
   $nsca_server = $nagios_nsca_server
-  $nsca_server_tag = $nagios_nsca_server_tag
 }
