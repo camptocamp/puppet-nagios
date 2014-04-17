@@ -27,7 +27,6 @@ class nagios::params {
   $rootdir     = "/etc/${basename}"
   $conffile    = "${rootdir}/nagios.cfg"
 
-  $nrpe_server_tag = $nagios_nrpe_server_tag
   $nsca_server = $nagios_nsca_server
   $nsca_server_tag = $nagios_nsca_server_tag
 }

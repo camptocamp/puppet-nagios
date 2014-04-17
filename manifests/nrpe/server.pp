@@ -29,11 +29,7 @@ class nagios::nrpe::server {
     default: { fail ("OS family ${::osfamily} not yet implemented !")}
   }
 
-  if $nagios::params::nrpe_server_tag {
-    $get_tag = "nagios-${nagios::params::nrpe_server_tag}"
-  } else {
-    $get_tag = "nagios-${::fqdn}"
-  }
+  $get_tag = "nagios-${::nagios::nrpe_server_tag}"
 
   Nagios_host    <<| tag == $get_tag |>>
   Nagios_service <<| tag == $get_tag |>>
