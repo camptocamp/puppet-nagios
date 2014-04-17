@@ -10,7 +10,7 @@
 # This is the main log file where service and host events are logged
 # for historical purposes.  This should be the first option specified 
 # in the config file!!!
-log_file=/var/log/<%= basename %>/nagios.log
+log_file=/var/log/<%= @basename %>/nagios.log
 
 # OBJECT CONFIGURATION FILE(S)
 # These are the object configuration files in which you define hosts,
@@ -29,7 +29,7 @@ cfg_dir=/etc/nagios.d
 # this cache file (rather than looking at the object config files
 # directly) in order to prevent inconsistencies that can occur
 # when the config files are modified after Nagios starts.
-object_cache_file=/var/cache/<%= basename %>/objects.cache
+object_cache_file=/var/cache/<%= @basename %>/objects.cache
 
 # PRE-CACHED OBJECT FILE
 # This options determines the location of the precached object file.
@@ -42,7 +42,7 @@ object_cache_file=/var/cache/<%= basename %>/objects.cache
 # the Nagios process if you've got a large and/or complex configuration.
 # Read the documentation section on optimizing Nagios to find our more
 # about how this feature works.
-precached_object_file=/var/cache/<%= basename %>/objects.precache
+precached_object_file=/var/cache/<%= @basename %>/objects.precache
 
 # RESOURCE FILE
 # This is an optional resource file that contains $USERx$ macro
@@ -52,21 +52,21 @@ precached_object_file=/var/cache/<%= basename %>/objects.precache
 # considered to be sensitive (usernames, passwords, etc) can be
 # defined as macros in this file and restrictive permissions (600)
 # can be placed on this file.
-resource_file=/etc/<%= basename %>/resource.cfg
+resource_file=/etc/<%= @basename %>/resource.cfg
 
 # STATUS FILE
 # This is where the current status of all monitored services and
 # hosts is stored.  Its contents are read and processed by the CGIs.
 # The contents of the status file are deleted every time Nagios
 #  restarts.
-status_file=/var/cache/<%= basename %>/status.dat
+status_file=/var/cache/<%= @basename %>/status.dat
 
 # STATUS FILE UPDATE INTERVAL
 # This option determines the frequency (in seconds) that
 # Nagios will periodically dump program, host, and 
 # service status data.
-<% if has_variable?("nagios_status_update_interval") %>
-status_update_interval=<%= nagios_status_update_interval %>
+<% if @nagios_status_update_interval %>
+status_update_interval=<%= @nagios_status_update_interval %>
 <% else %>
 status_update_interval=10
 <% end %>
@@ -74,8 +74,8 @@ status_update_interval=10
 # NAGIOS USER
 # This determines the effective user that Nagios should run as.  
 # You can either supply a username or a UID.
-<% if has_variable?("nagios_user") %>
-nagios_user=<%= nagios_nagios_user %>
+<% if @nagios_user %>
+nagios_user=<%= @nagios_nagios_user %>
 <% else %>
 nagios_user=nagios
 <% end %>
@@ -83,8 +83,8 @@ nagios_user=nagios
 # NAGIOS GROUP
 # This determines the effective group that Nagios should run as.  
 # You can either supply a group name or a GID.
-<% if has_variable?("nagios_group") %>
-nagios_group=<%= nagios_nagios_group %>
+<% if @nagios_group %>
+nagios_group=<%= @nagios_nagios_group %>
 <% else %>
 nagios_group=nagios
 <% end %>
@@ -96,8 +96,8 @@ nagios_group=nagios
 # cautious side.  If you want to be able to use the CGI command interface
 # you will have to enable this.
 # Values: 0 = disable commands, 1 = enable commands
-<% if has_variable?("nagios_check_external_commands") %>
-check_external_commands=<%= nagios_check_external_commands %>
+<% if @nagios_check_external_commands %>
+check_external_commands=<%= @nagios_check_external_commands %>
 <% else %>
 check_external_commands=1
 <% end %>
@@ -115,8 +115,8 @@ check_external_commands=1
 # NOTE: Setting this value to -1 causes Nagios to check the external
 # command file as often as possible.
 #command_check_interval=15s
-<% if has_variable?("nagios_command_check_interval") %>
-command_check_interval=<%= nagios_command_check_interval %>
+<% if @nagios_command_check_interval %>
+command_check_interval=<%= @nagios_command_check_interval %>
 <% else %>
 command_check_interval=-1
 <% end %>
@@ -130,15 +130,15 @@ command_check_interval=-1
 # time its contents are processed.
 # Debian Users: In case you didn't read README.Debian yet, _NOW_ is the
 # time to do it.
-command_file=/var/run/<%= basename %>/rw/nagios.cmd
+command_file=/var/run/<%= @basename %>/rw/nagios.cmd
 
 # EXTERNAL COMMAND BUFFER SLOTS
 # This settings is used to tweak the number of items or "slots" that
 # the Nagios daemon should allocate to the buffer that holds incoming 
 # external commands before they are processed.  As external commands 
 # are processed by the daemon, they are removed from the buffer.  
-<% if has_variable?("nagios_external_command_buffer_slots") %>
-external_command_buffer_slots=<%= nagios_external_command_buffer_slots %>
+<% if @nagios_external_command_buffer_slots %>
+external_command_buffer_slots=<%= @nagios_external_command_buffer_slots %>
 <% else %>
 external_command_buffer_slots=4096
 <% end %>
@@ -147,9 +147,9 @@ external_command_buffer_slots=4096
 # This is the lockfile that Nagios will use to store its PID number
 # in when it is running in daemon mode.
 <% if operatingsystem =~ /RedHat|CentOS/ -%>
-lock_file=/var/run/<%= basename %>.pid
+lock_file=/var/run/<%= @basename %>.pid
 <% else -%>
-lock_file=/var/run/<%= basename %>/<%= basename %>.pid
+lock_file=/var/run/<%= @basename %>/<%= basename %>.pid
 <% end -%>
 
 # TEMP FILE
@@ -157,13 +157,13 @@ lock_file=/var/run/<%= basename %>/<%= basename %>.pid
 # updates the status log, cleans the comment file, etc.  This file
 # is created, used, and deleted throughout the time that Nagios is
 # running.
-temp_file=/var/cache/<%= basename %>/nagios.tmp
+temp_file=/var/cache/<%= @basename %>/nagios.tmp
 
 # TEMP PATH
 # This is path where Nagios can create temp files for service and
 # host check results, etc.
-<% if has_variable?("nagios_temp_path") %>
-temp_path=<%= nagios_temp_path %>
+<% if @nagios_temp_path %>
+temp_path=<%= @nagios_temp_path %>
 <% else %>
 temp_path=/tmp
 <% end %>
@@ -173,8 +173,8 @@ temp_path=/tmp
 # Values:  0      = Broker nothing
 #         -1      = Broker everything
 #         <other> = See documentation
-<% if has_variable?("nagios_event_broker_options") %>
-event_broker_options=<%= nagios_event_broker_options %>
+<% if @nagios_event_broker_options %>
+event_broker_options=<%= @nagios_event_broker_options %>
 <% else %>
 event_broker_options=-1
 <% end %>
@@ -212,8 +212,8 @@ event_broker_options=-1
 #	d	= Daily rotation (midnight every day)
 #	w	= Weekly rotation (midnight on Saturday evening)
 #	m	= Monthly rotation (midnight last day of month)
-<% if has_variable?("nagios_log_rotation_method") %>
-log_rotation_method=<%= nagios_log_rotation_method %>
+<% if @nagios_log_rotation_method %>
+log_rotation_method=<%= @nagios_log_rotation_method %>
 <% else %>
 log_rotation_method=d
 <% end %>
@@ -221,7 +221,7 @@ log_rotation_method=d
 # LOG ARCHIVE PATH
 # This is the directory where archived (rotated) log files should be 
 # placed (assuming you've chosen to do log rotation).
-log_archive_path=/var/log/<%= basename %>/archives
+log_archive_path=/var/log/<%= @basename %>/archives
 
 # LOGGING OPTIONS
 # If you want messages logged to the syslog facility, as well as the
@@ -233,8 +233,8 @@ use_syslog=<%= @use_syslog %>
 # NOTIFICATION LOGGING OPTION
 # If you don't want notifications to be logged, set this value to 0.
 # If notifications should be logged, set the value to 1.
-<% if has_variable?("nagios_log_notifications") %>
-log_notifications=<%= nagios_log_notifications %>
+<% if @nagios_log_notifications %>
+log_notifications=<%= @nagios_log_notifications %>
 <% else %>
 log_notifications=0
 <% end %>
@@ -242,8 +242,8 @@ log_notifications=0
 # SERVICE RETRY LOGGING OPTION
 # If you don't want service check retries to be logged, set this value
 # to 0.  If retries should be logged, set the value to 1.
-<% if has_variable?("nagios_log_service_retries") %>
-log_service_retries=<%= nagios_log_service_retries %>
+<% if @nagios_log_service_retries %>
+log_service_retries=<%= @nagios_log_service_retries %>
 <% else %>
 log_service_retries=0
 <% end %>
@@ -251,8 +251,8 @@ log_service_retries=0
 # HOST RETRY LOGGING OPTION
 # If you don't want host check retries to be logged, set this value to
 # 0.  If retries should be logged, set the value to 1.
-<% if has_variable?("nagios_log_host_retries") %>
-log_host_retries=<%= nagios_log_host_retries %>
+<% if @nagios_log_host_retries %>
+log_host_retries=<%= @nagios_log_host_retries %>
 <% else %>
 log_host_retries=0
 <% end %>
@@ -261,8 +261,8 @@ log_host_retries=0
 # If you don't want host and service event handlers to be logged, set
 # this value to 0.  If event handlers should be logged, set the value
 # to 1.
-<% if has_variable?("nagios_log_event_handlers") %>
-log_event_handlers=<%= nagios_log_event_handlers %>
+<% if @nagios_log_event_handlers %>
+log_event_handlers=<%= @nagios_log_event_handlers %>
 <% else %>
 log_event_handlers=0
 <% end %>
@@ -274,8 +274,8 @@ log_event_handlers=0
 # are not using an external application that does long term state
 # statistics reporting, you do not need to enable this option.  In
 # this case, set the value to 0.
-<% if has_variable?("nagios_log_initial_states") %>
-log_initial_states=<%= nagios_log_initial_states %>
+<% if @nagios_log_initial_states %>
+log_initial_states=<%= @nagios_log_initial_states %>
 <% else %>
 log_initial_states=0
 <% end %>
@@ -286,8 +286,8 @@ log_initial_states=0
 # Note: This option does not include logging of passive service
 # checks - see the option below for controlling whether or not
 # passive checks are logged.
-<% if has_variable?("nagios_log_external_commands") %>
-log_external_commands=<%= nagios_log_external_commands %>
+<% if @nagios_log_external_commands %>
+log_external_commands=<%= @nagios_log_external_commands %>
 <% else %>
 log_external_commands=0
 <% end %>
@@ -296,8 +296,8 @@ log_external_commands=0
 # If you don't want Nagios to log passive host and service checks, set
 # this value to 0.  If passive checks should be logged, set
 # this value to 1.
-<% if has_variable?("nagios_log_passive_checks") %>
-log_passive_checks=<%= nagios_log_passive_checks %>
+<% if @nagios_log_passive_checks %>
+log_passive_checks=<%= @nagios_log_passive_checks %>
 <% else %>
 log_passive_checks=0
 <% end %>
@@ -327,8 +327,8 @@ log_passive_checks=0
 #	d	= Use a "dumb" delay of 1 second between checks
 #	s	= Use "smart" inter-check delay calculation
 #       x.xx    = Use an inter-check delay of x.xx seconds
-<% if has_variable?("nagios_service_inter_check_delay_method") %>
-service_inter_check_delay_method=<%= nagios_service_inter_check_delay_method %>
+<% if @nagios_service_inter_check_delay_method %>
+service_inter_check_delay_method=<%= @nagios_service_inter_check_delay_method %>
 <% else %>
 service_inter_check_delay_method=s
 <% end %>
@@ -337,8 +337,8 @@ service_inter_check_delay_method=s
 # This variable determines the timeframe (in minutes) from the
 # program start time that an initial check of all services should
 # be completed.  Default is 30 minutes.
-<% if has_variable?("nagios_max_service_check_spread") %>
-max_service_check_spread=<%= nagios_max_service_check_spread %>
+<% if @nagios_max_service_check_spread %>
+max_service_check_spread=<%= @nagios_max_service_check_spread %>
 <% else %>
 max_service_check_spread=30
 <% end %>
@@ -354,8 +354,8 @@ max_service_check_spread=30
 #       s       = Use "smart" interleave factor calculation
 #       x       = Use an interleave factor of x, where x is a
 #                 number greater than or equal to 1.
-<% if has_variable?("nagios_service_interleave_factor") %>
-service_interleave_factor=<%= nagios_service_interleave_factor %>
+<% if @nagios_service_interleave_factor %>
+service_interleave_factor=<%= @nagios_service_interleave_factor %>
 <% else %>
 service_interleave_factor=s
 <% end %>
@@ -371,8 +371,8 @@ service_interleave_factor=s
 #	d	= Use a "dumb" delay of 1 second between checks
 #	s	= Use "smart" inter-check delay calculation
 #       x.xx    = Use an inter-check delay of x.xx seconds
-<% if has_variable?("nagios_host_inter_check_delay_method") %>
-host_inter_check_delay_method=<%= nagios_host_inter_check_delay_method %>
+<% if @nagios_host_inter_check_delay_method %>
+host_inter_check_delay_method=<%= @nagios_host_inter_check_delay_method %>
 <% else %>
 host_inter_check_delay_method=s
 <% end %>
@@ -381,8 +381,8 @@ host_inter_check_delay_method=s
 # This variable determines the timeframe (in minutes) from the
 # program start time that an initial check of all hosts should
 # be completed.  Default is 30 minutes.
-<% if has_variable?("nagios_max_host_check_spread") %>
-max_host_check_spread=<%= nagios_max_host_check_spread %>
+<% if @nagios_max_host_check_spread %>
+max_host_check_spread=<%= @nagios_max_host_check_spread %>
 <% else %>
 max_host_check_spread=30
 <% end %>
@@ -394,8 +394,8 @@ max_host_check_spread=30
 # any service checks from being parallelized.  A value of 0
 # will not restrict the number of concurrent checks that are
 # being executed.
-<% if has_variable?("nagios_max_concurrent_checks") %>
-max_concurrent_checks=<%= nagios_max_concurrent_checks %>
+<% if @nagios_max_concurrent_checks %>
+max_concurrent_checks=<%= @nagios_max_concurrent_checks %>
 <% else %>
 max_concurrent_checks=0
 <% end %>
@@ -403,8 +403,8 @@ max_concurrent_checks=0
 # HOST AND SERVICE CHECK REAPER FREQUENCY
 # This is the frequency (in seconds!) that Nagios will process
 # the results of host and service checks.
-<% if has_variable?("nagios_check_result_reaper_frequency") %>
-check_result_reaper_frequency=<%= nagios_check_result_reaper_frequency %>
+<% if @nagios_check_result_reaper_frequency %>
+check_result_reaper_frequency=<%= @nagios_check_result_reaper_frequency %>
 <% else %>
 check_result_reaper_frequency=10
 <% end %>
@@ -414,8 +414,8 @@ check_result_reaper_frequency=10
 # check result reaper event will be allowed to run before 
 # returning control back to Nagios so it can perform other
 # duties.
-<% if has_variable?("nagios_max_check_result_reaper_time") %>
-max_check_result_reaper_time=<%= nagios_max_check_result_reaper_time %>
+<% if @nagios_max_check_result_reaper_time %>
+max_check_result_reaper_time=<%= @nagios_max_check_result_reaper_time %>
 <% else %>
 max_check_result_reaper_time=30
 <% end %>
@@ -426,14 +426,14 @@ max_check_result_reaper_time=30
 #
 # Note: Make sure that only one instance of Nagios has access
 # to this directory!  
-check_result_path=/var/lib/<%= basename %>/spool/checkresults
+check_result_path=/var/lib/<%= @basename %>/spool/checkresults
 
 # MAX CHECK RESULT FILE AGE
 # This option determines the maximum age (in seconds) which check
 # result files are considered to be valid.  Files older than this 
 # threshold will be mercilessly deleted without further processing.
-<% if has_variable?("nagios_max_check_result_file_age") %>
-max_check_result_file_age=<%= nagios_max_check_result_file_age %>
+<% if @nagios_max_check_result_file_age %>
+max_check_result_file_age=<%= @nagios_max_check_result_file_age %>
 <% else %>
 max_check_result_file_age=3600
 <% end %>
@@ -448,8 +448,8 @@ max_check_result_file_age=3600
 # states being used by Nagios, while a lower value may result in a
 # performance hit for host checks.  Use a value of 0 to disable host
 # check caching.
-<% if has_variable?("nagios_cached_host_check_horizon") %>
-cached_host_check_horizon=<%= nagios_cached_host_check_horizon %>
+<% if @nagios_cached_host_check_horizon %>
+cached_host_check_horizon=<%= @nagios_cached_host_check_horizon %>
 <% else %>
 cached_host_check_horizon=15
 <% end %>
@@ -461,8 +461,8 @@ cached_host_check_horizon=15
 # recently that the timeframe specified by this value) can immensely
 # improve performance in regards to predictive dependency checks.
 # Use a value of 0 to disable service check caching.
-<% if has_variable?("nagios_cached_service_check_horizon") %>
-cached_service_check_horizon=<%= nagios_cached_service_check_horizon %>
+<% if @nagios_cached_service_check_horizon %>
+cached_service_check_horizon=<%= @nagios_cached_service_check_horizon %>
 <% else %>
 cached_service_check_horizon=15
 <% end %>
@@ -475,8 +475,8 @@ cached_service_check_horizon=15
 # Values:
 #  0 = Disable predictive checks
 #  1 = Enable predictive checks (default)
-<% if has_variable?("nagios_enable_predictive_host_dependency_checks") %>
-enable_predictive_host_dependency_checks=<%= nagios_enable_predictive_host_dependency_checks %>
+<% if @nagios_enable_predictive_host_dependency_checks %>
+enable_predictive_host_dependency_checks=<%= @nagios_enable_predictive_host_dependency_checks %>
 <% else %>
 enable_predictive_host_dependency_checks=1
 <% end %>
@@ -489,8 +489,8 @@ enable_predictive_host_dependency_checks=1
 # Values:
 #  0 = Disable predictive checks
 #  1 = Enable predictive checks (default)
-<% if has_variable?("nagios_enable_predictive_service_dependency_checks") %>
-enable_predictive_service_dependency_checks=<%= nagios_enable_predictive_service_dependency_checks %>
+<% if @nagios_enable_predictive_service_dependency_checks %>
+enable_predictive_service_dependency_checks=<%= @nagios_enable_predictive_service_dependency_checks %>
 <% else %>
 enable_predictive_service_dependency_checks=1
 <% end %>
@@ -504,8 +504,8 @@ enable_predictive_service_dependency_checks=1
 # Values:
 #  0 = Don't use soft state dependencies (default) 
 #  1 = Use soft state dependencies 
-<% if has_variable?("nagios_soft_state_dependencies") %>
-soft_state_dependencies=<%= nagios_soft_state_dependencies %>
+<% if @nagios_soft_state_dependencies %>
+soft_state_dependencies=<%= @nagios_soft_state_dependencies %>
 <% else %>
 soft_state_dependencies=0
 <% end %>
@@ -517,8 +517,8 @@ soft_state_dependencies=0
 # the monitoring server.  
 # WARNING: THIS IS AN EXPERIMENTAL FEATURE - IT CAN DEGRADE
 # PERFORMANCE, RATHER THAN INCREASE IT, IF USED IMPROPERLY
-<% if has_variable?("nagios_auto_reschedule_checks") %>
-auto_reschedule_checks=<%= nagios_auto_reschedule_checks %>
+<% if @nagios_auto_reschedule_checks %>
+auto_reschedule_checks=<%= @nagios_auto_reschedule_checks %>
 <% else %>
 auto_reschedule_checks=0
 <% end %>
@@ -530,8 +530,8 @@ auto_reschedule_checks=0
 # Default is 30 seconds.
 # WARNING: THIS IS AN EXPERIMENTAL FEATURE - IT CAN DEGRADE
 # PERFORMANCE, RATHER THAN INCREASE IT, IF USED IMPROPERLY
-<% if has_variable?("nagios_auto_rescheduling_interval") %>
-auto_rescheduling_interval=<%= nagios_auto_rescheduling_interval %>
+<% if @nagios_auto_rescheduling_interval %>
+auto_rescheduling_interval=<%= @nagios_auto_rescheduling_interval %>
 <% else %>
 auto_rescheduling_interval=30
 <% end %>
@@ -545,8 +545,8 @@ auto_rescheduling_interval=30
 # enabled.  Default is 180 seconds (3 minutes).
 # WARNING: THIS IS AN EXPERIMENTAL FEATURE - IT CAN DEGRADE
 # PERFORMANCE, RATHER THAN INCREASE IT, IF USED IMPROPERLY
-<% if has_variable?("nagios_auto_rescheduling_window") %>
-auto_rescheduling_window=<%= nagios_auto_rescheduling_window %>
+<% if @nagios_auto_rescheduling_window %>
+auto_rescheduling_window=<%= @nagios_auto_rescheduling_window %>
 <% else %>
 auto_rescheduling_window=180
 <% end %>
@@ -554,8 +554,8 @@ auto_rescheduling_window=180
 # SLEEP TIME
 # This is the number of seconds to sleep between checking for system
 # events and service checks that need to be run.
-<% if has_variable?("nagios_sleep_time") %>
-sleep_time=<%= nagios_sleep_time %>
+<% if @nagios_sleep_time %>
+sleep_time=<%= @nagios_sleep_time %>
 <% else %>
 sleep_time=0.25
 <% end %>
@@ -567,38 +567,38 @@ sleep_time=0.25
 # service checks, host checks, event handlers, notifications, the
 # ocsp command, and performance data commands.  All values are in
 # seconds.
-<% if has_variable?("nagios_service_check_timeout") %>
-service_check_timeout=<%= nagios_service_check_timeout %>
+<% if @nagios_service_check_timeout %>
+service_check_timeout=<%= @nagios_service_check_timeout %>
 <% else %>
 service_check_timeout=60
 <% end %>
 
-<% if has_variable?("nagios_host_check_timeout") %>
-host_check_timeout=<%= nagios_host_check_timeout %>
+<% if @nagios_host_check_timeout %>
+host_check_timeout=<%= @nagios_host_check_timeout %>
 <% else %>
 host_check_timeout=60
 <% end %>
 
-<% if has_variable?("nagios_event_handler_timeout") %>
-event_handler_timeout=<%= nagios_event_handler_timeout %>
+<% if @nagios_event_handler_timeout %>
+event_handler_timeout=<%= @nagios_event_handler_timeout %>
 <% else %>
 event_handler_timeout=30
 <% end %>
 
-<% if has_variable?("nagios_notification_timeout") %>
-notification_timeout=<%= nagios_notification_timeout %>
+<% if @nagios_notification_timeout %>
+notification_timeout=<%= @nagios_notification_timeout %>
 <% else %>
 notification_timeout=30
 <% end %>
 
-<% if has_variable?("nagios_ocsp_timeout") %>
-ocsp_timeout=<%= nagios_ocsp_timeout %>
+<% if @nagios_ocsp_timeout %>
+ocsp_timeout=<%= @nagios_ocsp_timeout %>
 <% else %>
 ocsp_timeout=10
 <% end %>
 
-<% if has_variable?("nagios_perfdata_timeout") %>
-perfdata_timeout=<%= nagios_perfdata_timeout %>
+<% if @nagios_perfdata_timeout %>
+perfdata_timeout=<%= @nagios_perfdata_timeout %>
 <% else %>
 perfdata_timeout=5
 <% end %>
@@ -612,8 +612,8 @@ perfdata_timeout=5
 # slow Nagios down a bit when it (re)starts.  Since its only
 # a one-time penalty, I think its well worth the additional
 # startup delay.
-<% if has_variable?("nagios_retain_state_information") %>
-retain_state_information=<%= nagios_retain_state_information %>
+<% if @nagios_retain_state_information %>
+retain_state_information=<%= @nagios_retain_state_information %>
 <% else %>
 retain_state_information=1
 <% end %>
@@ -625,7 +625,7 @@ retain_state_information=1
 # starting to monitor the network when Nagios is restarted.
 # This file is used only if the preserve_state_information
 # variable is set to 1.
-state_retention_file=/var/lib/<%= basename %>/retention.dat
+state_retention_file=/var/lib/<%= @basename %>/retention.dat
 
 # RETENTION DATA UPDATE INTERVAL
 # This setting determines how often (in minutes) that Nagios
@@ -634,8 +634,8 @@ state_retention_file=/var/lib/<%= basename %>/retention.dat
 # data at regular interval, but it will still save retention
 # data before shutting down or restarting.  If you have disabled
 # state retention, this option has no effect.
-<% if has_variable?("nagios_retention_update_interval") %>
-retention_update_interval=<%= nagios_retention_update_interval %>
+<% if @nagios_retention_update_interval %>
+retention_update_interval=<%= @nagios_retention_update_interval %>
 <% else %>
 retention_update_interval=60
 <% end %>
@@ -646,8 +646,8 @@ retention_update_interval=60
 # retention file.  If you want to use retained program status
 # information, set this value to 1.  If not, set this value
 # to 0.
-<% if has_variable?("nagios_use_retained_program_state") %>
-use_retained_program_state=<%= nagios_use_retained_program_state %>
+<% if @nagios_use_retained_program_state %>
+use_retained_program_state=<%= @nagios_use_retained_program_state %>
 <% else %>
 use_retained_program_state=0
 <% end %>
@@ -658,8 +658,8 @@ use_retained_program_state=0
 # based on the values saved in the retention file.  If you
 # If you want to use retained scheduling info, set this
 # value to 1.  If not, set this value to 0.
-<% if has_variable?("nagios_use_retained_scheduling_info") %>
-use_retained_scheduling_info=<%= nagios_use_retained_scheduling_info %>
+<% if @nagios_use_retained_scheduling_info %>
+use_retained_scheduling_info=<%= @nagios_use_retained_scheduling_info %>
 <% else %>
 use_retained_scheduling_info=1
 <% end %>
@@ -677,15 +677,15 @@ use_retained_scheduling_info=1
 # MODATTR_EVENT_HANDLER_ENABLED (8) + MODATTR_FLAP_DETECTION_ENABLED (16) = 24
 
 # This mask determines what host attributes are not retained
-<% if has_variable?("nagios_retained_host_attribute_mask") %>
-retained_host_attribute_mask=<%= nagios_retained_host_attribute_mask %>
+<% if @nagios_retained_host_attribute_mask %>
+retained_host_attribute_mask=<%= @nagios_retained_host_attribute_mask %>
 <% else %>
 retained_host_attribute_mask=0
 <% end %>
 
 # This mask determines what service attributes are not retained
-<% if has_variable?("nagios_retained_service_attribute_mask") %>
-retained_service_attribute_mask=<%= nagios_retained_service_attribute_mask %>
+<% if @nagios_retained_service_attribute_mask %>
+retained_service_attribute_mask=<%= @nagios_retained_service_attribute_mask %>
 <% else %>
 retained_service_attribute_mask=0
 <% end %>
@@ -694,14 +694,14 @@ retained_service_attribute_mask=0
 # There are two masks, because some process attributes have host and service
 # options.  For example, you can disable active host checks, but leave active
 # service checks enabled.
-<% if has_variable?("nagios_retained_process_host_attribute_mask") %>
-retained_process_host_attribute_mask=<%= nagios_retained_process_host_attribute_mask %>
+<% if @nagios_retained_process_host_attribute_mask %>
+retained_process_host_attribute_mask=<%= @nagios_retained_process_host_attribute_mask %>
 <% else %>
 retained_process_host_attribute_mask=0
 <% end %>
 
-<% if has_variable?("nagios_retained_process_service_attribute_mask") %>
-retained_process_service_attribute_mask=<%= nagios_retained_process_service_attribute_mask %>
+<% if @nagios_retained_process_service_attribute_mask %>
+retained_process_service_attribute_mask=<%= @nagios_retained_process_service_attribute_mask %>
 <% else %>
 retained_process_service_attribute_mask=0
 <% end %>
@@ -710,14 +710,14 @@ retained_process_service_attribute_mask=0
 # There are two masks, because some contact attributes have host and
 # service options.  For example, you can disable host notifications for
 # a contact, but leave service notifications enabled for them.
-<% if has_variable?("nagios_retained_contact_host_attribute_mask") %>
-retained_contact_host_attribute_mask=<%= nagios_retained_contact_host_attribute_mask %>
+<% if @nagios_retained_contact_host_attribute_mask %>
+retained_contact_host_attribute_mask=<%= @nagios_retained_contact_host_attribute_mask %>
 <% else %>
 retained_contact_host_attribute_mask=0
 <% end %>
 
-<% if has_variable?("nagios_retained_contact_service_attribute_mask") %>
-retained_contact_service_attribute_mask=<%= nagios_retained_contact_service_attribute_mask %>
+<% if @nagios_retained_contact_service_attribute_mask %>
+retained_contact_service_attribute_mask=<%= @nagios_retained_contact_service_attribute_mask %>
 <% else %>
 retained_contact_service_attribute_mask=0
 <% end %>
@@ -727,8 +727,8 @@ retained_contact_service_attribute_mask=0
 # host/contact/service configuration files.  Setting this to 60 means
 # that each interval is one minute long (60 seconds).  Other settings
 # have not been tested much, so your mileage is likely to vary...
-<% if has_variable?("nagios_interval_length") %>
-interval_length=<%= nagios_interval_length %>
+<% if @nagios_interval_length %>
+interval_length=<%= @nagios_interval_length %>
 <% else %>
 interval_length=60
 <% end %>
@@ -739,8 +739,8 @@ interval_length=60
 # enable the aggressive check option.  Read the docs for more info
 # on what aggressive host check is or check out the source code in
 # base/checks.c
-<% if has_variable?("nagios_use_aggressive_host_checking") %>
-use_aggressive_host_checking=<%= nagios_use_aggressive_host_checking %>
+<% if @nagios_use_aggressive_host_checking %>
+use_aggressive_host_checking=<%= @nagios_use_aggressive_host_checking %>
 <% else %>
 use_aggressive_host_checking=0
 <% end %>
@@ -753,8 +753,8 @@ use_aggressive_host_checking=0
 # you're implementing redundant hosts or have a special need for
 # disabling the execution of service checks, leave this enabled!
 # Values: 1 = enable checks, 0 = disable checks
-<% if has_variable?("nagios_execute_service_checks") %>
-execute_service_checks=<%= nagios_execute_service_checks %>
+<% if @nagios_execute_service_checks %>
+execute_service_checks=<%= @nagios_execute_service_checks %>
 <% else %>
 execute_service_checks=1
 <% end %>
@@ -763,8 +763,8 @@ execute_service_checks=1
 # This determines whether or not Nagios will accept passive
 # service checks results when it initially (re)starts.
 # Values: 1 = accept passive checks, 0 = reject passive checks
-<% if has_variable?("nagios_accept_passive_service_checks") %>
-accept_passive_service_checks=<%= nagios_accept_passive_service_checks %>
+<% if @nagios_accept_passive_service_checks %>
+accept_passive_service_checks=<%= @nagios_accept_passive_service_checks %>
 <% else %>
 accept_passive_service_checks=1
 <% end %>
@@ -777,8 +777,8 @@ accept_passive_service_checks=1
 # you're implementing redundant hosts or have a special need for
 # disabling the execution of host checks, leave this enabled!
 # Values: 1 = enable checks, 0 = disable checks
-<% if has_variable?("nagios_execute_host_checks") %>
-execute_host_checks=<%= nagios_execute_host_checks %>
+<% if @nagios_execute_host_checks %>
+execute_host_checks=<%= @nagios_execute_host_checks %>
 <% else %>
 execute_host_checks=1
 <% end %>
@@ -787,8 +787,8 @@ execute_host_checks=1
 # This determines whether or not Nagios will accept passive
 # host checks results when it initially (re)starts.
 # Values: 1 = accept passive checks, 0 = reject passive checks
-<% if has_variable?("nagios_accept_passive_host_checks") %>
-accept_passive_host_checks=<%= nagios_accept_passive_host_checks %>
+<% if @nagios_accept_passive_host_checks %>
+accept_passive_host_checks=<%= @nagios_accept_passive_host_checks %>
 <% else %>
 accept_passive_host_checks=1
 <% end %>
@@ -797,8 +797,8 @@ accept_passive_host_checks=1
 # This determines whether or not Nagios will sent out any host or
 # service notifications when it is initially (re)started.
 # Values: 1 = enable notifications, 0 = disable notifications
-<% if has_variable?("nagios_enable_notifications") %>
-enable_notifications=<%= nagios_enable_notifications %>
+<% if @nagios_enable_notifications %>
+enable_notifications=<%= @nagios_enable_notifications %>
 <% else %>
 enable_notifications=1
 <% end %>
@@ -808,8 +808,8 @@ enable_notifications=1
 # service event handlers when it is initially (re)started.  Unless
 # you're implementing redundant hosts, leave this option enabled.
 # Values: 1 = enable event handlers, 0 = disable event handlers
-<% if has_variable?("nagios_enable_event_handlers") %>
-enable_event_handlers=<%= nagios_enable_event_handlers %>
+<% if @nagios_enable_event_handlers %>
+enable_event_handlers=<%= @nagios_enable_event_handlers %>
 <% else %>
 enable_event_handlers=1
 <% end %>
@@ -823,8 +823,8 @@ enable_event_handlers=1
 # defined below).  Read the HTML docs for more information on
 # performance data.
 # Values: 1 = process performance data, 0 = do not process performance data
-<% if has_variable?("nagios_process_performance_data") %>
-process_performance_data=<%= nagios_process_performance_data %>
+<% if @nagios_process_performance_data %>
+process_performance_data=<%= @nagios_process_performance_data %>
 <% else %>
 process_performance_data=0
 <% end %>
@@ -898,8 +898,8 @@ process_performance_data=0
 # this option.  Read the HTML docs for more information on
 # implementing distributed monitoring.
 # Values: 1 = obsess over services, 0 = do not obsess (default)
-<% if has_variable?("nagios_obsess_over_services") %>
-obsess_over_services=<%= nagios_obsess_over_services %>
+<% if @nagios_obsess_over_services %>
+obsess_over_services=<%= @nagios_obsess_over_services %>
 <% else %>
 obsess_over_services=1
 <% end %>
@@ -921,8 +921,8 @@ obsess_over_services=1
 # this option.  Read the HTML docs for more information on
 # implementing distributed monitoring.
 # Values: 1 = obsess over hosts, 0 = do not obsess (default)
-<% if has_variable?("nagios_obsess_over_hosts") %>
-obsess_over_hosts=<%= nagios_obsess_over_hosts %>
+<% if @nagios_obsess_over_hosts %>
+obsess_over_hosts=<%= @nagios_obsess_over_hosts %>
 <% else %>
 obsess_over_hosts=1
 <% end %>
@@ -950,8 +950,8 @@ obsess_over_hosts=1
 # to translate any DOWN or UNREACHABLE host states it receives
 # passively into the correct state from the view of this server.
 # Values: 1 = perform translation, 0 = do not translate (default)
-<% if has_variable?("nagios_translate_passive_host_checks") %>
-translate_passive_host_checks=<%= nagios_translate_passive_host_checks %>
+<% if @nagios_translate_passive_host_checks %>
+translate_passive_host_checks=<%= @nagios_translate_passive_host_checks %>
 <% else %>
 translate_passive_host_checks=0
 <% end %>
@@ -962,8 +962,8 @@ translate_passive_host_checks=0
 # result will put a host into a HARD state type.  This can be changed
 # by enabling this option.
 # Values: 0 = passive checks are HARD, 1 = passive checks are SOFT
-<% if has_variable?("nagios_passive_host_checks_are_soft") %>
-passive_host_checks_are_soft=<%= nagios_passive_host_checks_are_soft %>
+<% if @nagios_passive_host_checks_are_soft %>
+passive_host_checks_are_soft=<%= @nagios_passive_host_checks_are_soft %>
 <% else %>
 passive_host_checks_are_soft=0
 <% end %>
@@ -980,14 +980,14 @@ passive_host_checks_are_soft=0
 # If you have problems with service checks never getting
 # rescheduled, make sure you have orphaned service checks enabled.
 # Values: 1 = enable checks, 0 = disable checks
-<% if has_variable?("nagios_check_for_orphaned_services") %>
-check_for_orphaned_services=<%= nagios_check_for_orphaned_services %>
+<% if @nagios_check_for_orphaned_services %>
+check_for_orphaned_services=<%= @nagios_check_for_orphaned_services %>
 <% else %>
 check_for_orphaned_services=1
 <% end %>
 
-<% if has_variable?("nagios_check_for_orphaned_hosts") %>
-check_for_orphaned_hosts=<%= nagios_check_for_orphaned_hosts %>
+<% if @nagios_check_for_orphaned_hosts %>
+check_for_orphaned_hosts=<%= @nagios_check_for_orphaned_hosts %>
 <% else %>
 check_for_orphaned_hosts=1
 <% end %>
@@ -998,8 +998,8 @@ check_for_orphaned_hosts=1
 # is useful for ensuring passive checks are received in a timely
 # manner.
 # Values: 1 = enabled freshness checking, 0 = disable freshness checking
-<% if has_variable?("nagios_check_service_freshness") %>
-check_service_freshness=<%= nagios_check_service_freshness %>
+<% if @nagios_check_service_freshness %>
+check_service_freshness=<%= @nagios_check_service_freshness %>
 <% else %>
 check_service_freshness=1
 <% end %>
@@ -1008,8 +1008,8 @@ check_service_freshness=1
 # This setting determines how often (in seconds) Nagios will
 # check the "freshness" of service check results.  If you have
 # disabled service freshness checking, this option has no effect.
-<% if has_variable?("nagios_service_freshness_check_interval") %>
-service_freshness_check_interval=<%= nagios_service_freshness_check_interval %>
+<% if @nagios_service_freshness_check_interval %>
+service_freshness_check_interval=<%= @nagios_service_freshness_check_interval %>
 <% else %>
 service_freshness_check_interval=60
 <% end %>
@@ -1020,8 +1020,8 @@ service_freshness_check_interval=60
 # is useful for ensuring passive checks are received in a timely
 # manner.
 # Values: 1 = enabled freshness checking, 0 = disable freshness checking
-<% if has_variable?("nagios_check_host_freshness") %>
-check_host_freshness=<%= nagios_check_host_freshness %>
+<% if @nagios_check_host_freshness %>
+check_host_freshness=<%= @nagios_check_host_freshness %>
 <% else %>
 check_host_freshness=1
 <% end %>
@@ -1030,8 +1030,8 @@ check_host_freshness=1
 # This setting determines how often (in seconds) Nagios will
 # check the "freshness" of host check results.  If you have
 # disabled host freshness checking, this option has no effect.
-<% if has_variable?("nagios_host_freshness_check_interval") %>
-host_freshness_check_interval=<%= nagios_host_freshness_check_interval %>
+<% if @nagios_host_freshness_check_interval %>
+host_freshness_check_interval=<%= @nagios_host_freshness_check_interval %>
 <% else %>
 host_freshness_check_interval=60
 <% end %>
@@ -1040,8 +1040,8 @@ host_freshness_check_interval=60
 # This setting determines the number of seconds that Nagios
 # will add to any host and service freshness thresholds that
 # it calculates (those not explicitly specified by the user).
-<% if has_variable?("nagios_additional_freshness_latency") %>
-additional_freshness_latency=<%= nagios_additional_freshness_latency %>
+<% if @nagios_additional_freshness_latency %>
+additional_freshness_latency=<%= @nagios_additional_freshness_latency %>
 <% else %>
 additional_freshness_latency=15
 <% end %>
@@ -1057,8 +1057,8 @@ additional_freshness_latency=15
 # the HTML documentation before enabling this feature!
 # Values: 1 = enable flap detection
 #         0 = disable flap detection (default)
-<% if has_variable?("nagios_enable_flap_detection") %>
-enable_flap_detection=<%= nagios_enable_flap_detection %>
+<% if @nagios_enable_flap_detection %>
+enable_flap_detection=<%= @nagios_enable_flap_detection %>
 <% else %>
 enable_flap_detection=1
 <% end %>
@@ -1067,26 +1067,26 @@ enable_flap_detection=1
 # Read the HTML documentation on flap detection for
 # an explanation of what this option does.  This option
 # has no effect if flap detection is disabled.
-<% if has_variable?("nagios_low_service_flap_threshold") %>
-low_service_flap_threshold=<%= nagios_low_service_flap_threshold %>
+<% if @nagios_low_service_flap_threshold %>
+low_service_flap_threshold=<%= @nagios_low_service_flap_threshold %>
 <% else %>
 low_service_flap_threshold=5.0
 <% end %>
 
-<% if has_variable?("nagios_high_service_flap_threshold") %>
-high_service_flap_threshold=<%= nagios_high_service_flap_threshold %>
+<% if @nagios_high_service_flap_threshold %>
+high_service_flap_threshold=<%= @nagios_high_service_flap_threshold %>
 <% else %>
 high_service_flap_threshold=20.0
 <% end %>
 
-<% if has_variable?("nagios_low_host_flap_threshold") %>
-low_host_flap_threshold=<%= nagios_low_host_flap_threshold %>
+<% if @nagios_low_host_flap_threshold %>
+low_host_flap_threshold=<%= @nagios_low_host_flap_threshold %>
 <% else %>
 low_host_flap_threshold=5.0
 <% end %>
 
-<% if has_variable?("nagios_high_host_flap_threshold") %>
-high_host_flap_threshold=<%= nagios_high_host_flap_threshold %>
+<% if @nagios_high_host_flap_threshold %>
+high_host_flap_threshold=<%= @nagios_high_host_flap_threshold %>
 <% else %>
 high_host_flap_threshold=20.0
 <% end %>
@@ -1099,8 +1099,8 @@ high_host_flap_threshold=20.0
 #	iso8601		(YYYY-MM-DD HH:MM:SS)
 #	strict-iso8601	(YYYY-MM-DDTHH:MM:SS)
 #
-<% if has_variable?("nagios_date_format") %>
-date_format=<%= nagios_date_format %>
+<% if @nagios_date_format %>
+date_format=<%= @nagios_date_format %>
 <% else %>
 date_format=iso8601
 <% end %>
@@ -1126,15 +1126,15 @@ date_format=iso8601
 # This value determines where the p1.pl perl script (used by the
 # embedded Perl interpreter) is located.  If you didn't compile
 # Nagios with embedded Perl support, this option has no effect.
-p1_file=<%= nagios_p1_file %>
+p1_file=<%= @nagios_p1_file %>
 
 # EMBEDDED PERL INTERPRETER OPTION
 # This option determines whether or not the embedded Perl interpreter
 # will be enabled during runtime.  This option has no effect if Nagios
 # has not been compiled with support for embedded Perl.
 # Values: 0 = disable interpreter, 1 = enable interpreter
-<% if has_variable?("nagios_enable_embedded_perl") %>
-enable_embedded_perl=<%= nagios_enable_embedded_perl %>
+<% if @nagios_enable_embedded_perl %>
+enable_embedded_perl=<%= @nagios_enable_embedded_perl %>
 <% else %>
 enable_embedded_perl=1
 <% end %>
@@ -1145,8 +1145,8 @@ enable_embedded_perl=1
 # do not explicitly indicate whether or not it is okay to do so. Read
 # the HTML documentation on the embedded Perl interpreter for more 
 # information on how this option works.
-<% if has_variable?("nagios_use_embedded_perl_implicitly") %>
-use_embedded_perl_implicitly=<%= nagios_use_embedded_perl_implicitly %>
+<% if @nagios_use_embedded_perl_implicitly %>
+use_embedded_perl_implicitly=<%= @nagios_use_embedded_perl_implicitly %>
 <% else %>
 use_embedded_perl_implicitly=1
 <% end %>
@@ -1155,8 +1155,8 @@ use_embedded_perl_implicitly=1
 # This option allows you to specify illegal characters that cannot
 # be used in host names, service descriptions, or names of other
 # object types.
-<% if has_variable?("nagios_illegal_object_name_chars") %>
-illegal_object_name_chars=<%= nagios_illegal_object_name_chars %>
+<% if @nagios_illegal_object_name_chars %>
+illegal_object_name_chars=<%= @nagios_illegal_object_name_chars %>
 <% else %>
 illegal_object_name_chars=`~!$%^&*|'"<>?,()=
 <% end %>
@@ -1175,8 +1175,8 @@ illegal_object_name_chars=`~!$%^&*|'"<>?,()=
 #	$SERVICEPERFDATA$
 #	$SERVICEACKAUTHOR$
 #	$SERVICEACKCOMMENT$
-<% if has_variable?("nagios_illegal_macro_output_chars") %>
-illegal_macro_output_chars=<%= nagios_illegal_macro_output_chars %>
+<% if @nagios_illegal_macro_output_chars %>
+illegal_macro_output_chars=<%= @nagios_illegal_macro_output_chars %>
 <% else %>
 illegal_macro_output_chars=`~$&|'"<>
 <% end %>
@@ -1187,8 +1187,8 @@ illegal_macro_output_chars=`~$&|'"<>
 # matching is used to match host, hostgroup, service, and service
 # group names/descriptions in some fields of various object types.
 # Values: 1 = enable regexp matching, 0 = disable regexp matching
-<% if has_variable?("nagios_use_regexp_matching") %>
-use_regexp_matching=<%= nagios_use_regexp_matching %>
+<% if @nagios_use_regexp_matching %>
+use_regexp_matching=<%= @nagios_use_regexp_matching %>
 <% else %>
 use_regexp_matching=0
 <% end %>
@@ -1202,8 +1202,8 @@ use_regexp_matching=0
 # (* and ?).  If the option is ENABLED, regexp matching occurs
 # all the time (which can be annoying).
 # Values: 1 = enable true matching, 0 = disable true matching
-<% if has_variable?("nagios_use_true_regexp_matching") %>
-use_true_regexp_matching=<%= nagios_use_true_regexp_matching %>
+<% if @nagios_use_true_regexp_matching %>
+use_true_regexp_matching=<%= @nagios_use_true_regexp_matching %>
 <% else %>
 use_true_regexp_matching=0
 <% end %>
@@ -1213,14 +1213,14 @@ use_true_regexp_matching=0
 # Nagios never uses these values itself, but you can access them by
 # using the $ADMINEMAIL$ and $ADMINPAGER$ macros in your notification
 # commands.
-<% if has_variable?("nagios_admin_email") %>
-admin_email=<%= nagios_admin_email %>
+<% if @nagios_admin_email %>
+admin_email=<%= @nagios_admin_email %>
 <% else %>
-admin_email=root@<%=fqdn%>
+admin_email=root@<%= @fqdn%>
 <% end %>
 
-<% if has_variable?("nagios_admin_pager") %>
-admin_pager=<%= nagios_admin_pager %>
+<% if @nagios_admin_pager %>
+admin_pager=<%= @nagios_admin_pager %>
 <% else %>
 admin_pager=pageroot@localhost
 <% end %>
@@ -1233,8 +1233,8 @@ admin_pager=pageroot@localhost
 # a core file will be produced, but that's just life...
 # Values: 1 - Allow core dumps
 #         0 - Do not allow core dumps (default)
-<% if has_variable?("nagios_daemon_dumps_core") %>
-daemon_dumps_core=<%= nagios_daemon_dumps_core %>
+<% if @nagios_daemon_dumps_core %>
+daemon_dumps_core=<%= @nagios_daemon_dumps_core %>
 <% else %>
 daemon_dumps_core=0
 <% end %>
@@ -1246,8 +1246,8 @@ daemon_dumps_core=0
 # of enabling this option.
 # Values: 1 - Enabled tweaks
 #         0 - Disable tweaks (default)
-<% if has_variable?("nagios_use_large_installation_tweaks") %>
-use_large_installation_tweaks=<%= nagios_use_large_installation_tweaks %>
+<% if @nagios_use_large_installation_tweaks %>
+use_large_installation_tweaks=<%= @nagios_use_large_installation_tweaks %>
 <% else %>
 use_large_installation_tweaks=0
 <% end %>
@@ -1261,8 +1261,8 @@ use_large_installation_tweaks=0
 # importantly) consume more CPU.
 # Values: 1 - Enable environment variable macros (default)
 #         0 - Disable environment variable macros
-<% if has_variable?("nagios_enable_environment_macros") %>
-enable_environment_macros=<%= nagios_enable_environment_macros %>
+<% if @nagios_enable_environment_macros %>
+enable_environment_macros=<%= @nagios_enable_environment_macros %>
 <% else %>
 enable_environment_macros=1
 <% end %>
@@ -1310,8 +1310,8 @@ enable_environment_macros=1
 #          512 = Scheduled downtime
 #          1024 = Comments
 #          2048 = Macros
-<% if has_variable?("nagios_debug_level") %>
-debug_level=<%= nagios_debug_level %>
+<% if @nagios_debug_level %>
+debug_level=<%= @nagios_debug_level %>
 <% else %>
 debug_level=0
 <% end %>
@@ -1321,15 +1321,15 @@ debug_level=0
 # Values: 0 = Brief output
 #         1 = More detailed
 #         2 = Very detailed
-<% if has_variable?("nagios_debug_verbosity") then %>
-debug_verbosity=<%= nagios_debug_verbosity %>
+<% if @nagios_debug_verbosity then %>
+debug_verbosity=<%= @nagios_debug_verbosity %>
 <% else %>
 debug_verbosity=0
 <% end %>
 
 # DEBUG FILE
 # This option determines where Nagios should write debugging information.
-debug_file=/var/lib/<%= basename %>/nagios.debug
+debug_file=/var/lib/<%= @basename %>/nagios.debug
 
 # MAX DEBUG FILE SIZE
 # This option determines the maximum size (in bytes) of the debug file.  If
@@ -1337,8 +1337,8 @@ debug_file=/var/lib/<%= basename %>/nagios.debug
 # extension.  If a file already exists with a .old extension it will
 # automatically be deleted.  This helps ensure your disk space usage doesn't
 # get out of control when debugging Nagios.
-<% if has_variable?("nagios_max_debug_file_size") %>
-max_debug_file_size=<%= nagios_max_debug_file_size %>
+<% if @nagios_max_debug_file_size %>
+max_debug_file_size=<%= @nagios_max_debug_file_size %>
 <% else %>
 max_debug_file_size=1000000
 <% end %>
