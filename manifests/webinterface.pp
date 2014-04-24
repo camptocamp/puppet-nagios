@@ -68,12 +68,6 @@ allow httpd_nagios_script_t var_t:file { read getattr };
 #============= httpd_t ==============
 allow httpd_t nagios_log_t:file read;
 ",
-        notify  => Selmodule['nagios-httpd'],
-      }
-      selmodule {'nagios-httpd':
-        ensure      => present,
-        syncversion => true,
-        require     => Selinux::Module['nagios-httpd'],
       }
     }
 
