@@ -73,7 +73,7 @@ nsca_group=nogroup
 # Values: 0 = debugging off, 1 = debugging on
 
 <% if has_variable?("nagios_nsca_debug") %>
-debug=<%= nagios_nsca_debug %>
+debug=<%= @nagios_nsca_debug %>
 <% else %>
 debug=0
 <% end %>
@@ -81,7 +81,7 @@ debug=0
 # COMMAND FILE
 # This is the location of the Nagios command file that the daemon
 # should write all service check results that it receives.
-command_file=/var/run/<%= basename %>/rw/nagios.cmd
+command_file=/var/run/<%= @basename %>/rw/nagios.cmd
 
 # ALTERNATE DUMP FILE
 # This is used to specify an alternate file the daemon should
@@ -141,7 +141,7 @@ max_packet_age=30
 # restrictive permissions on this config file!
 
 <% if has_variable?("nagios_nsca_password") %>
-password=<%= nagios_nsca_password %>
+password=<%= @nagios_nsca_password %>
 <% else %>
 #password=
 <% end %>

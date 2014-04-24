@@ -12,7 +12,7 @@
 # The CGIs will read the main and host config files for any other
 # data they might need.
 <% if has_variable?("nagios_main_config_file") %>
-main_config_file=<%= nagios_main_config_file %>
+main_config_file=<%= @nagios_main_config_file %>
 <% else %>
 main_config_file=/etc/nagios3/nagios.cfg
 <% end %>
@@ -22,7 +22,7 @@ main_config_file=/etc/nagios3/nagios.cfg
 # value is used to locate the logo images needed by the statusmap
 # and statuswrl CGIs.
 <% if has_variable?("nagios_physical_html_path") %>
-physical_html_path=<%= nagios_physical_html_path %>
+physical_html_path=<%= @nagios_physical_html_path %>
 <% else %>
 physical_html_path=/usr/share/nagios3/htdocs
 <% end %>
@@ -35,7 +35,7 @@ physical_html_path=/usr/share/nagios3/htdocs
 # http://www.myhost.com/nagios, this value should be '/nagios'
 # (without the quotes).
 <% if has_variable?("nagios_url_html_path") %>
-url_html_path=<%= nagios_url_html_path %>
+url_html_path=<%= @nagios_url_html_path %>
 <% else %>
 url_html_path=/nagios3
 <% end %>
@@ -46,7 +46,7 @@ url_html_path=/nagios3
 # Values: 0 = disables context-sensitive help
 #         1 = enables context-sensitive help
 <% if has_variable?("nagios_show_context_help") %>
-show_context_help=<%= nagios_show_context_help %>
+show_context_help=<%= @nagios_show_context_help %>
 <% else %>
 show_context_help=0
 <% end %>
@@ -57,13 +57,13 @@ show_context_help=0
 # Values: 0 = leave hosts/services that have not been check yet in their original state
 #         1 = mark hosts/services that have not been checked yet as PENDING
 <% if has_variable?("nagios_show_context_help") %>
-use_pending_states=<%= nagios_show_context_help %>
+use_pending_states=<%= @nagios_show_context_help %>
 <% else %>
 use_pending_states=1
 <% end %>
 
 <% if has_variable?("nagios_nagios_check_command") %>
-nagios_check_command=<%= nagios_nagios_check_command %>
+nagios_check_command=<%= @nagios_nagios_check_command %>
 <% else %>
 nagios_check_command=/usr/lib/nagios/plugins/check_nagios /var/cache/nagios3/status.dat 5 '/usr/sbin/nagios3'
 <% end %>
@@ -193,7 +193,7 @@ authorized_for_all_host_commands=<%= @authorized_for_all_host_commands %>
 #       3 = Balanced tree
 #       4 = Circular
 <% if has_variable?("nagios_default_statusmap_layout") %>
-default_statusmap_layout=<%= nagios_default_statusmap_layout %>
+default_statusmap_layout=<%= @nagios_default_statusmap_layout %>
 <% else %>
 default_statusmap_layout=5
 <% end %>
@@ -208,7 +208,7 @@ default_statusmap_layout=5
 #       3 = Balanced tree
 #       4 = Circular
 <% if has_variable?("nagios_default_statuswrl_layout") %>
-default_statuswrl_layout=<%= nagios_default_statuswrl_layout %>
+default_statuswrl_layout=<%= @nagios_default_statuswrl_layout %>
 <% else %>
 default_statuswrl_layout=4
 <% end %>
@@ -234,7 +234,7 @@ default_statuswrl_layout=4
 # OS and distribution, so you may have to tweak this to
 # work on your system.
 <% if has_variable?("nagios_ping_syntax") %>
-ping_syntax=<%= nagios_ping_syntax %>
+ping_syntax=<%= @nagios_ping_syntax %>
 <% else %>
 ping_syntax=/bin/ping -n -U -c 5 $HOSTADDRESS$
 <% end %>
@@ -243,7 +243,7 @@ ping_syntax=/bin/ping -n -U -c 5 $HOSTADDRESS$
 # This option allows you to specify the refresh rate in seconds
 # of various CGIs (status, statusmap, extinfo, and outages).  
 <% if has_variable?("nagios_refresh_rate") %>
-refresh_rate=<%= nagios_refresh_rate %>
+refresh_rate=<%= @nagios_refresh_rate %>
 <% else %>
 refresh_rate=90
 <% end %>
@@ -253,7 +253,7 @@ refresh_rate=90
 # status output is escaped in the web interface.  If enabled,
 # your plugin output will not be able to contain clickable links.
 <% if has_variable?("nagios_escape_html_tags") %>
-escape_html_tags=<%= nagios_escape_html_tags %>
+escape_html_tags=<%= @nagios_escape_html_tags %>
 <% else %>
 escape_html_tags=1
 <% end %>
@@ -286,13 +286,13 @@ escape_html_tags=1
 # These options determine the target frames in which notes and 
 # action URLs will open.
 <% if has_variable?("nagios_action_url_target") %>
-action_url_target=<%= nagios_action_url_target %>
+action_url_target=<%= @nagios_action_url_target %>
 <% else %>
 action_url_target=_blank
 <% end %>
 
 <% if has_variable?("nagios_notes_url_target") %>
-notes_url_target=<%= nagios_notes_url_target %>
+notes_url_target=<%= @nagios_notes_url_target %>
 <% else %>
 notes_url_target=_blank
 <% end %>
@@ -304,7 +304,7 @@ notes_url_target=_blank
 # Values: 0 = allow editing author names
 #         1 = lock author names (disallow editing)
 <% if has_variable?("nagios_lock_author_names") %>
-lock_author_names=<%= nagios_lock_author_names %>
+lock_author_names=<%= @nagios_lock_author_names %>
 <% else %>
 lock_author_names=1
 <% end %>
