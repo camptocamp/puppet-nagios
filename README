@@ -23,14 +23,15 @@ node 'distributed_monitoring_server' {
   # $nagios_debug_verbosity="3"
   
   $nagiosadmin_password = "XXXX"
-  $nagios_nsca_server="central_monitoring_server"
 
   ...
 
   include apache::base
 
   include nagios::base
-  include nagios::nsca::client
+  class { 'nagios::nsca::client':
+    nsca_server => 'central_monitoring_server',
+  }
   include nagios::webinterface
 
   # active check on distributed monitoring server 

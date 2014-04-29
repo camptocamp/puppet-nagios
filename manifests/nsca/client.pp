@@ -8,7 +8,9 @@
 #   include nagios
 #   include nagios::nsca::client
 #
-class nagios::nsca::client {
+class nagios::nsca::client(
+  $nsca_server,
+) {
 
   include ::nagios::params
 
@@ -25,7 +27,6 @@ class nagios::nsca::client {
   }
 
   # variables used in ERB template
-  $nsca_server = $nagios::params::nsca_server
   $nsca_cfg = "${nagios::params::rootdir}/send_nsca.cfg"
 
   file { "${nagios::params::rootdir}/send_nsca.cfg":
