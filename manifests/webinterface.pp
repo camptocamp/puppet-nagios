@@ -16,6 +16,17 @@ class nagios::webinterface(
   $authorized_for_all_host_commands         = pick($nagios_authorized_for_all_host_commands, 'nagiosadmin'),
   $authorized_for_all_service_commands      = pick($nagios_authorized_for_all_service_commands, 'nagiosadmin'),
   $use_authentication                       = pick($nagios_use_authentication, '1'),
+
+  $action_url_target        = '_blank',
+  $default_statusmap_layout = 5,
+  $default_statuswrl_layout = 4,
+  $escape_html_tags         = 1,
+  $lock_author_names        = 1,
+  $notes_url_target         = '_blank',
+  $ping_syntax              = '/bin/ping -n -U -c 5 $HOSTADDRESS$',
+  $refresh_rate             = 90,
+  $show_context_help        = 0,
+  $use_pending_states       = 1,
 ) {
 
   include ::nagios::params
