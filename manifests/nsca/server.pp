@@ -11,6 +11,8 @@
 #
 class nagios::nsca::server(
   $decryption_method = pick($nagios_nsca_decryption_method, '0'),
+
+  $debug = 0,
 ) {
 
   include ::nagios::params
