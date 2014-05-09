@@ -16,6 +16,7 @@ class nagios::webinterface(
   $authorized_for_all_host_commands         = pick($nagios_authorized_for_all_host_commands, 'nagiosadmin'),
   $authorized_for_all_service_commands      = pick($nagios_authorized_for_all_service_commands, 'nagiosadmin'),
   $use_authentication                       = pick($nagios_use_authentication, '1'),
+  $default_user_name                        = undef,
 
   $action_url_target        = '_blank',
   $default_statusmap_layout = 5,
