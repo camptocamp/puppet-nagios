@@ -8,14 +8,14 @@
 #   include nagios::webinterface
 #
 class nagios::webinterface(
-  $authorized_for_system_information        = pick($nagios_authorized_for_system_information, 'nagiosadmin'),
-  $authorized_for_configuration_information = pick($nagios_authorized_for_configuration_information, 'nagiosadmin'),
-  $authorized_for_system_commands           = pick($nagios_authorized_for_system_commands, 'nagiosadmin'),
-  $authorized_for_all_services              = pick($nagios_authorized_for_all_services, 'nagiosadmin'),
-  $authorized_for_all_hosts                 = pick($nagios_authorized_for_all_hosts, 'nagiosadmin'),
-  $authorized_for_all_host_commands         = pick($nagios_authorized_for_all_host_commands, 'nagiosadmin'),
-  $authorized_for_all_service_commands      = pick($nagios_authorized_for_all_service_commands, 'nagiosadmin'),
-  $use_authentication                       = pick($nagios_use_authentication, '1'),
+  $authorized_for_system_information        = 'nagiosadmin',
+  $authorized_for_configuration_information = 'nagiosadmin',
+  $authorized_for_system_commands           = 'nagiosadmin',
+  $authorized_for_all_services              = 'nagiosadmin',
+  $authorized_for_all_hosts                 = 'nagiosadmin',
+  $authorized_for_all_host_commands         = 'nagiosadmin',
+  $authorized_for_all_service_commands      = 'nagiosadmin',
+  $use_authentication                       = '1',
   $default_user_name                        = undef,
 
   $action_url_target        = '_blank',
