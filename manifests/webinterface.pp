@@ -28,6 +28,7 @@ class nagios::webinterface(
   $refresh_rate             = 90,
   $show_context_help        = 0,
   $use_pending_states       = 1,
+  $notify                   = Exec['apache-graceful'],
 ) {
 
   include ::nagios::params
@@ -45,7 +46,7 @@ class nagios::webinterface(
     mode    => '0644',
     content => template('nagios/cgi.cfg.erb'),
     require => Class['nagios'],
-    notify  => Exec['apache-graceful'],
+    notify  => $notify,
   }
 
   case $::osfamily {
@@ -58,7 +59,7 @@ class nagios::webinterface(
       file {'/etc/httpd/conf.d/nagios3.conf':
         ensure  => absent,
         require => Package['nagios-www'],
-        notify  => Exec['apache-graceful'],
+        notify  => $notify,
       }
 
       #SELinux - see
@@ -91,7 +92,7 @@ allow httpd_t nagios_log_t:file read;
 
       file {'/etc/apache2/conf.d/nagios3.conf':
         ensure  => absent,
-        notify  => Exec['apache-graceful'],
+        notify  => $notify,
       }
     }
 
