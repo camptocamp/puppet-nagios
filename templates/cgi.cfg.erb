@@ -94,7 +94,7 @@ use_authentication=<%= @use_authentication %>
 # define this variable, anyone who has not authenticated to the web
 # server will inherit all rights you assign to this user!
 
-<% if has_variable?("default_user_name") %>
+<% if @default_user_name %>
 default_user_name=<%= @default_user_name %>
 <% end %>
 #default_user_name=guest
