@@ -146,10 +146,10 @@ external_command_buffer_slots=4096
 # LOCK FILE
 # This is the lockfile that Nagios will use to store its PID number
 # in when it is running in daemon mode.
-<% if operatingsystem =~ /RedHat|CentOS/ -%>
+<% if @operatingsystem =~ /RedHat|CentOS/ -%>
 lock_file=/var/run/<%= @basename %>.pid
 <% else -%>
-lock_file=/var/run/<%= @basename %>/<%= basename %>.pid
+lock_file=/var/run/<%= @basename %>/<%= @basename %>.pid
 <% end -%>
 
 # TEMP FILE
