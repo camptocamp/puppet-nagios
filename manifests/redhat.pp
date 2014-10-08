@@ -69,6 +69,12 @@ class nagios::redhat inherits nagios::base {
       File['/var/cache/nagios/status.dat']  { mode => '0664', }
     }
 
+    '7': {
+      selinux::fcontext{ '/var/cache/nagios':
+        setype => 'nagios_log_t',
+      }
+    }
+
   }
 
   # workaround broken init-script
