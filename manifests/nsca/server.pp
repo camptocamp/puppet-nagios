@@ -27,12 +27,12 @@ class nagios::nsca::server(
   }
 
   service {'nsca':
-    ensure      => running,
-    enable      => true,
-    hasrestart  => true,
-    hasstatus   => false,
-    pattern     => '/usr/sbin/nsca',
-    require     => Package['nsca'],
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    hasstatus  => false,
+    pattern    => '/usr/sbin/nsca',
+    require    => Package['nsca'],
   }
 
   $get_tag = "nagios-${::nagios::nsca_server_tag}"

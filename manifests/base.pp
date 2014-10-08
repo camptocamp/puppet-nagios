@@ -111,12 +111,12 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/generic-host.cfg":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    source  => 'puppet:///modules/nagios/generic-host.cfg',
-    notify  => Exec['nagios-restart'],
+    ensure => present,
+    owner  => root,
+    group  => root,
+    mode   => '0644',
+    source => 'puppet:///modules/nagios/generic-host.cfg',
+    notify => Exec['nagios-restart'],
   }
 
   file {"${nagios::params::resourcedir}/generic-command.cfg":
@@ -129,12 +129,12 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/generic-timeperiod.cfg":
-    ensure  => present,
-    owner   => root,
-    group   => root,
-    mode    => '0644',
-    source  => 'puppet:///modules/nagios/generic-timeperiod.cfg',
-    notify  => Exec['nagios-restart'],
+    ensure => present,
+    owner  => root,
+    group  => root,
+    mode   => '0644',
+    source => 'puppet:///modules/nagios/generic-timeperiod.cfg',
+    notify => Exec['nagios-restart'],
   }
 
   file {"${nagios::params::resourcedir}/base-contacts.cfg":

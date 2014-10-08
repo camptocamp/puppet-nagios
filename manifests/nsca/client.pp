@@ -64,11 +64,11 @@ class nagios::nsca::client(
   }
 
   nagios_command {'submit_ocsp':
-    ensure        => present,
-    command_line  => '/usr/local/bin/submit_ocsp $HOSTNAME$ \'$SERVICEDESC$\' $SERVICESTATEID$ \'$SERVICEOUTPUT$\'',
-    target        => "${nagios::params::resourcedir}/command-submit_ocsp.cfg",
-    notify        => Exec['nagios-restart'],
-    require       => File["${nagios::params::resourcedir}/command-submit_ocsp.cfg"],
+    ensure       => present,
+    command_line => '/usr/local/bin/submit_ocsp $HOSTNAME$ \'$SERVICEDESC$\' $SERVICESTATEID$ \'$SERVICEOUTPUT$\'',
+    target       => "${nagios::params::resourcedir}/command-submit_ocsp.cfg",
+    notify       => Exec['nagios-restart'],
+    require      => File["${nagios::params::resourcedir}/command-submit_ocsp.cfg"],
   }
 
   file { "${nagios::params::resourcedir}/command-submit_ochp.cfg":
@@ -78,16 +78,16 @@ class nagios::nsca::client(
   }
 
   nagios_command {'submit_ochp':
-    ensure        => present,
-    command_line  => '/usr/local/bin/submit_ochp $HOSTNAME$ $HOSTSTATE$ \'$HOSTOUTPUT$\'',
-    target        => "${nagios::params::resourcedir}/command-submit_ochp.cfg",
-    notify        => Exec['nagios-restart'],
-    require       => File["${nagios::params::resourcedir}/command-submit_ochp.cfg"],
+    ensure       => present,
+    command_line => '/usr/local/bin/submit_ochp $HOSTNAME$ $HOSTSTATE$ \'$HOSTOUTPUT$\'',
+    target       => "${nagios::params::resourcedir}/command-submit_ochp.cfg",
+    notify       => Exec['nagios-restart'],
+    require      => File["${nagios::params::resourcedir}/command-submit_ochp.cfg"],
   }
 
   concat::fragment {'submit_ocsp':
-    target    => $nagios::params::conffile,
-    content   => "ocsp_command=submit_ocsp\n",
+    target  => $nagios::params::conffile,
+    content => "ocsp_command=submit_ocsp\n",
   }
 
   concat::fragment {'submit_ochp':

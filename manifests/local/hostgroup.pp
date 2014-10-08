@@ -15,9 +15,9 @@ define nagios::local::hostgroup ($ensure=present) {
   $fname = regsubst($name, '\W', '_', 'G')
 
   nagios_hostgroup { $name:
-    ensure  => $ensure,
-    target  => "${nagios::params::resourcedir}/hostgroup-${fname}.cfg",
-    notify  => Exec['nagios-restart'],
+    ensure => $ensure,
+    target => "${nagios::params::resourcedir}/hostgroup-${fname}.cfg",
+    notify => Exec['nagios-restart'],
   }
 
   file { "${nagios::params::resourcedir}/hostgroup-${fname}.cfg":

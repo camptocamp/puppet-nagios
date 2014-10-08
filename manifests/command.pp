@@ -18,10 +18,10 @@ define nagios::command (
   $fname = regsubst($name, '\W', '_', 'G')
 
   nagios_command { $name:
-    ensure        => $ensure,
-    command_line  => $command_line,
-    target        => "${nagios::params::resourcedir}/command-${fname}.cfg",
-    notify        => Exec['nagios-restart'],
+    ensure       => $ensure,
+    command_line => $command_line,
+    target       => "${nagios::params::resourcedir}/command-${fname}.cfg",
+    notify       => Exec['nagios-restart'],
   }
 
   file { "${nagios::params::resourcedir}/command-${fname}.cfg":

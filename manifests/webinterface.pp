@@ -90,8 +90,8 @@ allow httpd_t nagios_log_t:file read;
       }
 
       file {'/etc/apache2/conf.d/nagios3.conf':
-        ensure  => absent,
-        notify  => Exec['apache-graceful'],
+        ensure => absent,
+        notify => Exec['apache-graceful'],
       }
     }
 
