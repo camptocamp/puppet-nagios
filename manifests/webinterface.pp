@@ -25,6 +25,7 @@ class nagios::webinterface(
   $lock_author_names        = 1,
   $notes_url_target         = '_blank',
   $ping_syntax              = '/bin/ping -n -U -c 5 $HOSTADDRESS$',
+  $result_limit             = 100,
   $refresh_rate             = 90,
   $show_context_help        = 0,
   $use_pending_states       = 1,
