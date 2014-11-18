@@ -130,7 +130,11 @@ command_check_interval=-1
 # time its contents are processed.
 # Debian Users: In case you didn't read README.Debian yet, _NOW_ is the
 # time to do it.
+<% if ( @osfamily == 'RedHat' ) && ( @lsbmajdistrelease == 7 ) -%>
+command_file=/var/spool/nagios/cmd/nagios.cmd
+<% else -%>
 command_file=/var/run/<%= @basename %>/rw/nagios.cmd
+<% end -%>
 
 # EXTERNAL COMMAND BUFFER SLOTS
 # This settings is used to tweak the number of items or "slots" that
