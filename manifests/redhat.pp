@@ -26,7 +26,7 @@ class nagios::redhat inherits nagios::base {
 
   file {'/etc/nagios3': ensure => absent }
 
-  case $::lsbmajdistrelease {
+  case $::operatingsystemmajrelease {
 
     '5','6': {
       File[
