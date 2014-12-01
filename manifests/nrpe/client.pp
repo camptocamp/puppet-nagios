@@ -27,10 +27,6 @@ class nagios::nrpe::client {
     name   => $package_name,
   }
 
-  user{ 'nrpe':
-    ensure => present,
-  }
-
   service { 'nrpe':
     ensure  => running,
     name    => $service_name,
