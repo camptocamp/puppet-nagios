@@ -27,9 +27,14 @@ class nagios::nrpe::client {
     name   => $package_name,
   }
 
+  $nologin_path = $::osfamily ? {
+    Debian => '/usr/sbin/nologin',
+    RedHat => '/sbin/nologin',
+  }
+
   user{ 'nrpe':
     ensure  => present,
-    shell   => '/sbin/nologin',
+    shell   => $nologin_path,
     require => Package['nrpe'],
   }
 
