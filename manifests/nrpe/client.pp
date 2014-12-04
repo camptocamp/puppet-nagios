@@ -27,6 +27,12 @@ class nagios::nrpe::client {
     name   => $package_name,
   }
 
+  user{ 'nrpe':
+    ensure  => present,
+    shell   => '/sbin/nologin',
+    require => Package['nrpe'],
+  }
+
   service { 'nrpe':
     ensure  => running,
     name    => $service_name,
