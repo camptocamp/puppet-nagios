@@ -44,11 +44,12 @@ class nagios::redhat inherits nagios::base {
         seltype => 'nagios_log_t',
       }
 
-      exec { 'chcon /var/run/nagios/rw/nagios.cmd':
-        require => [Exec['create fifo'], File['nagios read-write dir']],
-        command => 'chcon -t nagios_spool_t /var/run/nagios/rw/nagios.cmd',
-        unless  => 'ls -Z /var/run/nagios/rw/nagios.cmd | grep -q nagios_spool_t',
-        onlyif  => $::selinux,
+      if str2bool($::selinux) {
+        exec { 'chcon /var/run/nagios/rw/nagios.cmd':
+          require => [Exec['create fifo'], File['nagios read-write dir']],
+          command => 'chcon -t nagios_spool_t /var/run/nagios/rw/nagios.cmd',
+          unless  => 'ls -Z /var/run/nagios/rw/nagios.cmd | grep -q nagios_spool_t',
+        }
       }
 
       file {[
