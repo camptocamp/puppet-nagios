@@ -76,6 +76,10 @@ class nagios::redhat inherits nagios::base {
       }
     }
 
+    default: {
+      fail "nagios::redhat doesn't support ${::operatingsystemmajrelease} yet"
+    }
+
   }
 
   # workaround broken init-script
