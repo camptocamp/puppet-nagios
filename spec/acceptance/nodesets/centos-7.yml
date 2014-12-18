@@ -1,0 +1,12 @@
+HOSTS:
+  centos-7:
+    roles:
+      - default
+    default_apply_opts:
+      strict_variables:
+    platform: centos-7-x64_64
+    box : centos-7
+    box_url : http://sa.camptocamp.com/vagrant/centos-7-x86_64_2014-11-21.box
+    hypervisor : vagrant
+CONFIG:
+  type: foss
