@@ -47,8 +47,8 @@ class nagios::nsca::server(
   Nagios_command { require => File[$nagios::params::resourcedir] }
 
   $nagios_nsca_cfg = $::osfamily ? {
-    Debian => '/etc/nsca.cfg',
-    RedHat => "${nagios::params::rootdir}/nsca.cfg",
+    'Debian' => '/etc/nsca.cfg',
+    'RedHat' => "${nagios::params::rootdir}/nsca.cfg",
   }
 
   file {$nagios_nsca_cfg:

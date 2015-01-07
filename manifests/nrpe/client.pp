@@ -28,8 +28,8 @@ class nagios::nrpe::client {
   }
 
   $nologin_path = $::osfamily ? {
-    Debian => '/usr/sbin/nologin',
-    RedHat => '/sbin/nologin',
+    'Debian' => '/usr/sbin/nologin',
+    'RedHat' => '/sbin/nologin',
   }
 
   user{ 'nrpe':
