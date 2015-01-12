@@ -6,7 +6,7 @@ HOSTS:
       strict_variables:
     platform: debian-7-amd64
     box : debian-7
-    box_url : http://sa.camptocamp.com/vagrant/debian-7-amd64_2014-11-21.box
+    box_url : http://sa.camptocamp.com/vagrant/debian-7-amd64_2015-01-08.box
     hypervisor : vagrant
 CONFIG:
   type: foss
