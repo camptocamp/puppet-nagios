@@ -15,11 +15,6 @@ class nagios::redhat inherits nagios::base {
     ensure => present,
   }
 
-  Service['nagios'] {
-    hasstatus   => false,
-    pattern     => '/usr/sbin/nagios -d /etc/nagios/nagios.cfg',
-  }
-
   # redhat specific resources below
 
   file {'/etc/default/nagios': ensure => absent }
@@ -52,6 +47,11 @@ class nagios::redhat inherits nagios::base {
         }
       }
 
+      Service['nagios'] {
+        hasstatus   => false,
+        pattern     => '/usr/sbin/nagios -d /etc/nagios/nagios.cfg',
+      }
+
       file {[
         '/var/lib/nagios/retention.dat',
         '/var/cache/nagios/nagios.tmp',
@@ -68,32 +68,45 @@ class nagios::redhat inherits nagios::base {
       }
       File['/var/lib/nagios/retention.dat'] { mode => '0600', }
       File['/var/cache/nagios/status.dat']  { mode => '0664', }
+
+      # workaround broken init-script
+      Exec['nagios-restart'] {
+        command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -f '^/usr/sbin/nagios' && /etc/init.d/nagios start",
+      }
+
+      Exec['nagios-reload'] {
+        command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -HUP -f '^/usr/sbin/nagios'",
+      }
+
+      exec {'create fifo':
+        command => 'mknod -m 0664 /var/run/nagios/rw/nagios.cmd p && chown nagios /var/run/nagios/rw/nagios.cmd',
+        unless  => 'test -p /var/run/nagios/rw/nagios.cmd',
+        require => File['nagios read-write dir'],
+      }
     }
 
     '7': {
       selinux::fcontext{ '/var/cache/nagios':
         setype => 'nagios_log_t',
       }
+
+      Service['nagios'] {
+        provider => 'systemd',
+      }
+
+      Exec['nagios-restart'] {
+        command => "nagios -v ${nagios::params::conffile} && systemctl restart nagios.service",
+      }
+
+      Exec['nagios-reload'] {
+        command => "nagios -v ${nagios::params::conffile} && systemctl reload nagios.service",
+      }
+
     }
 
     default: {
       fail "nagios::redhat doesn't support ${::operatingsystemmajrelease} yet"
     }
 
-  }
-
-  # workaround broken init-script
-  Exec['nagios-restart'] {
-    command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -f '^/usr/sbin/nagios' && /etc/init.d/nagios start",
-  }
-
-  Exec['nagios-reload'] {
-    command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -HUP -f '^/usr/sbin/nagios'",
-  }
-
-  exec {'create fifo':
-    command => 'mknod -m 0664 /var/run/nagios/rw/nagios.cmd p && chown nagios /var/run/nagios/rw/nagios.cmd',
-    unless  => 'test -p /var/run/nagios/rw/nagios.cmd',
-    require => File['nagios read-write dir'],
   }
 }
