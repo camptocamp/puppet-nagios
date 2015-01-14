@@ -9,6 +9,12 @@ describe 'nagios class' do
        
         if $::osfamily == 'RedHat' {
           class {'::selinux::base':}
+
+          yumrepo {'epel':
+            baseurl  => 'http://mirror.switch.ch/ftp/mirror/epel/7/$basearch',
+            enabled  => 1,
+            gpgcheck => 0,
+          }
         }
 
         class { '::nagios': }
