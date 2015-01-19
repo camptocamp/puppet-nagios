@@ -27,7 +27,7 @@ define nagios::service::local (
   $use='generic-service-active',
   ) {
 
-  include nagios::params
+  include ::nagios::params
 
   $fname = regsubst($name, '\W', '_', 'G')
 

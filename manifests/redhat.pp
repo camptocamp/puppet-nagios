@@ -7,7 +7,7 @@
 #
 class nagios::redhat inherits nagios::base {
 
-  include nagios::params
+  include ::nagios::params
 
   # Common resources between base, redhat, and debian
 

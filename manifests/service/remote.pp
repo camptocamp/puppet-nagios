@@ -25,7 +25,7 @@ define nagios::service::remote (
   $max_check_attempts    = undef,
 ) {
 
-  include nagios::params
+  include ::nagios::params
 
   $fname = regsubst($name, '\W', '_', 'G')
 

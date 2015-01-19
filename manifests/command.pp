@@ -13,7 +13,7 @@ define nagios::command (
   $ensure        = present,
   ) {
 
-  include nagios::params
+  include ::nagios::params
 
   $fname = regsubst($name, '\W', '_', 'G')
 

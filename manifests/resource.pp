@@ -16,7 +16,7 @@ define nagios::resource(
   $ensure = present,
 ) {
 
-  include nagios::params
+  include ::nagios::params
 
   concat::fragment {$name:
     ensure  => $ensure,

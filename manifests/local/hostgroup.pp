@@ -10,7 +10,7 @@
 #
 define nagios::local::hostgroup ($ensure=present) {
 
-  include nagios::params
+  include ::nagios::params
 
   $fname = regsubst($name, '\W', '_', 'G')
 

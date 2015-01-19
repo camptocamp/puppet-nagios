@@ -16,7 +16,7 @@ define nagios::host (
   $contact_groups=undef
   ) {
 
-  include nagios::params
+  include ::nagios::params
 
   $fname   = regsubst($name, '\W', '_', 'G')
   $nagios_address = $address ? {

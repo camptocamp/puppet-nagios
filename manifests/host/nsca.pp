@@ -19,7 +19,7 @@ define nagios::host::nsca (
   $contact_groups=undef
   ) {
 
-  include nagios::params
+  include ::nagios::params
 
   $fname               = regsubst($name, '\W', '_', 'G')
   $nagios_host_address = $address ? {

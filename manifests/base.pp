@@ -7,7 +7,7 @@
 #
 class nagios::base {
 
-  include nagios::params
+  include ::nagios::params
 
   # variables used in ERB template
   $basename = $nagios::params::basename

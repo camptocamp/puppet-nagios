@@ -6,8 +6,8 @@ class nagios(
   $niceness        = 5,
 ) {
   case $::osfamily {
-    'Debian': { include nagios::debian }
-    'RedHat': { include nagios::redhat }
+    'Debian': { include ::nagios::debian }
+    'RedHat': { include ::nagios::redhat }
     default:  { fail ("OS family ${::osfamily} not yet implemented !")}
   }
 }
