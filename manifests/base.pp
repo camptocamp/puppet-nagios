@@ -81,6 +81,7 @@ class nagios::base {
     require => Package['nagios'],
   }
 
+  $use_syslog = $nagios::use_syslog
   concat::fragment {'main':
     target  => $nagios::params::conffile,
     content => template('nagios/nagios.cfg.erb'),
