@@ -52,7 +52,7 @@ class nagios::nsca::server(
   }
 
   file {$nagios_nsca_cfg:
-    ensure  => present,
+    ensure  => file,
     owner   => root,
     group   => nagios,
     mode    => '0640',

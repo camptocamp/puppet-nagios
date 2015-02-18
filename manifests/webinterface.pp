@@ -40,7 +40,7 @@ class nagios::webinterface(
   $nagios_nagios_check_command = "${nagios::params::user1}/check_nagios /var/cache/${nagios::params::basename}/status.dat 5 '/usr/sbin/${nagios::params::basename}'"
 
   file {"${nagios::params::rootdir}/cgi.cfg":
-    ensure  => present,
+    ensure  => file,
     owner   => root,
     group   => root,
     mode    => '0644',

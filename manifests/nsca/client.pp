@@ -30,7 +30,7 @@ class nagios::nsca::client(
   $nsca_cfg = "${nagios::params::rootdir}/send_nsca.cfg"
 
   file { "${nagios::params::rootdir}/send_nsca.cfg":
-    ensure  => present,
+    ensure  => file,
     owner   => root,
     group   => nagios,
     mode    => '0640',
@@ -40,7 +40,7 @@ class nagios::nsca::client(
   }
 
   file {'/usr/local/bin/submit_ocsp':
-    ensure  => present,
+    ensure  => file,
     owner   => root,
     group   => root,
     mode    => '0755',
@@ -49,7 +49,7 @@ class nagios::nsca::client(
   }
 
   file {'/usr/local/bin/submit_ochp':
-    ensure  => present,
+    ensure  => file,
     owner   => root,
     group   => root,
     mode    => '0755',
@@ -58,7 +58,7 @@ class nagios::nsca::client(
   }
 
   file { "${nagios::params::resourcedir}/command-submit_ocsp.cfg":
-    ensure => present,
+    ensure => file,
     owner  => 'root',
     mode   => '0644',
   }
@@ -72,7 +72,7 @@ class nagios::nsca::client(
   }
 
   file { "${nagios::params::resourcedir}/command-submit_ochp.cfg":
-    ensure => present,
+    ensure => file,
     owner  => 'root',
     mode   => '0644',
   }

@@ -37,7 +37,7 @@ class nagios::debian inherits nagios::base {
   $niceness = $nagios::niceness
 
   file {'/etc/default/nagios3':
-    ensure  => present,
+    ensure  => file,
     owner   => root,
     group   => root,
     mode    => '0644',

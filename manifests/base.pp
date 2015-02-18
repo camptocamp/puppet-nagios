@@ -112,7 +112,7 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/generic-host.cfg":
-    ensure => present,
+    ensure => file,
     owner  => root,
     group  => root,
     mode   => '0644',
@@ -121,7 +121,7 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/generic-command.cfg":
-    ensure  => present,
+    ensure  => file,
     owner   => root,
     group   => root,
     mode    => '0644',
@@ -130,7 +130,7 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/generic-timeperiod.cfg":
-    ensure => present,
+    ensure => file,
     owner  => root,
     group  => root,
     mode   => '0644',
@@ -139,7 +139,7 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/base-contacts.cfg":
-    ensure => present,
+    ensure => file,
     owner  => 'root',
     mode   => '0644',
   }
@@ -160,7 +160,7 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/base-contactgroups.cfg":
-    ensure => present,
+    ensure => file,
     owner  => 'root',
     mode   => '0644',
   }
@@ -178,7 +178,7 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/base-servicegroup.cfg":
-    ensure => present,
+    ensure => file,
     owner  => 'root',
     mode   => '0644',
   }
