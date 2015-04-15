@@ -46,10 +46,11 @@ class nagios::nrpe::client {
     require => Package['nrpe'],
   }
 
+  $module_path = get_module_path($module_name)
   augeas::lens { 'nrpe':
-    ensure      => 'present',
-    lens_source => 'puppet:///modules/nagios/nrpe.aug',
-    stock_since => '1.1.0',
+    ensure       => 'present',
+    lens_content => file("${module_path}/files/nrpe.aug"),
+    stock_since  => '1.1.0',
   }
 
 }

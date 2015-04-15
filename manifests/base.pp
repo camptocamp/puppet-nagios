@@ -101,7 +101,9 @@ class nagios::base {
   # purge undefined nagios resources
   file { $nagios::params::resourcedir:
     ensure  => directory,
+    # lint:ignore:fileserver
     source  => 'puppet:///modules/nagios/empty',
+    # lint:endignore
     owner   => root,
     group   => root,
     mode    => '0644',
@@ -111,13 +113,14 @@ class nagios::base {
     notify  => Exec['nagios-restart'],
   }
 
+  $module_path = get_module_path($module_name)
   file {"${nagios::params::resourcedir}/generic-host.cfg":
-    ensure => file,
-    owner  => root,
-    group  => root,
-    mode   => '0644',
-    source => 'puppet:///modules/nagios/generic-host.cfg',
-    notify => Exec['nagios-restart'],
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    content => file("${module_path}/files/generic-host.cfg"),
+    notify  => Exec['nagios-restart'],
   }
 
   file {"${nagios::params::resourcedir}/generic-command.cfg":
@@ -130,12 +133,12 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/generic-timeperiod.cfg":
-    ensure => file,
-    owner  => root,
-    group  => root,
-    mode   => '0644',
-    source => 'puppet:///modules/nagios/generic-timeperiod.cfg',
-    notify => Exec['nagios-restart'],
+    ensure  => file,
+    owner   => root,
+    group   => root,
+    mode    => '0644',
+    content => file("${module_path}/files/generic-timeperiod.cfg"),
+    notify  => Exec['nagios-restart'],
   }
 
   file {"${nagios::params::resourcedir}/base-contacts.cfg":
