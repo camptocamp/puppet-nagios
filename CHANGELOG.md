@@ -1,3 +1,7 @@
+## 2015-04-17 - Release 1.0.4
+
+- Fetch fixtures from puppet forge
+
 ## 2015-04-15 - Release 1.0.3
 
 - Use file() function instead of fileserver (way faster)
