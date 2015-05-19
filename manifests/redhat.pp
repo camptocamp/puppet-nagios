@@ -15,6 +15,17 @@ class nagios::redhat inherits nagios::base {
     ensure => present,
   }
 
+  package { [
+    'nagios-plugins',
+    'nagios-plugins-procs',
+    'nagios-plugins-disk',
+    'nagios-plugins-load',
+    'nagios-plugins-ping',
+    'nrpe',
+  ]:
+    ensure => present,
+  }
+
   # redhat specific resources below
 
   file {'/etc/default/nagios': ensure => absent }
