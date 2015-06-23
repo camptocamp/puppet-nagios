@@ -32,7 +32,7 @@ define nagios::service::local (
   $fname = regsubst($name, '\W', '_', 'G')
 
   $nagios_service_host_name     = $host_name ? {
-    false   => $::hostname,
+    false   => $::fqdn,
     default => $host_name,
   }
   $nagios_service_check_command = $check_command ? {

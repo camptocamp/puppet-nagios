@@ -35,7 +35,7 @@ define nagios::service::nsca (
   $fname = regsubst($name, '\W', '_', 'G')
 
   $nagios_host_name = $host_name ? {
-    false    => $::hostname,
+    false    => $::fqdn,
     default  => $host_name,
   }
 
@@ -53,12 +53,12 @@ define nagios::service::nsca (
     service_description   => $service_description,
   }
 
-  @@nagios_service { "@@${name} on ${::hostname}":
+  @@nagios_service { "@@${name} on ${::fqdn}":
     ensure                => $ensure,
     use                   => $use_passive,
     host_name             => $nagios_host_name,
     tag                   => $export_for,
-    target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${::hostname}.cfg",
+    target                => "${nagios::params::resourcedir}/collected-service-${fname}_on_${::fqdn}.cfg",
     notify                => Exec['nagios-restart'],
     contact_groups        => $contact_groups,
     servicegroups         => $service_groups,
@@ -68,7 +68,7 @@ define nagios::service::nsca (
     service_description   => $service_description,
   }
 
-  @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${::hostname}.cfg":
+  @@file { "${nagios::params::resourcedir}/collected-service-${fname}_on_${::fqdn}.cfg":
     ensure => $ensure,
     owner  => 'root',
     mode   => '0644',
