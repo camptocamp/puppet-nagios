@@ -1,3 +1,7 @@
+## 2015-07-13 - Release 1.0.13
+
+Fix a scope issue with generic-command template
+
 ## 2015-06-26 - Release 1.0.12
 
 Fix strict_variables activation with rspec-puppet 2.2
