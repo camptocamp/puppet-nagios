@@ -123,6 +123,7 @@ class nagios::base {
     notify  => Exec['nagios-restart'],
   }
 
+  $check_ping_ipv = $::nagios::check_ping_ipv
   file {"${nagios::params::resourcedir}/generic-command.cfg":
     ensure  => file,
     owner   => root,
