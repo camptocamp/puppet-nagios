@@ -1,3 +1,7 @@
+## 2015-07-15 - Release 1.0.15
+
+Forgot to remove file context for RHEL7 too
+
 ## 2015-07-15 - Release 1.0.14
 
 Remove SELinux type for a directory, already managed by RHEL policy.
