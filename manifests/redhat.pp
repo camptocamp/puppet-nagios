@@ -25,7 +25,6 @@ class nagios::redhat inherits nagios::base {
 
     '5','6': {
       File[
-        '/var/run/nagios',
         '/var/log/nagios',
         '/var/lib/nagios',
         '/var/lib/nagios/spool',
