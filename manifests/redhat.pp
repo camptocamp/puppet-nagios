@@ -85,10 +85,6 @@ class nagios::redhat inherits nagios::base {
     }
 
     '7': {
-      selinux::fcontext{ '/var/cache/nagios':
-        setype => 'nagios_log_t',
-      }
-
       Service['nagios'] {
         provider => 'systemd',
       }
