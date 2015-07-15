@@ -1,3 +1,7 @@
+## 2015-07-15 - Release 1.0.14
+
+Remove SELinux type for a directory, already managed by RHEL policy.
+
 ## 2015-07-13 - Release 1.0.13
 
 Fix a scope issue with generic-command template

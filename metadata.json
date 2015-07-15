@@ -1,6 +1,6 @@
 {
   "name": "camptocamp-nagios",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "author": "Camptocamp",
   "summary": "Puppet Nagios module",
   "license": "Apache-2.0",
