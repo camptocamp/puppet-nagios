@@ -1,3 +1,7 @@
+## 2015-07-16 - Release 1.0.16
+
+Remove nagios_alias from local resource
+
 ## 2015-07-15 - Release 1.0.15
 
 Forgot to remove file context for RHEL7 too
