@@ -32,7 +32,6 @@ define nagios::host::remote (
     ensure  => $ensure,
     use     => 'generic-host-active',
     address => $host_address,
-    alias   => $nagios_alias,
     target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify  => Exec['nagios-restart'],
   }

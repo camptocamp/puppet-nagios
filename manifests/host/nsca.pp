@@ -31,7 +31,6 @@ define nagios::host::nsca (
     ensure  => $ensure,
     use     => 'generic-host-active',
     address => $nagios_host_address,
-    alias   => $nagios_alias,
     target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
     notify  => Exec['nagios-restart'],
   }
