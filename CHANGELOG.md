@@ -1,3 +1,8 @@
+## 2015-07-20 - Release 1.0.17
+
+Use namevar instead of alias for Package[nagios] on Debian
+to fix Puppet 4 support.
+
 ## 2015-07-16 - Release 1.0.16
 
 Remove nagios_alias from local resource
