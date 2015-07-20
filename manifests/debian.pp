@@ -19,9 +19,9 @@ class nagios::debian inherits nagios::base {
     ]:
     ensure => installed,
   }
-  package {'nagios3-core':
+  package {'nagios':
     ensure => installed,
-    alias  => 'nagios',
+    name   => 'nagios3-core',
   }
 
   Service['nagios'] {
