@@ -32,11 +32,11 @@ define nagios::host::remote (
     ensure => $ensure,
     owner  => 'root',
     mode   => '0644',
-    before => Nagios_host["Active ${name}"],
+    before => Nagios_host["@@${name}"],
   }
 
 
-  @@nagios_host { $name:
+  @@nagios_host { "@@${name}":
     ensure         => $ensure,
     use            => 'generic-host-active',
     tag            => $export_for,
@@ -49,7 +49,7 @@ define nagios::host::remote (
     notify         => Exec['nagios-restart'],
   }
 
-  Nagios_host <<| title == $name |>> {
+  Nagios_host <<| title == "@@${name}" |>> {
     use => 'generic-host-active',
     target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
     tag            => undef,

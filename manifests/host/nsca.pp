@@ -31,10 +31,10 @@ define nagios::host::nsca (
     ensure => $ensure,
     owner  => 'root',
     mode   => '0644',
-    before => Nagios_host[$name],
+    before => Nagios_host["@@${name}"],
   }
 
-  @@nagios_host { $name:
+  @@nagios_host { "@@${name}":
     ensure         => $ensure,
     use            => 'generic-host-passive',
     address        => $nagios_host_address,
@@ -47,7 +47,7 @@ define nagios::host::nsca (
     notify         => Exec['nagios-restart'],
   }
 
-  Nagios_host <<| title == $name |>> {
+  Nagios_host <<| title == "@@${name}" |>> {
     use            => 'generic-host-active',
     target         => "${nagios::params::resourcedir}/host-${fname}.cfg",
     tag            => undef,
