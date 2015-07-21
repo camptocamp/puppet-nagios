@@ -150,7 +150,9 @@ class nagios::base {
 
   nagios_contact { 'root':
     contact_name                  => 'root',
+    # lint:ignore:alias_parameter
     alias                         => 'Root',
+    # lint:endignore
     service_notification_period   => '24x7',
     host_notification_period      => '24x7',
     service_notification_options  => 'w,u,c,r',
@@ -171,7 +173,9 @@ class nagios::base {
 
   nagios_contactgroup { 'admins':
     contactgroup_name => 'admins',
+    # lint:ignore:alias_parameter
     alias             => 'Nagios Administrators',
+    # lint:endignore
     members           => 'root',
     target            => "${nagios::params::resourcedir}/base-contactgroups.cfg",
     notify            => Exec['nagios-restart'],
@@ -188,7 +192,9 @@ class nagios::base {
   }
 
   nagios_servicegroup { 'default':
+    # lint:ignore:alias_parameter
     alias   => 'Default Service Group',
+    # lint:endignore
     target  => "${nagios::params::resourcedir}/base-servicegroup.cfg",
     notify  => Exec['nagios-restart'],
     require => File["${nagios::params::resourcedir}/base-servicegroup.cfg"],

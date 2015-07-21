@@ -28,7 +28,9 @@ define nagios::host (
     ensure         => $ensure,
     use            => 'generic-host-active',
     address        => $nagios_address,
+    # lint:ignore:alias_parameter
     alias          => $nagios_alias,
+    # lint:endignore
     hostgroups     => $hostgroups,
     contact_groups => $contact_groups,
     target         => "${nagios::params::resourcedir}/host-${fname}.cfg",
