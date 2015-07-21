@@ -1,3 +1,8 @@
+## 2015-07-21 - Release 1.0.19
+
+Use only one nagios_host resource
+and realize it locally
+
 ## 2015-07-21 - Release 1.0.18
 
 Rename active nagios_host resources
