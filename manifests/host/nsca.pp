@@ -39,7 +39,9 @@ define nagios::host::nsca (
     use            => 'generic-host-passive',
     address        => $nagios_host_address,
     host_name      => $name,
+    # lint:ignore:alias_parameter
     alias          => $nagios_alias,
+    # lint:endignore
     tag            => $export_for,
     hostgroups     => $hostgroups,
     target         => "${nagios::params::resourcedir}/collected-host-${fname}.cfg",

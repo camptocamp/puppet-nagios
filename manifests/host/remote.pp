@@ -42,7 +42,9 @@ define nagios::host::remote (
     tag            => $export_for,
     host_name      => $name,
     address        => $host_address,
+    # lint:ignore:alias_parameter
     alias          => $nagios_alias,
+    # lint:endignore
     hostgroups     => $hostgroups,
     contact_groups => $contact_groups,
     target         => "${nagios::params::resourcedir}/collected-host-${fname}.cfg",
