@@ -1,3 +1,8 @@
+## 2015-07-21 - Release 1.0.18
+
+Rename active nagios_host resources
+to avoid alias conflict when using Puppet 4
+
 ## 2015-07-20 - Release 1.0.17
 
 Use namevar instead of alias for Package[nagios] on Debian
