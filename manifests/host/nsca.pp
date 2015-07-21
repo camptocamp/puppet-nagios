@@ -27,7 +27,7 @@ define nagios::host::nsca (
     default => $address,
   }
 
-  nagios_host { $name:
+  nagios_host { "Active ${name}":
     ensure  => $ensure,
     use     => 'generic-host-active',
     address => $nagios_host_address,
@@ -39,7 +39,7 @@ define nagios::host::nsca (
     ensure => $ensure,
     owner  => 'root',
     mode   => '0644',
-    before => Nagios_host[$name],
+    before => Nagios_host["Active ${name}"],
   }
 
   @@nagios_host { "@@${name}":

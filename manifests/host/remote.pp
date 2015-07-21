@@ -28,7 +28,7 @@ define nagios::host::remote (
     default => $address,
   }
 
-  nagios_host { $name:
+  nagios_host { "Active ${name}":
     ensure  => $ensure,
     use     => 'generic-host-active',
     address => $host_address,
@@ -40,7 +40,7 @@ define nagios::host::remote (
     ensure => $ensure,
     owner  => 'root',
     mode   => '0644',
-    before => Nagios_host[$name],
+    before => Nagios_host["Active ${name}"],
   }
 
 
