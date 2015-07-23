@@ -28,14 +28,6 @@ define nagios::host::remote (
     default => $address,
   }
 
-  file { "${nagios::params::resourcedir}/host-${fname}.cfg":
-    ensure => $ensure,
-    owner  => 'root',
-    mode   => '0644',
-    before => Nagios_host["@@${name}"],
-  }
-
-
   @@nagios_host { "@@${name}":
     ensure         => $ensure,
     use            => 'generic-host-active',
@@ -51,6 +43,13 @@ define nagios::host::remote (
     notify         => Exec['nagios-restart'],
   }
 
+  @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":
+    ensure => $ensure,
+    owner  => 'root',
+    mode   => '0644',
+    tag    => $export_for,
+  }
+
   Nagios_host <<| title == "@@${name}" |>> {
     use => 'generic-host-active',
     target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
@@ -59,11 +58,9 @@ define nagios::host::remote (
     contact_groups => undef,
   }
 
-  @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":
-    ensure => $ensure,
-    owner  => 'root',
-    mode   => '0644',
-    tag    => $export_for,
+  File <<| title == "${nagios::params::resourcedir}/collected-host-${fname}.cfg" |>> {
+    path   => "${nagios::params::resourcedir}/host-${fname}.cfg",
+    before => Nagios_host["@@${name}"],
   }
 
 }
