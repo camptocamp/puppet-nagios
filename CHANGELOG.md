@@ -1,3 +1,7 @@
+## 2015-07-23 - Release 1.0.20
+
+Realize file exported resources locally, too
+
 ## 2015-07-21 - Release 1.0.19
 
 Use only one nagios_host resource
