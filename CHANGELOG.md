@@ -1,3 +1,7 @@
+## 2015-07-24 - Release 1.0.21
+
+Export nagios::host instead of nagios_host
+
 ## 2015-07-23 - Release 1.0.20
 
 Realize file exported resources locally, too
