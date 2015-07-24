@@ -29,7 +29,7 @@ define nagios::host::nsca (
 
   nagios_host {$name:
     ensure  => $ensure,
-    use     => 'generic-active-passive',
+    use     => 'generic-host-active',
     address => $nagios_host_address,
     # lint:ignore:alias_parameter
     alias   => $nagios_alias,
