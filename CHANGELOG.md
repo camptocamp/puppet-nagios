@@ -1,3 +1,9 @@
+## 2015-07-24 - Release 1.0.22
+
+Also collect nagios::host on nrpe server
+Fix bug in remote host
+Fix typo in nsca host definition
+
 ## 2015-07-24 - Release 1.0.21
 
 Export nagios::host instead of nagios_host
