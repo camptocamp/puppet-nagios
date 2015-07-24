@@ -31,7 +31,7 @@ class nagios::nrpe::server {
 
   $get_tag = "nagios-${::nagios::nrpe_server_tag}"
 
-  Nagios_host    <<| tag == $get_tag |>>
+  Nagios::Host   <<| tag == $get_tag |>>
   Nagios_service <<| tag == $get_tag |>>
   Nagios_command <<| tag == $get_tag |>>
   File           <<| tag == $get_tag |>>
