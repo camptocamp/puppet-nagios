@@ -13,12 +13,13 @@ define nagios::host (
   $address=false,
   $nagios_alias=undef,
   $hostgroups=undef,
-  $contact_groups=undef
+  $contact_groups=undef,
+  $use='generic-host-active',
   ) {
 
   include ::nagios::params
 
-  $fname   = regsubst($name, '\W', '_', 'G')
+  $fname = regsubst($name, '\W', '_', 'G')
   $nagios_address = $address ? {
     false   => $::ipaddress,
     default => $address,
@@ -26,7 +27,7 @@ define nagios::host (
 
   nagios_host { $name:
     ensure         => $ensure,
-    use            => 'generic-host-active',
+    use            => $use,
     address        => $nagios_address,
     # lint:ignore:alias_parameter
     alias          => $nagios_alias,

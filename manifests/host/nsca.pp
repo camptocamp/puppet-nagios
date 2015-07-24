@@ -21,45 +21,38 @@ define nagios::host::nsca (
 
   include ::nagios::params
 
-  $fname               = regsubst($name, '\W', '_', 'G')
+  $fname = regsubst($name, '\W', '_', 'G')
   $nagios_host_address = $address ? {
     false   => $::ipaddress,
     default => $address,
   }
 
-  @@nagios_host { "@@${name}":
-    ensure         => $ensure,
-    use            => 'generic-host-passive',
-    address        => $nagios_host_address,
-    host_name      => $name,
+  nagios_host {$name:
+    ensure  => $ensure,
+    use     => 'generic-active-passive',
+    address => $nagios_host_address,
     # lint:ignore:alias_parameter
-    alias          => $nagios_alias,
+    alias   => $nagios_alias,
     # lint:endignore
-    tag            => $export_for,
-    hostgroups     => $hostgroups,
-    target         => "${nagios::params::resourcedir}/collected-host-${fname}.cfg",
-    contact_groups => $contact_groups,
-    notify         => Exec['nagios-restart'],
+    target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
+    notify  => Exec['nagios-restart'],
   }
 
-  @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":
+  file { "${nagios::params::resourcedir}/host-${fname}.cfg":
     ensure => $ensure,
     owner  => 'root',
     mode   => '0644',
-    tag    => $export_for,
+    before => Nagios_host[$name],
   }
 
-  Nagios_host <<| title == "@@${name}" |>> {
-    use            => 'generic-host-active',
-    target         => "${nagios::params::resourcedir}/host-${fname}.cfg",
-    tag            => undef,
-    hostgroups     => undef,
-    contact_groups => undef,
-  }
-
-  File <<| title ==  "${nagios::params::resourcedir}/collected-host-${fname}.cfg" |>> {
-    path   => "${nagios::params::resourcedir}/host-${fname}.cfg",
-    before => Nagios_host["@@${name}"],
+  @@nagios::host {$name:
+    ensure         => $ensure,
+    address        => $nagios_host_address,
+    nagios_alias   => $nagios_alias,
+    hostgroups     => $hostgroups,
+    contact_groups => $contact_groups,
+    use            => 'generic-host-passive',
+    tag            => $export_for,
   }
 
 }

@@ -22,45 +22,38 @@ define nagios::host::remote (
   include ::nagios::params
 
   $fname = regsubst($name, '\W', '_', 'G')
-
   $host_address = $address ? {
     false   => $::ipaddress,
     default => $address,
   }
 
-  @@nagios_host { "@@${name}":
-    ensure         => $ensure,
-    use            => 'generic-host-active',
-    tag            => $export_for,
-    host_name      => $name,
-    address        => $host_address,
+  nagios_host {$name:
+    ensure    => $ensure,
+    use       => 'generic-host-active',
+    host_name => $name,
+    address   => $host_address,
     # lint:ignore:alias_parameter
-    alias          => $nagios_alias,
+    alias     => $nagios_alias,
     # lint:endignore
-    hostgroups     => $hostgroups,
-    contact_groups => $contact_groups,
-    target         => "${nagios::params::resourcedir}/collected-host-${fname}.cfg",
-    notify         => Exec['nagios-restart'],
+    target    => "${nagios::params::resourcedir}/host-${fname}.cfg",
+    notify    => Exec['nagios-restart'],
   }
 
-  @@file { "${nagios::params::resourcedir}/collected-host-${fname}.cfg":
+  file { "${nagios::params::resourcedir}/host-${fname}.cfg":
     ensure => $ensure,
     owner  => 'root',
     mode   => '0644',
-    tag    => $export_for,
-  }
-
-  Nagios_host <<| title == "@@${name}" |>> {
-    use => 'generic-host-active',
-    target  => "${nagios::params::resourcedir}/host-${fname}.cfg",
-    tag            => undef,
-    hostgroups     => undef,
-    contact_groups => undef,
-  }
-
-  File <<| title == "${nagios::params::resourcedir}/collected-host-${fname}.cfg" |>> {
-    path   => "${nagios::params::resourcedir}/host-${fname}.cfg",
     before => Nagios_host["@@${name}"],
+  }
+
+  @@nagios::host {$name:
+    ensure         => $ensure,
+    address        => $host_address,
+    nagios_alias   => $nagios_alias,
+    hostgroups     => $hostgroups,
+    contact_groups => $contact_groups,
+    use            => 'generic-host-active',
+    tag            => $export_for,
   }
 
 }
