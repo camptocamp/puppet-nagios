@@ -1,3 +1,7 @@
+## 2015-08-21 - Release 1.0.23
+
+Use docker for acceptance tests
+
 ## 2015-07-24 - Release 1.0.22
 
 Also collect nagios::host on nrpe server
