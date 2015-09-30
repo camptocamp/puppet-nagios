@@ -51,23 +51,6 @@ class nagios::redhat inherits nagios::base {
         pattern     => '/usr/sbin/nagios -d /etc/nagios/nagios.cfg',
       }
 
-      file {[
-        '/var/lib/nagios/retention.dat',
-        '/var/cache/nagios/nagios.tmp',
-        '/var/cache/nagios/status.dat',
-        '/var/cache/nagios/objects.precache',
-        '/var/cache/nagios/objects.cache',
-      ]:
-        ensure   => file,
-        seltype  => 'nagios_log_t',
-        owner    => 'nagios',
-        group    => 'nagios',
-        loglevel => 'debug',
-        require  => File['/var/run/nagios'],
-      }
-      File['/var/lib/nagios/retention.dat'] { mode => '0600', }
-      File['/var/cache/nagios/status.dat']  { mode => '0664', }
-
       # workaround broken init-script
       Exec['nagios-restart'] {
         command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -f '^/usr/sbin/nagios' && /etc/init.d/nagios start",
