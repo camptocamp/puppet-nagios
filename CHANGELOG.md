@@ -1,3 +1,7 @@
+## 2015-09-30 - Release 1.0.24
+
+Stop managing files created by nagios
+
 ## 2015-08-21 - Release 1.0.23
 
 Use docker for acceptance tests
