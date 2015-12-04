@@ -38,12 +38,19 @@ class nagios::nrpe::client {
     require => Package['nrpe'],
   }
 
+  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease == '7' {
+    $provider = 'redhat'
+  } else {
+    $provider = undef
+  }
+
   service { 'nrpe':
-    ensure  => running,
-    name    => $service_name,
-    enable  => true,
-    pattern => '/usr/sbin/nrpe',
-    require => Package['nrpe'],
+    ensure   => running,
+    provider => $provider,
+    name     => $service_name,
+    enable   => true,
+    pattern  => '/usr/sbin/nrpe',
+    require  => Package['nrpe'],
   }
 
   $module_path = get_module_path($module_name)
