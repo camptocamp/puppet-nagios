@@ -69,7 +69,7 @@ class nagios::redhat inherits nagios::base {
 
     '7': {
       Service['nagios'] {
-        provider => 'systemd',
+        provider => 'redhat',
       }
 
       Exec['nagios-restart'] {
