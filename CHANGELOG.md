@@ -1,3 +1,7 @@
+## 2015-12-04 - Release 1.0.25
+
+Fix convergence on RedHat 7
+
 ## 2015-09-30 - Release 1.0.24
 
 Stop managing files created by nagios
