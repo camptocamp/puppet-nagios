@@ -1,3 +1,7 @@
+## 2015-12-07 - Release 1.0.26
+
+Fix convergence on RedHat 7
+
 ## 2015-12-04 - Release 1.0.25
 
 Fix convergence on RedHat 7
