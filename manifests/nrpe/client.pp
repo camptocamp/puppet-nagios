@@ -44,13 +44,20 @@ class nagios::nrpe::client {
     $provider = undef
   }
 
+  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '6' {
+    $hasstatus = false
+  } else {
+    $hasstatus = undef
+  }
+
   service { 'nrpe':
-    ensure   => running,
-    provider => $provider,
-    name     => $service_name,
-    enable   => true,
-    pattern  => '/usr/sbin/nrpe',
-    require  => Package['nrpe'],
+    ensure    => running,
+    provider  => $provider,
+    hasstatus => $hasstatus,
+    name      => $service_name,
+    enable    => true,
+    pattern   => '/usr/sbin/nrpe',
+    require   => Package['nrpe'],
   }
 
   $module_path = get_module_path($module_name)
