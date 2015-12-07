@@ -1,3 +1,7 @@
+## 2015-12-07 - Release 1.0.27
+
+Fix convergence on Debian 6
+
 ## 2015-12-07 - Release 1.0.26
 
 Fix convergence on RedHat 7
