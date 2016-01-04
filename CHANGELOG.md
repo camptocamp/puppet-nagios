@@ -1,3 +1,7 @@
+## 2016-01-04 - Release 1.0.28
+
+Add rw dir in /var/log/nagios for nagios 4
+
 ## 2015-12-07 - Release 1.0.27
 
 Fix convergence on Debian 6
