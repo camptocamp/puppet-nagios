@@ -1,3 +1,7 @@
+## 2016-02-03 - Release 1.0.29
+
+Move lock_file definition to params.pp
+
 ## 2016-01-04 - Release 1.0.28
 
 Add rw dir in /var/log/nagios for nagios 4
