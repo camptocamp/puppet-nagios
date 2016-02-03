@@ -26,4 +26,18 @@ class nagios::params {
   $resourcedir = '/etc/nagios.d'
   $rootdir     = "/etc/${basename}"
   $conffile    = "${rootdir}/nagios.cfg"
+
+  case $::osfamily {
+    'RedHat': {
+      if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
+        $pidfile = "/var/run/${basename}/${basename}.pid"
+      } else {
+        $pidfile = "/var/run/${basename}.pid"
+      }
+    }
+    default: {
+      $pidfile = "/var/run/${basename}/${basename}.pid"
+    }
+  }
+
 }
