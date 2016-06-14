@@ -1,15 +1,16 @@
 HOSTS:
-  debian-7-x64:
+  centos-5-x64:
     default_apply_opts:
       order: random
       strict_variables:
-    platform: debian-7-amd64
+    platform: el-5-x86_64
     hypervisor : docker
-    image: debian:7
+    image: tianon/centos:5.10
     docker_preserve_image: true
     docker_cmd: '["/sbin/init"]'
     docker_image_commands:
-      - 'apt-get install -y cron locales-all net-tools wget'
+      - 'yum install -y crontabs tar wget which'
+      - 'sed -i -e "/mingetty/d" /etc/inittab'
 CONFIG:
   type: aio
   log_level: debug

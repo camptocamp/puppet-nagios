@@ -1,12 +1,15 @@
 HOSTS:
-  centos-7:
-    roles:
-      - default
+  centos-7-x64:
     default_apply_opts:
+      order: random
       strict_variables:
     platform: el-7-x86_64
-    box : centos-7-x86_64_2015-01-08
-    box_url : http://sa.camptocamp.com/vagrant/centos-7-x86_64_2015-01-08.box
-    hypervisor : vagrant
+    hypervisor : docker
+    image: centos:7
+    docker_preserve_image: true
+    docker_cmd: '["/usr/sbin/init"]'
+    docker_image_commands:
+      - 'yum install -y crontabs tar wget'
 CONFIG:
-  type: foss
+  type: aio
+  log_level: debug
