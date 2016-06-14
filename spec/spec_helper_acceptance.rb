@@ -2,7 +2,7 @@ require 'beaker-rspec'
 
 hosts.each do |host|
   # Install puppet
-  install_puppet()
+  install_puppet_agent_on host, {}
   install_package host, 'git'
   case fact('osfamily')
   when 'Debian'
