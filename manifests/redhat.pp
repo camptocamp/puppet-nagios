@@ -34,18 +34,6 @@ class nagios::redhat inherits nagios::base {
         seltype => 'nagios_log_t',
       }
 
-      File['nagios read-write dir'] {
-        seltype => 'nagios_log_t',
-      }
-
-      if str2bool($::selinux) {
-        exec { 'chcon /var/run/nagios/rw/nagios.cmd':
-          require => [Exec['create fifo'], File['nagios read-write dir']],
-          command => 'chcon -t nagios_spool_t /var/run/nagios/rw/nagios.cmd',
-          unless  => 'ls -Z /var/run/nagios/rw/nagios.cmd | grep -q nagios_spool_t',
-        }
-      }
-
       Service['nagios'] {
         hasstatus   => false,
         pattern     => '/usr/sbin/nagios -d /etc/nagios/nagios.cfg',
@@ -58,12 +46,6 @@ class nagios::redhat inherits nagios::base {
 
       Exec['nagios-reload'] {
         command => "nagios -v ${nagios::params::conffile} && pkill -P 1 -HUP -f '^/usr/sbin/nagios'",
-      }
-
-      exec {'create fifo':
-        command => 'mknod -m 0664 /var/run/nagios/rw/nagios.cmd p && chown nagios /var/run/nagios/rw/nagios.cmd',
-        unless  => 'test -p /var/run/nagios/rw/nagios.cmd',
-        require => File['nagios read-write dir'],
       }
     }
 

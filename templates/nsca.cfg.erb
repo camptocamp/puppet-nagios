@@ -76,7 +76,7 @@ debug=<%= @debug %>
 # COMMAND FILE
 # This is the location of the Nagios command file that the daemon
 # should write all service check results that it receives.
-command_file=/var/run/<%= @basename %>/rw/nagios.cmd
+command_file=<%= @command_file %>
 
 # ALTERNATE DUMP FILE
 # This is used to specify an alternate file the daemon should
