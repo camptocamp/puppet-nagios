@@ -101,7 +101,6 @@ allow httpd_t nagios_log_t:file read;
     }
   }
 
-  include ::apache_c2c::params
   include ::nagios::base::withwebinterface
 
 }
