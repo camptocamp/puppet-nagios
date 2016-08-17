@@ -1,3 +1,8 @@
+## 2016-08-17 - Release 1.0.30
+
+Remove dependency on apache_c2c
+Use standard paths for command_file
+
 ## 2016-02-03 - Release 1.0.29
 
 Move lock_file definition to params.pp
