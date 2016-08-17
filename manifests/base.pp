@@ -92,6 +92,10 @@ class nagios::base {
   }
 
   $use_syslog = $nagios::use_syslog
+  $command_file = $::osfamily ? {
+    'Debian' => '/var/lib/nagios3/rw/nagios.cmd',
+    'RedHat' => '/var/spool/nagios/cmd/nagios.cmd',
+  }
   concat::fragment {'main':
     target  => $nagios::params::conffile,
     content => template('nagios/nagios.cfg.erb'),

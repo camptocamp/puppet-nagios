@@ -51,6 +51,11 @@ class nagios::nsca::server(
     'RedHat' => "${nagios::params::rootdir}/nsca.cfg",
   }
 
+  $command_file = $::osfamily ? {
+    'Debian' => '/var/lib/nagios3/rw/nagios.cmd',
+    'RedHat' => '/var/spool/nagios/cmd/nagios.cmd',
+  }
+
   file {$nagios_nsca_cfg:
     ensure  => file,
     owner   => root,
