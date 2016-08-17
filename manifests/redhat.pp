@@ -34,10 +34,6 @@ class nagios::redhat inherits nagios::base {
         seltype => 'nagios_log_t',
       }
 
-      File['nagios read-write dir'] {
-        seltype => 'nagios_log_t',
-      }
-
       Service['nagios'] {
         hasstatus   => false,
         pattern     => '/usr/sbin/nagios -d /etc/nagios/nagios.cfg',
