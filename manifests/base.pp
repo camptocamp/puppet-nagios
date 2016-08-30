@@ -47,6 +47,15 @@ class nagios::base {
     refreshonly => true,
   }
 
+  file { 'nagios read-write dir':
+    ensure  => directory,
+    path    => "/var/run/${nagios::params::basename}/rw",
+    owner   => 'nagios',
+    group   => 'nagios',
+    mode    => '2710',
+    require => Package['nagios'],
+  }
+
   file { 'nagios query-handler read-write dir':
     ensure  => directory,
     path    => "/var/log/${nagios::params::basename}/rw",
