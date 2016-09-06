@@ -47,6 +47,21 @@ class nagios::base {
     refreshonly => true,
   }
 
+  $read_write_dir = $::osfamily ? {
+    'Debian' => '/var/lib/nagios3/rw',
+    'RedHat' => '/var/spool/nagios/cmd',
+  }
+  $command_file = "${read_write_dir}/nagios.cmd"
+
+  file { 'nagios read-write dir':
+    ensure  => directory,
+    path    => $read_write_dir,
+    owner   => 'nagios',
+    group   => 'nagios',
+    mode    => '2710',
+    require => Package['nagios'],
+  }
+
   file { 'nagios query-handler read-write dir':
     ensure  => directory,
     path    => "/var/log/${nagios::params::basename}/rw",
@@ -83,10 +98,6 @@ class nagios::base {
   }
 
   $use_syslog = $nagios::use_syslog
-  $command_file = $::osfamily ? {
-    'Debian' => '/var/lib/nagios3/rw/nagios.cmd',
-    'RedHat' => '/var/spool/nagios/cmd/nagios.cmd',
-  }
   concat::fragment {'main':
     target  => $nagios::params::conffile,
     content => template('nagios/nagios.cfg.erb'),
