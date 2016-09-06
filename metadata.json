@@ -32,15 +32,16 @@
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "6",
-        "7"
+        "7",
+        "8"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "10.04",
         "12.04",
-        "14.04"
+        "14.04",
+        "16.04"
       ]
     },
     {
@@ -51,8 +52,5 @@
         "7"
       ]
     }
-  ],
-  "puppet_version": [
-    "3.7"
   ]
 }
