@@ -1,3 +1,7 @@
+## 2016-09-06 - Release 1.0.31
+
+Fix read-write dir creation
+
 ## 2016-08-17 - Release 1.0.30
 
 Remove dependency on apache_c2c
