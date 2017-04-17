@@ -30,8 +30,15 @@ class nagios::base {
     require => Package['nagios'],
   }
 
+  $force_redhat_provider = $::osfamily == 'RedHat' and versioncmp($::operatingsystemmajrelease, '7') >= 0
+  $provider = $force_redhat_provider ? {
+    true    => 'redhat',
+    default => undef,
+  }
+
   service { 'nagios':
     ensure     => running,
+    provider   => $provider,
     enable     => true,
     hasrestart => true,
     require    => Package['nagios'],
