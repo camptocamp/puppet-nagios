@@ -1,3 +1,7 @@
+## 2016-09-06 - Release 1.0.32
+
+EPEL has now nagios 4.3 so change the values for pid file on rhel6.
+
 ## 2016-09-06 - Release 1.0.31
 
 Fix read-write dir creation
