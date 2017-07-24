@@ -1,3 +1,9 @@
+## 2016-09-06 - Release 1.0.33
+
+EPEL has messed their packaging so it pushes /etc/httpd/conf.d/nagios.conf everywhere now...
+
+This breaks httpd if mod_version is not loaded. And if you use puppetlabs/apache this is fatal.
+
 ## 2016-09-06 - Release 1.0.32
 
 EPEL has now nagios 4.3 so change the values for pid file on rhel6.
