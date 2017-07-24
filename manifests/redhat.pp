@@ -21,6 +21,11 @@ class nagios::redhat inherits nagios::base {
 
   file {'/etc/nagios3': ensure => absent }
 
+  file {'/etc/httpd/conf.d/nagios.conf':
+    ensure  => absent,
+    require => Package['nagios'],
+  }
+
   case $::operatingsystemmajrelease {
 
     '5','6': {

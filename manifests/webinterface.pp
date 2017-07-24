@@ -56,12 +56,6 @@ class nagios::webinterface(
         ensure => present,
       }
 
-      file {'/etc/httpd/conf.d/nagios3.conf':
-        ensure  => absent,
-        require => Package['nagios-www'],
-        notify  => Exec['apache-graceful'],
-      }
-
       #SELinux - see
       # http://grokbase.com/post/2008/12/06/centos-trying-to-setting-a-selinux-policy-to-nagios-3-0-6-on-centos-5-2/u-x2GXaK02ZlLVNVs_Mkq0G2hDg
       selinux::module {'nagios-httpd':
