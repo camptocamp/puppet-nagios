@@ -29,10 +29,10 @@ class nagios::params {
 
   case $::osfamily {
     'RedHat': {
-      if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
-        $pidfile = "/var/run/${basename}/${basename}.pid"
-      } else {
+      if versioncmp($::operatingsystemmajrelease, '5') <= 0 {
         $pidfile = "/var/run/${basename}.pid"
+      } else {
+        $pidfile = "/var/run/${basename}/${basename}.pid"
       }
     }
     default: {
