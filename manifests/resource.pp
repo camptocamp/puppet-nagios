@@ -19,7 +19,6 @@ define nagios::resource(
   include ::nagios::params
 
   concat::fragment {$name:
-    ensure  => $ensure,
     target  => "${nagios::params::rootdir}/resource.cfg",
     content => "\$${name}\$=\"${value}\"\n",
   }
