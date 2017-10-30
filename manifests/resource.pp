@@ -13,13 +13,11 @@
 #
 define nagios::resource(
   $value,
-  $ensure = present,
 ) {
 
   include ::nagios::params
 
   concat::fragment {$name:
-    ensure  => $ensure,
     target  => "${nagios::params::rootdir}/resource.cfg",
     content => "\$${name}\$=\"${value}\"\n",
   }
