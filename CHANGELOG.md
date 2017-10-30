@@ -1,3 +1,7 @@
+## 2017-10-30 - Release 1.0.34
+
+Remove "ensure" for `concat::fragment` to match with the new version of the concat module.
+
 ## 2016-09-06 - Release 1.0.33
 
 EPEL has messed their packaging so it pushes /etc/httpd/conf.d/nagios.conf everywhere now...
