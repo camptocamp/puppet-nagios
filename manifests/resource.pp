@@ -13,7 +13,6 @@
 #
 define nagios::resource(
   $value,
-  $ensure = present,
 ) {
 
   include ::nagios::params
