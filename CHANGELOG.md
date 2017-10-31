@@ -1,3 +1,7 @@
+## 2017-10-31 - Release 1.0.35
+
+Fix path for the nagios-restart command.
+
 ## 2017-10-30 - Release 1.0.34
 
 Remove "ensure" for `concat::fragment` to match with the new version of the concat module.
