@@ -46,6 +46,7 @@ class nagios::base {
   exec { 'nagios-reload':
     command     => "${nagios::params::basename} -v ${nagios::params::conffile} && /etc/init.d/${nagios::params::basename} reload",
     refreshonly => true,
+    path        => $::path,
   }
 
   $read_write_dir = $::osfamily ? {
