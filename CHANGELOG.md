@@ -1,3 +1,7 @@
+## 2017-10-31 - Release 1.0.36
+
+Fix path for the nagios-reload command.
+
 ## 2017-10-31 - Release 1.0.35
 
 Fix path for the nagios-restart command.
