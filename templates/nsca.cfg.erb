@@ -50,7 +50,7 @@ nsca_user=nagios
 # 
 # NOTE: This option is ignored if NSCA is running under either inetd or xinetd
 
-nsca_group=nogroup
+nsca_group=<%= @nsca_group %>
 
 
 
@@ -87,7 +87,7 @@ command_file=<%= @command_file %>
 # to dump the contents of this file into the command file after
 # it starts Nagios.  Or you may simply choose to ignore any
 # check results received while Nagios was not running...
-alternate_dump_file=/var/run/nagios/nsca.dump
+alternate_dump_file=<%= @alternate_dump_file %>
 
 # AGGREGATED WRITES OPTION
 # This option determines whether or not the nsca daemon will

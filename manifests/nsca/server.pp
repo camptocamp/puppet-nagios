@@ -46,6 +46,11 @@ class nagios::nsca::server(
   Nagios_service { require => File[$nagios::params::resourcedir] }
   Nagios_command { require => File[$nagios::params::resourcedir] }
 
+  $nsca_group = $::osfamily ? {
+    'Debian' => 'nogroup',
+    'RedHat' => 'nagios',
+  }
+
   $nagios_nsca_cfg = $::osfamily ? {
     'Debian' => '/etc/nsca.cfg',
     'RedHat' => "${nagios::params::rootdir}/nsca.cfg",
@@ -54,6 +59,11 @@ class nagios::nsca::server(
   $command_file = $::osfamily ? {
     'Debian' => '/var/lib/nagios3/rw/nagios.cmd',
     'RedHat' => '/var/spool/nagios/cmd/nagios.cmd',
+  }
+
+  $alternate_dump_file = $::osfamily ? {
+    'Debian' => '/var/run/nagios/nsca.dump',
+    'RedHat' => '/var/spool/nagios/cmd/nsca.dump',
   }
 
   file {$nagios_nsca_cfg:
