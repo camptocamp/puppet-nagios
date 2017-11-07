@@ -1,3 +1,7 @@
+## 2017-11-07 - Release 1.0.37
+
+Fix nsca alternate_dump_file and group on RedHat
+
 ## 2017-10-31 - Release 1.0.36
 
 Fix path for the nagios-reload command.
