@@ -3,5 +3,6 @@ fixtures:
     concat: 'puppetlabs-concat'
     selinux: 'camptocamp-selinux'
     stdlib: 'puppetlabs-stdlib'
+    nagios_core: 'puppetlabs-nagios_core'
   symlinks:
     nagios: "#{source_dir}"
