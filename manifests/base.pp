@@ -6,6 +6,7 @@
 #   include nagios
 #
 class nagios::base {
+  assert_private()
 
   include ::nagios::params
 
@@ -25,13 +26,18 @@ class nagios::base {
   # Common resources between base, redhat, and debian
 
   user { 'nagios':
-    ensure  => present,
+    ensure  => $nagios::ensure,
     shell   => '/bin/sh',
     require => Package['nagios'],
   }
 
+  $svc_ensure = $nagios::ensure {
+    present => running,
+    default => stopped,
+  }
+
   service { 'nagios':
-    ensure     => running,
+    ensure     => $svc_ensure,
     enable     => true,
     hasrestart => true,
     require    => Package['nagios'],
@@ -55,8 +61,18 @@ class nagios::base {
   }
   $command_file = "${read_write_dir}/nagios.cmd"
 
+  $file_ensure = $nagios::ensure ? {
+    present => file,
+    default => absent,
+  }
+
+  $dir_ensure = $nagios::ensure ? {
+    present => directory,
+    default => absent,
+  }
+
   file { 'nagios read-write dir':
-    ensure  => directory,
+    ensure  => $dir_ensure,
     path    => $read_write_dir,
     owner   => 'nagios',
     group   => 'nagios',
@@ -65,7 +81,7 @@ class nagios::base {
   }
 
   file { 'nagios query-handler read-write dir':
-    ensure  => directory,
+    ensure  => $dir_ensure,
     path    => "/var/log/${nagios::params::basename}/rw",
     owner   => 'nagios',
     group   => 'nagios',
@@ -81,7 +97,7 @@ class nagios::base {
     "/var/lib/${nagios::params::basename}/spool/checkresults",
     "/var/cache/${nagios::params::basename}",
   ]:
-    ensure  => directory,
+    ensure  => $dir_ensure,
     owner   => nagios,
     group   => nagios,
     mode    => '0755',
@@ -95,12 +111,14 @@ class nagios::base {
       $nagios::params::conffile,
       "${nagios::params::rootdir}/resource.cfg",
     ]:
+    ensure => $nagios::ensure,
     notify  => Exec['nagios-restart'],
     require => Package['nagios'],
   }
 
   $use_syslog = $nagios::use_syslog
   concat::fragment {'main':
+    ensure => $nagios::ensure,
     target  => $nagios::params::conffile,
     content => template('nagios/nagios.cfg.erb'),
   }
@@ -161,12 +179,13 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/base-contacts.cfg":
-    ensure => file,
+    ensure => $file_ensure,
     owner  => 'root',
     mode   => '0644',
   }
 
   nagios_contact { 'root':
+    ensure                        => $nagios::ensure,
     contact_name                  => 'root',
     # lint:ignore:alias_parameter
     alias                         => 'Root',
@@ -184,12 +203,13 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/base-contactgroups.cfg":
-    ensure => file,
+    ensure => $file_ensure,
     owner  => 'root',
     mode   => '0644',
   }
 
   nagios_contactgroup { 'admins':
+    ensure            => $nagios::ensure,
     contactgroup_name => 'admins',
     # lint:ignore:alias_parameter
     alias             => 'Nagios Administrators',
@@ -204,12 +224,13 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/base-servicegroup.cfg":
-    ensure => file,
+    ensure => $file_ensure,
     owner  => 'root',
     mode   => '0644',
   }
 
   nagios_servicegroup { 'default':
+    ensure  => $nagios::ensure,
     # lint:ignore:alias_parameter
     alias   => 'Default Service Group',
     # lint:endignore

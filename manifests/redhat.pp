@@ -6,13 +6,14 @@
 #   include nagios
 #
 class nagios::redhat inherits nagios::base {
+  assert_private()
 
   include ::nagios::params
 
   # Common resources between base, redhat, and debian
 
   package { 'nagios':
-    ensure => present,
+    ensure => $nagios::ensure,
   }
 
   # redhat specific resources below

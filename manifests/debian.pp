@@ -6,6 +6,7 @@
 #   include nagios
 #
 class nagios::debian inherits nagios::base {
+  assert_private()
 
   include ::nagios::params
 
@@ -17,10 +18,10 @@ class nagios::debian inherits nagios::base {
     'nagios-plugins-standard',
     'nagios-plugins-basic',
     ]:
-    ensure => installed,
+    ensure => $nagios::ensure,
   }
   package {'nagios':
-    ensure => installed,
+    ensure => $nagios::ensure,
     name   => 'nagios3-core',
   }
 
@@ -36,8 +37,13 @@ class nagios::debian inherits nagios::base {
   # debian specific resources below
   $niceness = $nagios::niceness
 
+  $file_ensure = $nagios::ensure ? {
+    present => file,
+    default => absent,
+  }
+
   file {'/etc/default/nagios3':
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => root,
     mode    => '0644',
