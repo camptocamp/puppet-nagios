@@ -73,6 +73,7 @@ class nagios::base {
 
   file { 'nagios read-write dir':
     ensure  => $dir_ensure,
+    force   => true,
     path    => $read_write_dir,
     owner   => 'nagios',
     group   => 'nagios',
@@ -82,6 +83,7 @@ class nagios::base {
 
   file { 'nagios query-handler read-write dir':
     ensure  => $dir_ensure,
+    force   => true,
     path    => "/var/log/${nagios::params::basename}/rw",
     owner   => 'nagios',
     group   => 'nagios',
@@ -98,6 +100,7 @@ class nagios::base {
     "/var/cache/${nagios::params::basename}",
   ]:
     ensure  => $dir_ensure,
+    force   => true,
     owner   => nagios,
     group   => nagios,
     mode    => '0755',
@@ -135,7 +138,8 @@ class nagios::base {
 
   # purge undefined nagios resources
   file { $nagios::params::resourcedir:
-    ensure  => directory,
+    ensure  => $dir_ensure,
+    force   => true,
     # lint:ignore:fileserver
     source  => 'puppet:///modules/nagios/empty',
     # lint:endignore
@@ -150,7 +154,7 @@ class nagios::base {
 
   $module_path = get_module_path($module_name)
   file {"${nagios::params::resourcedir}/generic-host.cfg":
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => root,
     mode    => '0644',
@@ -160,7 +164,7 @@ class nagios::base {
 
   $check_ping_ipv = $::nagios::check_ping_ipv
   file {"${nagios::params::resourcedir}/generic-command.cfg":
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => root,
     mode    => '0644',
@@ -169,7 +173,7 @@ class nagios::base {
   }
 
   file {"${nagios::params::resourcedir}/generic-timeperiod.cfg":
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => root,
     mode    => '0644',
