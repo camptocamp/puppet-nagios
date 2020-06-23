@@ -31,7 +31,7 @@ class nagios::base {
     require => Package['nagios'],
   }
 
-  $svc_ensure = $nagios::ensure {
+  $svc_ensure = $nagios::ensure ? {
     present => running,
     default => stopped,
   }
