@@ -118,7 +118,6 @@ class nagios::base {
 
   $use_syslog = $nagios::use_syslog
   concat::fragment {'main':
-    ensure => $nagios::ensure,
     target  => $nagios::params::conffile,
     content => template('nagios/nagios.cfg.erb'),
   }
