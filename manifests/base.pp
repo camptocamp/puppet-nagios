@@ -139,7 +139,6 @@ class nagios::base {
   # purge undefined nagios resources
   file { $nagios::params::resourcedir:
     ensure  => $dir_ensure,
-    force   => true,
     # lint:ignore:fileserver
     source  => 'puppet:///modules/nagios/empty',
     # lint:endignore
