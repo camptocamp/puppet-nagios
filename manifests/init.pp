@@ -1,10 +1,10 @@
 class nagios(
-  Enum['present', 'absent'] = 'present',
-  $use_syslog               = '1',
-  $check_ping_ipv           = undef,
-  $nrpe_server_tag          = $::fqdn,
-  $nsca_server_tag          = $::fqdn,
-  $niceness                 = 5,
+  Enum['present', 'absent'] $ensure          = 'present',
+                            $use_syslog      = '1',
+                            $check_ping_ipv  = undef,
+                            $nrpe_server_tag = $::fqdn,
+                            $nsca_server_tag = $::fqdn,
+                            $niceness        = 5,
 ) {
   case $::osfamily {
     'Debian': { include ::nagios::debian }
