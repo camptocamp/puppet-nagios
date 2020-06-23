@@ -10,6 +10,7 @@
 #   include nagios::nsca::server
 #
 class nagios::nsca::server(
+  Enum['present', 'absent'] $ensure = 'present',
   $decryption_method = pick($nagios_nsca_decryption_method, '0'),
 
   $debug = 0,
@@ -22,12 +23,17 @@ class nagios::nsca::server(
 
   if !defined (Package['nsca']) {
     package {'nsca':
-      ensure => installed;
+      ensure => $ensure;
     }
   }
 
+  $svc_ensure = $nagios::ensure ? {
+    present => running,
+    default => stopped,
+  }
+
   service {'nsca':
-    ensure     => running,
+    ensure     => $svc_ensure,
     enable     => true,
     hasrestart => true,
     hasstatus  => false,
@@ -35,12 +41,14 @@ class nagios::nsca::server(
     require    => Package['nsca'],
   }
 
-  $get_tag = "nagios-${::nagios::nsca_server_tag}"
+  if $ensure == 'present' {
+    $get_tag = "nagios-${::nagios::nsca_server_tag}"
 
-  Nagios::Host   <<| tag == $get_tag |>>
-  Nagios_service <<| tag == $get_tag |>>
-  Nagios_command <<| tag == $get_tag |>>
-  File           <<| tag == $get_tag |>>
+    Nagios::Host   <<| tag == $get_tag |>>
+    Nagios_service <<| tag == $get_tag |>>
+    Nagios_command <<| tag == $get_tag |>>
+    File           <<| tag == $get_tag |>>
+  }
 
   Nagios_host    { require => File[$nagios::params::resourcedir] }
   Nagios_service { require => File[$nagios::params::resourcedir] }
@@ -66,8 +74,13 @@ class nagios::nsca::server(
     'RedHat' => '/var/spool/nagios/cmd/nsca.dump',
   }
 
+  $file_ensure = $nagios::ensure ? {
+    present => file,
+    default => absent,
+  }
+
   file {$nagios_nsca_cfg:
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => nagios,
     mode    => '0640',
