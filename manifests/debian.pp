@@ -12,16 +12,21 @@ class nagios::debian inherits nagios::base {
 
   # Common resources between base, redhat, and debian
 
+  $pkg_ensure = $nagios::ensure ? {
+    present => installed,
+    default => purged,
+  }
+
   package {[
     'nagios3-common',
     'nagios-plugins',
     'nagios-plugins-standard',
     'nagios-plugins-basic',
     ]:
-    ensure => $nagios::ensure,
+    ensure => $pkg_ensure,
   }
   package {'nagios':
-    ensure => $nagios::ensure,
+    ensure => $pkg_ensure,
     name   => 'nagios3-core',
   }
 
