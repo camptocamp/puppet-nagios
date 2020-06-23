@@ -11,7 +11,7 @@
 #
 class nagios::nsca::server(
   Enum['present', 'absent'] $ensure = 'present',
-  $decryption_method = pick($::nagios_nsca_decryption_method, '0'),
+  $decryption_method = '0',
 
   $debug = 0,
 ) {
