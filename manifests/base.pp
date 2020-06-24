@@ -10,8 +10,14 @@ class nagios::base {
 
   # purge
   if $nagios::ensure == 'absent' {
+    $pkg_ensure = $::osfamily ? {
+      'RedHat' => 'absent',
+      'Debian' => 'purged',
+    }
+
     purge { 'package':
-      if => ['name', '=~', 'monitoring-.*'],
+      if    => ['name', '=~', 'monitoring-.*'],
+      state => $pkg_ensure,
     }
   }
 
