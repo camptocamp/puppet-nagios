@@ -45,9 +45,14 @@ class nagios::nsca::server(
     default => stopped,
   }
 
+  $svc_enable = $nagios::ensure ? {
+    present => true,
+    default => false,
+  }
+
   service {'nsca':
     ensure     => $svc_ensure,
-    enable     => true,
+    enable     => $svc_enable,
     hasrestart => true,
     hasstatus  => false,
     pattern    => '/usr/sbin/nsca',
