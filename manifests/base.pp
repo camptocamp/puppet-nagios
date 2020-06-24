@@ -36,9 +36,14 @@ class nagios::base {
     default => stopped,
   }
 
+  $svc_enable = $nagios::ensure ? {
+    present => true,
+    default => false,
+  }
+
   service { 'nagios':
     ensure     => $svc_ensure,
-    enable     => true,
+    enable     => $svc_enable,
     hasrestart => true,
     require    => Package['nagios'],
   }
@@ -138,7 +143,7 @@ class nagios::base {
 
   $res_source = $dir_ensure ? {
     present => 'puppet:///modules/nagios/empty',
-    absent  => nil,
+    absent  => undef,
   }
 
   # purge undefined nagios resources
