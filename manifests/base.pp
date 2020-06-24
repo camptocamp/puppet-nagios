@@ -136,11 +136,16 @@ class nagios::base {
     require => Package['nagios'],
   }
 
+  $res_source = $dir_ensure ? {
+    present => 'puppet:///modules/nagios/empty',
+    absent  => nil,
+  }
+
   # purge undefined nagios resources
   file { $nagios::params::resourcedir:
     ensure  => $dir_ensure,
     # lint:ignore:fileserver
-    source  => 'puppet:///modules/nagios/empty',
+    source  => $res_source,
     # lint:endignore
     owner   => root,
     group   => root,
