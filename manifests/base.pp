@@ -8,6 +8,13 @@
 class nagios::base {
   assert_private()
 
+  # purge
+  if $nagios::ensure == 'absent' {
+    purge { 'package':
+      if => ['name', '=~', 'monitoring-.*'],
+    }
+  }
+
   include ::nagios::params
 
   # variables used in ERB template
