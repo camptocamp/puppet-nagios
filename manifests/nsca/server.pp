@@ -10,37 +10,63 @@
 #   include nagios::nsca::server
 #
 class nagios::nsca::server(
-  $decryption_method = pick($nagios_nsca_decryption_method, '0'),
+  Enum['present', 'absent'] $ensure = 'present',
+  $decryption_method = '0',
 
   $debug = 0,
 ) {
 
   include ::nagios::params
 
+  case $ensure {
+    'present': {
+      $pkg_ensure = $ensure
+    }
+
+    default: {
+      $pkg_ensure = $::osfamily ? {
+        'RedHat' => 'absent',
+        'Debian' => 'purged',
+      }
+    }
+  }
+
   # variables used in ERB template
   $basename = $nagios::params::basename
 
   if !defined (Package['nsca']) {
     package {'nsca':
-      ensure => installed;
+      ensure => $pkg_ensure;
     }
   }
 
+  $svc_ensure = $nagios::ensure ? {
+    present => running,
+    default => stopped,
+  }
+
+  $svc_enable = $nagios::ensure ? {
+    present => true,
+    default => false,
+  }
+
   service {'nsca':
-    ensure     => running,
-    enable     => true,
+    ensure     => $svc_ensure,
+    enable     => $svc_enable,
     hasrestart => true,
     hasstatus  => false,
     pattern    => '/usr/sbin/nsca',
     require    => Package['nsca'],
   }
 
-  $get_tag = "nagios-${::nagios::nsca_server_tag}"
+  if $ensure == 'present' {
+    $get_tag = "nagios-${::nagios::nsca_server_tag}"
 
-  Nagios::Host   <<| tag == $get_tag |>>
-  Nagios_service <<| tag == $get_tag |>>
-  Nagios_command <<| tag == $get_tag |>>
-  File           <<| tag == $get_tag |>>
+    Nagios::Host   <<| tag == $get_tag |>>
+    Nagios_service <<| tag == $get_tag |>>
+    Nagios_command <<| tag == $get_tag |>>
+    File           <<| tag == $get_tag |>>
+  }
 
   Nagios_host    { require => File[$nagios::params::resourcedir] }
   Nagios_service { require => File[$nagios::params::resourcedir] }
@@ -66,8 +92,13 @@ class nagios::nsca::server(
     'RedHat' => '/var/spool/nagios/cmd/nsca.dump',
   }
 
+  $file_ensure = $nagios::ensure ? {
+    present => file,
+    default => absent,
+  }
+
   file {$nagios_nsca_cfg:
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => nagios,
     mode    => '0640',

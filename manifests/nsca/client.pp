@@ -10,27 +10,46 @@
 #
 class nagios::nsca::client(
   $nsca_server,
+  Enum['present', 'absent'] $ensure = 'present',
 ) {
 
   include ::nagios::params
 
+  case $ensure {
+    'present': {
+      $pkg_ensure = $ensure
+    }
+
+    default: {
+      $pkg_ensure = $::osfamily ? {
+        'RedHat' => 'absent',
+        'Debian' => 'purged',
+      }
+    }
+  }
+
   if !defined (Package['nsca']) {
     package {'nsca':
-      ensure => installed;
+      ensure => $pkg_ensure;
     }
   }
 
   if $::osfamily == 'RedHat' {
     if !defined (Package['nsca-client']) {
-      package { 'nsca-client': ensure => installed }
+      package { 'nsca-client': ensure => $pkg_ensure }
     }
   }
 
   # variables used in ERB template
   $nsca_cfg = "${nagios::params::rootdir}/send_nsca.cfg"
 
+  $file_ensure = $nagios::ensure ? {
+    present => file,
+    default => absent,
+  }
+
   file { "${nagios::params::rootdir}/send_nsca.cfg":
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => nagios,
     mode    => '0640',
@@ -40,7 +59,7 @@ class nagios::nsca::client(
   }
 
   file {'/usr/local/bin/submit_ocsp':
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => root,
     mode    => '0755',
@@ -49,7 +68,7 @@ class nagios::nsca::client(
   }
 
   file {'/usr/local/bin/submit_ochp':
-    ensure  => file,
+    ensure  => $file_ensure,
     owner   => root,
     group   => root,
     mode    => '0755',
@@ -58,13 +77,13 @@ class nagios::nsca::client(
   }
 
   file { "${nagios::params::resourcedir}/command-submit_ocsp.cfg":
-    ensure => file,
+    ensure => $file_ensure,
     owner  => 'root',
     mode   => '0644',
   }
 
   nagios_command {'submit_ocsp':
-    ensure       => present,
+    ensure       => $ensure,
     command_line => '/usr/local/bin/submit_ocsp $HOSTNAME$ \'$SERVICEDESC$\' $SERVICESTATEID$ \'$SERVICEOUTPUT$\'',
     target       => "${nagios::params::resourcedir}/command-submit_ocsp.cfg",
     notify       => Exec['nagios-restart'],
@@ -72,13 +91,13 @@ class nagios::nsca::client(
   }
 
   file { "${nagios::params::resourcedir}/command-submit_ochp.cfg":
-    ensure => file,
+    ensure => $file_ensure,
     owner  => 'root',
     mode   => '0644',
   }
 
   nagios_command {'submit_ochp':
-    ensure       => present,
+    ensure       => $ensure,
     command_line => '/usr/local/bin/submit_ochp $HOSTNAME$ $HOSTSTATE$ \'$HOSTOUTPUT$\'',
     target       => "${nagios::params::resourcedir}/command-submit_ochp.cfg",
     notify       => Exec['nagios-restart'],
