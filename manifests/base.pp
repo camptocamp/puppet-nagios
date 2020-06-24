@@ -146,6 +146,13 @@ class nagios::base {
     absent  => undef,
   }
 
+
+  file { '/etc/nagios-plugins':
+    ensure => $dir_ensure,
+    purge  => true,
+    force  => true,
+  }
+
   # purge undefined nagios resources
   file { $nagios::params::resourcedir:
     ensure  => $dir_ensure,
