@@ -18,12 +18,25 @@ class nagios::nsca::server(
 
   include ::nagios::params
 
+  case $ensure {
+    'present': {
+      $pkg_ensure = $ensure
+    }
+
+    default: {
+      $pkg_ensure = $::osfamily ? {
+        'RedHat' => 'absent',
+        'Debian' => 'purged',
+      }
+    }
+  }
+
   # variables used in ERB template
   $basename = $nagios::params::basename
 
   if !defined (Package['nsca']) {
     package {'nsca':
-      ensure => $ensure;
+      ensure => $pkg_ensure;
     }
   }
 
