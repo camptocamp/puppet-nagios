@@ -16,7 +16,10 @@ class nagios::base {
     }
 
     purge { 'package':
-      if    => ['name', '=~', 'monitoring-.*'],
+      if    => [
+        ['name', '=~', 'monitoring-.*'],
+        ['name', '=~', 'nsca.*'],
+      ],
       state => $pkg_ensure,
     }
   }
