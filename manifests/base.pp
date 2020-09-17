@@ -158,8 +158,8 @@ class nagios::base {
   }
 
   $res_source = $dir_ensure ? {
-    present => 'puppet:///modules/nagios/empty',
-    absent  => undef,
+    directory => 'puppet:///modules/nagios/empty',
+    absent    => undef,
   }
 
 
