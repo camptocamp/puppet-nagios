@@ -56,10 +56,6 @@ class nagios::redhat inherits nagios::base {
     }
 
     '7': {
-      Service['nagios'] {
-        provider => 'redhat',
-      }
-
       Exec['nagios-restart'] {
         command => "nagios -v ${nagios::params::conffile} && systemctl restart nagios.service",
       }
@@ -68,6 +64,13 @@ class nagios::redhat inherits nagios::base {
         command => "nagios -v ${nagios::params::conffile} && systemctl reload nagios.service",
       }
 
+      file {'/var/log/nagios/nagios.log':
+        ensure  => file,
+        owner   => 'nagios',
+        group   => 'nagios',
+        require => Package['nagios'],
+        before  => Service['nagios'],
+      }
     }
 
     default: {

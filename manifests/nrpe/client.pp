@@ -38,12 +38,6 @@ class nagios::nrpe::client {
     require => Package['nrpe'],
   }
 
-  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease == '7' {
-    $provider = 'redhat'
-  } else {
-    $provider = undef
-  }
-
   if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '6' {
     $hasstatus = false
   } else {
@@ -52,7 +46,6 @@ class nagios::nrpe::client {
 
   service { 'nrpe':
     ensure    => running,
-    provider  => $provider,
     hasstatus => $hasstatus,
     name      => $service_name,
     enable    => true,
