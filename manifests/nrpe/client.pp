@@ -10,7 +10,21 @@
 #   include nagios
 #   include nagios::nrpe::client
 #
-class nagios::nrpe::client {
+class nagios::nrpe::client (
+  Enum['present', 'absent'] $ensure = 'present',
+) {
+  case $ensure {
+    'present': {
+      $pkg_ensure = $ensure
+    }
+
+    default: {
+      $pkg_ensure = $::osfamily ? {
+        'RedHat' => 'absent',
+        'Debian' => 'purged',
+      }
+    }
+  }
 
   $package_name = $::osfamily ? {
     'Debian' => 'nagios-nrpe-server',
@@ -23,7 +37,7 @@ class nagios::nrpe::client {
   }
 
   package { 'nrpe':
-    ensure => present,
+    ensure => $pkg_ensure,
     name   => $package_name,
   }
 
@@ -33,7 +47,7 @@ class nagios::nrpe::client {
   }
 
   user{ 'nrpe':
-    ensure  => present,
+    ensure  => $ensure,
     shell   => $nologin_path,
     require => Package['nrpe'],
   }
@@ -50,8 +64,13 @@ class nagios::nrpe::client {
     $hasstatus = undef
   }
 
+  $svc_ensure = $ensure ? {
+    present => running,
+    absent  => stopped,
+  }
+
   service { 'nrpe':
-    ensure    => running,
+    ensure    => $svc_ensure,
     provider  => $provider,
     hasstatus => $hasstatus,
     name      => $service_name,
@@ -62,7 +81,7 @@ class nagios::nrpe::client {
 
   $module_path = get_module_path($module_name)
   augeas::lens { 'nrpe':
-    ensure       => 'present',
+    ensure       => $ensure,
     lens_content => file("${module_path}/files/nrpe.aug"),
     stock_since  => '1.1.0',
   }
