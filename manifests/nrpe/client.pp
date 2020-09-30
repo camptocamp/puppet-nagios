@@ -69,12 +69,17 @@ class nagios::nrpe::client (
     absent  => stopped,
   }
 
+  $svc_enable = $ensure ? {
+    present => true,
+    absent  => false,
+  }
+
   service { 'nrpe':
     ensure    => $svc_ensure,
     provider  => $provider,
     hasstatus => $hasstatus,
     name      => $service_name,
-    enable    => true,
+    enable    => $svc_enable,
     pattern   => '/usr/sbin/nrpe',
     require   => Package['nrpe'],
   }
