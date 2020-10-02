@@ -64,20 +64,20 @@ class nagios::base {
     require    => Package['nagios'],
   }
 
-  if $nagios::ensure == 'present' {
-    exec { 'nagios-restart':
-      command     => "${nagios::params::basename} -v ${nagios::params::conffile} && /etc/init.d/${nagios::params::basename} restart",
-      refreshonly => true,
-      path        => $::path,
-    }
-
-    exec { 'nagios-reload':
-      command     => "${nagios::params::basename} -v ${nagios::params::conffile} && /etc/init.d/${nagios::params::basename} reload",
-      refreshonly => true,
-      path        => $::path,
-    }
+  exec { 'nagios-restart':
+    command     => "${nagios::params::basename} -v ${nagios::params::conffile} && /etc/init.d/${nagios::params::basename} restart",
+    refreshonly => true,
+    path        => $::path,
+    onlyif      => "test -f ${nagios::params::conffile}",
   }
 
+  exec { 'nagios-reload':
+    command     => "${nagios::params::basename} -v ${nagios::params::conffile} && /etc/init.d/${nagios::params::basename} reload",
+    refreshonly => true,
+    path        => $::path,
+    onlyif      => "test -f ${nagios::params::conffile}",
+  }
+  
   $read_write_dir = $::osfamily ? {
     'Debian' => '/var/lib/nagios3/rw',
     'RedHat' => '/var/spool/nagios/cmd',
